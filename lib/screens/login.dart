@@ -1,6 +1,6 @@
 import 'package:aj_autofix/screens/Sign_up.dart';
+import 'package:aj_autofix/screens/home.dart';
 import 'package:flutter/material.dart';
-
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -82,7 +82,12 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
