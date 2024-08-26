@@ -2,14 +2,14 @@ import 'package:aj_autofix/screens/booking.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter/material.dart';
 
-class home extends StatefulWidget {
-  const home({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<home> createState() => _homeState();
+  State<Home> createState() => _HomeState();
 }
 
-class _homeState extends State<home> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,10 +17,11 @@ class _homeState extends State<home> {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
+
 //search ito
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -61,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('E & J Autofix'),
         actions: [
           IconButton(

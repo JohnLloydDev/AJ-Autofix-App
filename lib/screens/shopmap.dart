@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'home.dart';
 import 'booking.dart';
 
@@ -6,11 +7,13 @@ class ShopMap extends StatefulWidget {
   const ShopMap({super.key});
 
   @override
-  _ShopMapState createState() => _ShopMapState();
+  _ShopMapState  createState() => _ShopMapState();
 }
 
 class _ShopMapState extends State<ShopMap> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 2; 
+
+  final LatLng shopLocation = const LatLng(13.794185, 122.473262); // Replace with actual coordinates
 
   void _onItemTapped(int index) {
     setState(() {
@@ -21,7 +24,7 @@ class _ShopMapState extends State<ShopMap> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
