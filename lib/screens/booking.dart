@@ -1,8 +1,6 @@
-
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter/material.dart';
-import 'home.dart'; 
-
+import 'home.dart';
 
 class Booking extends StatefulWidget {
   const Booking({super.key});
@@ -16,7 +14,7 @@ class _BookingState extends State<Booking> {
   String vehicleType = 'CAR';
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
-  int _selectedIndex = 1; // Default to Booking tab
+  final int _selectedIndex = 1; // Default to Booking tab
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -49,7 +47,7 @@ class _BookingState extends State<Booking> {
       case 0: // Home tab
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1: // Booking tab (Current screen)
@@ -157,4 +155,3 @@ class _BookingState extends State<Booking> {
     );
   }
 }
-
