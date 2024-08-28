@@ -10,7 +10,7 @@ class ContactUsScreen extends StatefulWidget {
 class _ContactUsScreenState extends State<ContactUsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Contact Us'),
         leading: IconButton(
