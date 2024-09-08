@@ -43,10 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, String>> services = [
     {'name': 'Power Window Motor', 'price': 'PHP 1,500'},
     {'name': 'Power Window Cable', 'price': 'PHP 900'},
-    {'name': 'Handle Repair', 'price': 'PHP 500'},
+    {'name': 'Door Lock Replacement', 'price': 'PHP 550'},
     {'name': 'Handle Replacement', 'price': 'PHP 700'},
     {'name': 'Door Lock Repair', 'price': 'PHP 400'},
-    {'name': 'Door Lock Replacement', 'price': 'PHP 550'},
+    {'name': 'Handle Repair', 'price': 'PHP 500'},
     {'name': 'Powerlock 1pc', 'price': 'PHP 500'},
     {'name': 'Powerlock Set', 'price': 'PHP 2,000'},
     {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800'},

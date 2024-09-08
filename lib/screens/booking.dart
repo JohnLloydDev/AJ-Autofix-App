@@ -12,7 +12,7 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   String selectedService = 'Standard Car Service';
-  String vehicleType = 'CAR';
+  String carType = ''; // Store the type of car input
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
   final int _selectedIndex = 1; // Default to Booking tab
@@ -71,7 +71,7 @@ class _BookingState extends State<Booking> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
+        child: Column(
           children: [
             DropdownButtonFormField<String>(
               value: selectedService,
@@ -96,43 +96,66 @@ class _BookingState extends State<Booking> {
               ),
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: vehicleType,
-              items: ['CAR', 'TRUCK'].map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type),
-                );
-              }).toList(),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Type of Car & Year Model',
+                hintText: 'e.g., Toyota Corolla 2020',
+                border: OutlineInputBorder(),
+              ),
               onChanged: (value) {
                 setState(() {
-                  vehicleType = value!;
+                  carType = value; // Update the carType with the input value
                 });
               },
-              decoration: const InputDecoration(
-                labelText: 'Type of Vehicle',
-                border: OutlineInputBorder(),
+            ),
+            const SizedBox(height: 16),
+            InkWell(
+              onTap: () => _selectDate(context),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Select Date',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(DateFormat('MM/dd/yyyy').format(selectedDate)),
+                    const Icon(Icons.calendar_today, color: Colors.grey),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),
-            ListTile(
-              title: Text('Date: ${DateFormat('MM/dd/yyyy').format(selectedDate)}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              title: Text('Time: ${selectedTime.format(context)}'),
-              trailing: const Icon(Icons.access_time),
+            InkWell(
               onTap: () => _selectTime(context),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Select Time',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(selectedTime.format(context)),
+                    const Icon(Icons.access_time, color: Colors.grey),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 16),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
                 // Handle booking submission
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.blue, side: const BorderSide(color: Colors.blue), // White text
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                side: const BorderSide(color: Colors.blue), // White text
                 minimumSize: const Size(double.infinity, 50), // Adjust button height
               ),
               child: const Text('BOOK NOW'),

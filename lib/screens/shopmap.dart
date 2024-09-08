@@ -13,8 +13,32 @@ class ShopMap extends StatefulWidget {
 class ShopMapState extends State<ShopMap> {
   int _selectedIndex = 2;
 
-  final LatLng shopLocation =
-      const LatLng(13.794185, 122.473262); 
+  final LatLng shopLocation = const LatLng(13.794185, 122.473262);
+
+  // Google Maps controller
+  GoogleMapController? _mapController;
+
+  // Marker to be displayed at the shop location
+  final Set<Marker> _markers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('shopLocation'),
+        position: shopLocation,
+        infoWindow: const InfoWindow(
+          title: 'E & J Autofix',
+          snippet: 'Your trusted car shop',
+        ),
+      ),
+    );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -34,7 +58,7 @@ class ShopMapState extends State<ShopMap> {
           MaterialPageRoute(builder: (context) => const Booking()),
         );
         break;
-      case 2: 
+      case 2:
         break;
       default:
         break;
@@ -46,10 +70,12 @@ class ShopMapState extends State<ShopMap> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shop Location'),
+        backgroundColor: Colors.lightBlue,
         actions: [
           IconButton(
             icon: const Icon(Icons.directions),
             onPressed: () {
+              // Optionally add functionality for directions here
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Directions Button Pressed')),
               );
@@ -57,11 +83,13 @@ class ShopMapState extends State<ShopMap> {
           ),
         ],
       ),
-      body: Center(
-        child: Image.asset(
-          'assets/map_placeholder.png',
-          fit: BoxFit.cover,
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: shopLocation,
+          zoom: 15, // Set zoom level
         ),
+        markers: _markers, // Display marker at shop location
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -82,5 +110,11 @@ class ShopMapState extends State<ShopMap> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
   }
 }
