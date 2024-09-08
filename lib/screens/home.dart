@@ -18,17 +18,16 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'E & J Autofix',
+      title: 'A & J Autofix',
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      debugShowCheckedModeBanner: false, 
+      debugShowCheckedModeBanner: false,
       home: const HomeScreen(),
     );
   }
 }
 
-//search ito
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -39,13 +38,54 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
+  final TextEditingController _searchController = TextEditingController();
+  
+  List<Map<String, String>> services = [
+    {'name': 'Power Window Motor', 'price': 'PHP 1,500'},
+    {'name': 'Power Window Cable', 'price': 'PHP 900'},
+    {'name': 'Handle Repair', 'price': 'PHP 500'},
+    {'name': 'Handle Replacement', 'price': 'PHP 700'},
+    {'name': 'Door Lock Repair', 'price': 'PHP 400'},
+    {'name': 'Door Lock Replacement', 'price': 'PHP 550'},
+    {'name': 'Powerlock 1pc', 'price': 'PHP 500'},
+    {'name': 'Powerlock Set', 'price': 'PHP 2,000'},
+    {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800'},
+  ];
+
+  List<Map<String, String>> _filteredServices = [];
+  
+  // Track selected services
+  Set<int> _selectedServices = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredServices = services;
+    _searchController.addListener(_filterServices);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_filterServices);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterServices() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredServices = services.where((service) {
+        final name = service['name']!.toLowerCase();
+        return name.contains(query);
+      }).toList();
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    // Navigate to the appropriate page based on the selected index
     switch (index) {
       case 1: // Booking tab
         Navigator.push(
@@ -65,10 +105,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Toggle the selection of a service
+  void _toggleServiceSelection(int index) {
+    setState(() {
+      if (_selectedServices.contains(index)) {
+        _selectedServices.remove(index);
+      } else {
+        _selectedServices.add(index);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, 
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('E & J Autofix'),
@@ -76,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              _scaffoldKey.currentState?.openEndDrawer(); 
+              _scaffoldKey.currentState?.openEndDrawer();
             },
           ),
         ],
@@ -86,23 +137,19 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             const SizedBox(
-              height: 100, // Adjusting the height 
+              height: 100, // Adjusting the height
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Color(0xFF9FA8DA), 
+                  color: Color(0xFF9FA8DA), // Light blue color for header
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Menu',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                        ),
-                      ),
+                child: Center(
+                  child: Text(
+                    'Menu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -167,6 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
                 hintText: 'Search for a car service',
@@ -184,9 +232,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
-                itemCount: 8, // Number of items in the grid
+                itemCount: _filteredServices.length,
                 itemBuilder: (context, index) {
-                  return const ServiceCard(); // Use const for better performance
+                  return ServiceCard(
+                    serviceName: _filteredServices[index]['name']!,
+                    servicePrice: _filteredServices[index]['price']!,
+                    isSelected: _selectedServices.contains(index), // Check if the service is selected
+                    onAddPressed: () => _toggleServiceSelection(index), // Handle the add button press
+                  );
                 },
               ),
             ),
@@ -216,49 +269,52 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ServiceCard extends StatelessWidget {
-  const ServiceCard({super.key});
+  final String serviceName;
+  final String servicePrice;
+  final bool isSelected;
+  final VoidCallback onAddPressed;
+
+  const ServiceCard({
+    super.key,
+    required this.serviceName,
+    required this.servicePrice,
+    required this.isSelected,
+    required this.onAddPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
+      color: isSelected ? Colors.green[100] : Colors.lightBlue[50], // Highlight if selected
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center, // Center contents vertically
           children: [
-            const Text(
-              'Change Oil',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              serviceName,
+              textAlign: TextAlign.center, // Center text horizontally
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const Text('PHP 100'),
+            Text(
+              servicePrice,
+              textAlign: TextAlign.center, // Center text horizontally
+            ),
+            const SizedBox(height: 8),
             ElevatedButton(
-              onPressed: () {
-                // Handle the add button press
-              },
-              child: const Text('ADD'),
+              onPressed: onAddPressed,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: isSelected ? Colors.green : Colors.blue, // Change button color if selected
+                minimumSize: const Size(double.infinity, 40), // Button height
+              ),
+              child: Text(isSelected ? 'SELECTED' : 'ADD'),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class BookingScreen extends StatelessWidget {
-  const BookingScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Booking'),
-      ),
-      body: const Center(
-        child: Text('Booking Page'),
       ),
     );
   }
