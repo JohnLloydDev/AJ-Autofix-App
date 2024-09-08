@@ -1,40 +1,61 @@
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-  final String id;
+  final String? id;
+  final String? profilePicture;
   final String fullname;
   final String username;
   final String email;
   final String contactNumber;
   final String password;
+  final String role;
 
-  const User(
-      {required this.id,
-      required this.fullname,
-      required this.username,
-      required this.email,
-      required this.contactNumber,
-      required this.password});
+  const User({
+    this.role = 'user',
+    this.id,
+    this.profilePicture,
+    this.fullname = '',
+    this.username = '',
+    required this.email,
+    this.contactNumber = '',
+    required this.password,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        id: json['id'],
-        fullname: json['fullname'],
-        username: json['username'],
-        email: json['email'],
-        contactNumber: json['contactNumber'],
-        password: json['password']);
+      id: json['_id'] ?? '',
+      profilePicture: json['profilePicture'] as String?,
+      fullname: json['fullname'] as String? ?? '',
+      username: json['username'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      contactNumber: json['contactNumber'] as String? ?? '',
+      password: json['password'] as String? ?? '',
+      role: json['role'] as String? ?? 'user',
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'profilePicture': profilePicture,
       'fullname': fullname,
       'username': username,
       'email': email,
       'contactNumber': contactNumber,
+      'password': password,
+      'role': role,
     };
   }
 
   @override
-  List<Object> get props => [fullname, username, email, contactNumber, password];
+  List<Object?> get props => [
+        id,
+        profilePicture,
+        fullname,
+        username,
+        email,
+        contactNumber,
+        password,
+        role
+      ];
 }

@@ -1,6 +1,6 @@
 import 'package:aj_autofix/screens/booking.dart';
 import 'package:aj_autofix/screens/contact_us.dart';
-import 'package:aj_autofix/screens/login.dart';
+import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pendingrequest.dart';
 import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const Login()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
               },
             ),
           ],

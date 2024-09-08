@@ -1,18 +1,19 @@
-part of 'auth_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class AuthState extends Equatable {
+  const AuthState();
   @override
   List<Object?> get props => [];
 }
 
-final class AuthInitial extends AuthState {}
+class AuthInitial extends AuthState {}
 
 class AuthIsProcessing extends AuthState {}
 
 class AuthSucceed extends AuthState {
   final String message;
 
-  AuthSucceed(this.message);
+  const AuthSucceed(this.message);
 
   @override
   List<Object> get props => [message];
@@ -21,9 +22,19 @@ class AuthSucceed extends AuthState {
 class AuthFailed extends AuthState {
   final String error;
 
-  AuthFailed(this.error);
+  const AuthFailed(this.error);
 
   @override
   List<Object> get props => [error];
-  }
+}
+
+class AuthSuccessWithRole extends AuthState {
+  final String role;
+
+  const AuthSuccessWithRole(this.role);
+
+  @override
+  List<Object> get props => [role];
+}
+
 

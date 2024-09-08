@@ -1,16 +1,18 @@
 import 'package:aj_autofix/bloc/auth_event.dart';
-import 'package:aj_autofix/repositories/auth_repo.dart';
+import 'package:aj_autofix/bloc/auth_state.dart';
+import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthRepo _authRepo;
-  AuthBloc(this._authRepo) : super(AuthInitial()) {
+  final AuthRepositoryImpl _authRepositoryImpl;
+
+  AuthBloc(this._authRepositoryImpl) : super(AuthInitial()) {
     on<UserRegistration>((event, emit) async {
       try {
-        await _authRepo.userRegister(event.user);
-        emit(AuthSucceed('Registration Success'));
+        await _authRepositoryImpl.userRegistration(
+            event.user, event.profilePicture);
+        emit(const AuthSucceed('Registration Success'));
       } catch (e) {
         emit(AuthFailed(e.toString()));
       }
@@ -18,11 +20,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<UserLogin>((event, emit) async {
       try {
-        await _authRepo.userLogin(event.user);
-        emit(AuthSucceed('Login Success'));
+        final User user = await _authRepositoryImpl.userLogin(event.user);
+        emit(AuthSuccessWithRole(user.role));
       } catch (e) {
         emit(AuthFailed(e.toString()));
       }
     });
+    on<AuthReset>((event, emit) => emit(AuthInitial()));
   }
 }

@@ -7,13 +7,14 @@ class ShopMap extends StatefulWidget {
   const ShopMap({super.key});
 
   @override
-  _ShopMapState  createState() => _ShopMapState();
+  ShopMapState createState() => ShopMapState();
 }
 
-class _ShopMapState extends State<ShopMap> {
-  int _selectedIndex = 2; 
+class ShopMapState extends State<ShopMap> {
+  int _selectedIndex = 2;
 
-  final LatLng shopLocation = const LatLng(13.794185, 122.473262); // Replace with actual coordinates
+  final LatLng shopLocation =
+      const LatLng(13.794185, 122.473262); 
 
   void _onItemTapped(int index) {
     setState(() {
@@ -33,7 +34,7 @@ class _ShopMapState extends State<ShopMap> {
           MaterialPageRoute(builder: (context) => const Booking()),
         );
         break;
-      case 2: // Map tab (current screen)
+      case 2: 
         break;
       default:
         break;
@@ -58,7 +59,7 @@ class _ShopMapState extends State<ShopMap> {
       ),
       body: Center(
         child: Image.asset(
-          'assets/map_placeholder.png', // Replace with your image path
+          'assets/map_placeholder.png',
           fit: BoxFit.cover,
         ),
       ),
