@@ -1,6 +1,7 @@
-import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import the intl package
 import 'home.dart';
+import 'package:aj_autofix/screens/shopmap.dart';
 
 class Booking extends StatefulWidget {
   const Booking({super.key});
@@ -66,6 +67,7 @@ class _BookingState extends State<Booking> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Booking'),
+        backgroundColor: Colors.lightBlue, // Light blue header
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -114,7 +116,7 @@ class _BookingState extends State<Booking> {
             ),
             const SizedBox(height: 16),
             ListTile(
-              title: Text('Date: ${selectedDate.toLocal()}'.split(' ')[0]),
+              title: Text('Date: ${DateFormat('MM/dd/yyyy').format(selectedDate)}'),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(context),
             ),
@@ -129,6 +131,10 @@ class _BookingState extends State<Booking> {
               onPressed: () {
                 // Handle booking submission
               },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.blue, side: const BorderSide(color: Colors.blue), // White text
+                minimumSize: const Size(double.infinity, 50), // Adjust button height
+              ),
               child: const Text('BOOK NOW'),
             ),
           ],
