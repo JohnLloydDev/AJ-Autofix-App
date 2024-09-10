@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, String>> _filteredServices = [];
   
   // Track selected services
-  Set<int> _selectedServices = {};
+  final Set<int> _selectedServices = {};
 
   @override
   void initState() {
