@@ -2,9 +2,9 @@ import 'package:aj_autofix/screens/booking.dart';
 import 'package:aj_autofix/screens/contact_us.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pendingrequest.dart';
+import 'package:aj_autofix/screens/profile.dart';
 import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
-import 'package:aj_autofix/screens/viewprofile.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, String>> _filteredServices = [];
   
   // Track selected services
-  Set<int> _selectedServices = {};
+  final Set<int> _selectedServices = {};
 
   @override
   void initState() {
@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ProfileView()));
+                        builder: (context) => const ProfileScreen()));
               },
             ),
             const Divider(),

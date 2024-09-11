@@ -6,12 +6,12 @@ import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepositoryImpl implements AuthRepository {
-  static const String baseUrl = "http://10.0.2.2:3000/api/";
+  //static const String baseUrl = "http://10.0.2.2:3000/api/auth/login";
 
   @override
   Future<User> userLogin(User user) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/login'),
+      Uri.parse('http://10.0.2.2:3000/api/auth/login'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({'email': user.email, 'password': user.password}),
     );
@@ -34,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> userRegistration(User user, File? profilePicture) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse('$baseUrl/registration'));
+        http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:3000/api/auth/registration'));
 
     request.fields['fullname'] = user.fullname;
     request.fields['username'] = user.username;
