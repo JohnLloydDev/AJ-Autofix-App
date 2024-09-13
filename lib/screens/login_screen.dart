@@ -1,8 +1,8 @@
-import 'package:aj_autofix/bloc/auth_bloc.dart';
-import 'package:aj_autofix/bloc/auth_event.dart';
-import 'package:aj_autofix/bloc/auth_state.dart';
+import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
+import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
-import 'package:aj_autofix/screens/dashboard.dart';
+import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
 import 'package:aj_autofix/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Dashboard()));
+                          builder: (context) => const AdminPanelScreen()));
                 }
               } else if (state is AuthFailed) {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -6,12 +6,12 @@ import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepositoryImpl implements AuthRepository {
-  //static const String baseUrl = "http://10.0.2.2:3000/api/auth/login";
+  static const String baseUrl = "https://aj-auto-fix-api.vercel.app/api";
 
   @override
   Future<User> userLogin(User user) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/api/auth/login'),
+      Uri.parse('$baseUrl/auth/login'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({'email': user.email, 'password': user.password}),
     );
@@ -34,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> userRegistration(User user, File? profilePicture) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:3000/api/auth/registration'));
+        http.MultipartRequest('POST', Uri.parse('$baseUrl/api/auth/registration'));
 
     request.fields['fullname'] = user.fullname;
     request.fields['username'] = user.username;
@@ -58,4 +58,5 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception('Failed to register: ${response.reasonPhrase}');
     }
   }
+
 }

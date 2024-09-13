@@ -1,5 +1,5 @@
-import 'package:aj_autofix/bloc/auth_event.dart';
-import 'package:aj_autofix/bloc/auth_state.dart';
+import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:bloc/bloc.dart';

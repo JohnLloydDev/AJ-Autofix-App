@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:aj_autofix/bloc/auth_bloc.dart';
-import 'package:aj_autofix/bloc/auth_event.dart';
-import 'package:aj_autofix/bloc/auth_state.dart';
+import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
+import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:flutter/material.dart';
