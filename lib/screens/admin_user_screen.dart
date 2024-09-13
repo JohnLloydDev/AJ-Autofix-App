@@ -172,7 +172,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     backgroundColor:
-                                        Colors.blue[700], // Text color
+                                        Colors.blue[700], 
                                     elevation: 2,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),

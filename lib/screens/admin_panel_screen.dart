@@ -1,3 +1,4 @@
+import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,9 @@ class AdminPanelScreen extends StatefulWidget {
 
 class _AdminPanelScreenState extends State<AdminPanelScreen> {
   int _selectedIndex = 0;
+  int totalApproved = 0;
+  int totalPending = 0;
+  int totalRejected = 0;
 
   @override
   void initState() {
@@ -28,10 +32,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AdminPanelScreen()),
-        );
         break;
       case 1:
         Navigator.pushReplacement(
@@ -39,6 +39,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           MaterialPageRoute(builder: (context) => const AdminUsersScreen()),
         );
       case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminServicesScreen()),
+        );
         break;
     }
   }
@@ -54,21 +58,47 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              shrinkWrap: true,
-              children: [
-                _buildDashboardItem(
-                    'Total Users', '12', Colors.purple, Icons.people),
-                _buildDashboardItem(
-                    'Requests', '30', Colors.red, Icons.request_page),
-                _buildDashboardItem(
-                    'Pending', '25', Colors.orange, Icons.thumb_up),
-                _buildDashboardItem(
-                    'Complete', '22', Colors.green, Icons.done_all),
-              ],
+            BlocBuilder<BookingBloc, BookingState>(
+              builder: (context, state) {
+                if (state is BookingLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is RequestError) {
+                  return Center(child: Text(state.error));
+                } else if (state is BookingLoaded) {
+                  final bookings = state.bookings;
+                  totalPending = bookings
+                      .where((booking) =>
+                          booking.status.toLowerCase() == 'pending')
+                      .length;
+                  totalApproved = bookings
+                      .where((booking) =>
+                          booking.status.toLowerCase() == 'approved')
+                      .length;
+                  totalRejected = bookings
+                      .where((booking) =>
+                          booking.status.toLowerCase() == 'rejected')
+                      .length;
+                      
+                  return GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    shrinkWrap: true,
+                    children: [
+                      _buildDashboardItem(
+                          'Total\nUsers', '15', Colors.purple, Icons.people),
+                      _buildDashboardItem('Total\nRejected', '$totalRejected',
+                          Colors.red, Icons.request_page),
+                      _buildDashboardItem('Total\nPending', '$totalPending',
+                          Colors.orange, Icons.thumb_up),
+                      _buildDashboardItem('Total\nApproved', '$totalApproved',
+                          Colors.green, Icons.done_all),
+                    ],
+                  );
+                } else {
+                  return const Center(child: Text('No data available'));
+                }
+              },
             ),
             const SizedBox(height: 20),
             const Align(
@@ -77,7 +107,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                 "Recent Activity",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20, 
+                  fontSize: 20,
                 ),
               ),
             ),
@@ -95,16 +125,31 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       itemBuilder: (context, index) {
                         final reverseIndex = bookings.length - 1 - index;
                         final booking = bookings[reverseIndex];
-                        return ListTile(
-                          title: Text(
-                            booking.user?.fullname ?? 'Unknown',
-                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _statusBadge(booking.status),
-                            ],
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]),
+                          child: ListTile(
+                            title: Text(
+                              booking.user?.fullname ?? 'Unknown',
+                              style: const TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _statusBadge(booking.status),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -176,7 +221,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -187,7 +232,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: color,
                   ),
@@ -210,13 +255,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             Text(
               count,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: color,
               ),
-            ),
-            const SizedBox(
-              height: 5,
             ),
             Divider(
               thickness: 1.5,
@@ -225,11 +267,14 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             const SizedBox(
               height: 5,
             ),
-            Text(
-              '$title: $count',
-              style: TextStyle(
-                fontSize: 14,
-                color: color.withOpacity(0.8),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                '$title: $count',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: color.withOpacity(0.8),
+                ),
               ),
             ),
           ],

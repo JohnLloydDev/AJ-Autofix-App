@@ -1,4 +1,3 @@
-
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
@@ -39,7 +38,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
     final query = _searchController.text.toLowerCase();
     final bookingBloc = context.read<BookingBloc>();
 
-    if (bookingBloc.state is BookingPendingLoaded ) {
+    if (bookingBloc.state is BookingPendingLoaded) {
       final bookings =
           (bookingBloc.state as BookingPendingLoaded).pendingBookings;
       setState(() {
@@ -71,6 +70,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
           context,
           MaterialPageRoute(builder: (context) => const AdminUsersScreen()),
         );
+        break; 
       case 2:
         break;
     }
