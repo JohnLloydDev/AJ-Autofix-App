@@ -40,23 +40,41 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
 
-  // Track selected categories
   final Set<String> _selectedCategories = {};
 
-  // Track selected services
   final Set<int> _selectedServices = {};
 
   List<Map<String, String>> services = [
-    {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
-    {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
-    {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
-    {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
-    {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
-    {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
-    {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
-    {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
-    {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'window'},
-  ];
+  // Window
+  {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
+  {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
+  {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
+  {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
+  // Door
+  {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
+  {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
+  {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
+  {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
+  // Engine category
+  {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
+  {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
+  {'name': 'Spark Plug Replacement', 'price': 'PHP 800', 'category': 'engine'},
+  {'name': 'Air Filter Replacement', 'price': 'PHP 600', 'category': 'engine'},
+  {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
+  {'name': 'Timing Belt Replacement', 'price': 'PHP 4,500', 'category': 'engine'},
+  // Wheel category
+  {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
+  {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
+  {'name': 'Brake Pad Replacement', 'price': 'PHP 1,800', 'category': 'wheel'},
+  {'name': 'Brake Fluid Replacement', 'price': 'PHP 600', 'category': 'wheel'},
+  // Electrical category
+  {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
+  {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
+  {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
+  {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
+  {'name': 'Headlight Bulb Replacement', 'price': 'PHP 500', 'category': 'electrical'},
+  {'name': 'Power Window Switch Repair', 'price': 'PHP 1,000', 'category': 'electrical'}
+];
 
   List<Map<String, String>> _filteredServices = [];
 
@@ -92,41 +110,36 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     switch (index) {
-      case 1: // Booking tab
+      case 1: 
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Booking()),
         );
         break;
-      case 2: // Map tab
+      case 2: 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const ShopMap()),
         );
         break;
       default:
-        // Home tab or other tabs
         break;
     }
   }
 
-  // Handle category button press
   void _onCategorySelected(String category) {
-  setState(() {
-    // If 'All' is selected, clear all categories
-    if (category == 'all') {
-      _selectedCategories.clear();
-    } else {
-      // If a specific category is selected, set it and clear 'All'
-      _selectedCategories.clear();
-      _selectedCategories.add(category);
-    }
+    setState(() {
+      if (category == 'all') {
+        _selectedCategories.clear();
+      } else {
+        _selectedCategories.clear();
+        _selectedCategories.add(category);
+      }
 
-    _filterServices(); // Refresh the service list based on the selected category
-  });
-}
+      _filterServices();
+    });
+  }
 
-  // Toggle service selection
   void _toggleServiceSelection(int index) {
     setState(() {
       if (_selectedServices.contains(index)) {
@@ -146,9 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Image.asset(
-              'assets/a&j_logo_home.png', // Update with your image path
-              height: 40, // Adjust height as needed
-              fit: BoxFit.contain, // Ensure the image scales properly
+              'assets/a&j_logo_home.png', 
+              height: 40, 
+              fit: BoxFit.contain, 
             ),
           ],
         ),
@@ -166,10 +179,10 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             const SizedBox(
-              height: 100, // Adjusting the height
+              height: 100, 
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Color(0xFF9FA8DA), // Light blue color for header
+                  color: Color(0xFF9FA8DA), 
                 ),
                 child: Center(
                   child: Text(
@@ -244,14 +257,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image above the search bar
             Container(
-              width: double.infinity, // Stretch the container to the full width of its parent
-              height: 100, // Set the height for the container
+              width: double
+                  .infinity, 
+              height: 100, 
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0), // Adjust the radius as needed
+                borderRadius:
+                    BorderRadius.circular(16.0), 
                 boxShadow: [
-                  // Optional: add shadow for better appearance
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
                     blurRadius: 5.0,
@@ -260,18 +273,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0), // Ensure the radius is applied to the image
+                borderRadius: BorderRadius.circular(
+                    16.0), 
                 child: Image.asset(
                   'assets/repair.png',
                   width: double.infinity,
-                  height: double.infinity, // Make the image fill the container
-                  fit: BoxFit.cover, // Ensure the image scales properly
+                  height: double.infinity, 
+                  fit: BoxFit.cover, 
                 ),
               ),
             ),
             const SizedBox(height: 16),
 
-            // Search bar
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -284,19 +297,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Category text options
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _categoryTextButton('All'),
-                _categoryTextButton('Engine'),
-                _categoryTextButton('Window'),
-                _categoryTextButton('Door'),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _categoryTextButton('All'),
+                  _categoryTextButton('Engine'),
+                  _categoryTextButton('Window'),
+                  _categoryTextButton('Door'),
+                  _categoryTextButton('Wheel'),
+                  _categoryTextButton('Electrical'),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
 
-            // Expanded GridView
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -340,14 +355,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Create horizontal category buttons
   Widget _categoryTextButton(String category) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: TextButton(
         style: TextButton.styleFrom(
-          foregroundColor: _selectedCategories.contains(category.toLowerCase()) ? Colors.white : Colors.black,
-          backgroundColor: _selectedCategories.contains(category.toLowerCase()) ? Colors.purple : Colors.grey[300],
+          foregroundColor: _selectedCategories.contains(category.toLowerCase())
+              ? Colors.white
+              : Colors.black,
+          backgroundColor: _selectedCategories.contains(category.toLowerCase())
+              ? Colors.purple
+              : Colors.grey[300],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
@@ -377,18 +395,21 @@ class ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      color: Colors.white, // Change background color to white
+      color: Colors.white, 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center contents vertically
-          crossAxisAlignment: CrossAxisAlignment.start, // Align contents to the start (left)
+          mainAxisAlignment:
+              MainAxisAlignment.center,
+          crossAxisAlignment:
+              CrossAxisAlignment.center,
           children: [
             Text(
               serviceName,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -398,11 +419,13 @@ class ServiceCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               servicePrice,
+              textAlign: TextAlign.center, 
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            const Spacer(), // Pushes the icon button to the bottom
+            const Spacer(), 
             Align(
-              alignment: Alignment.bottomRight, // Align the icon to the bottom-right
+              alignment:
+                  Alignment.bottomRight, 
               child: IconButton(
                 onPressed: onAddPressed,
                 icon: Icon(
