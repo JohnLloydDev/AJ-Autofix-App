@@ -53,6 +53,12 @@ flutter:
   assets:
     - assets/map_placeholder.png
     - assets/default_profile.png
+    - assets/a&j_autofix_logo_splash_screen.png
+    - assets/a&j_logo_home.png
+    - assets/category_logo.png
+    - assets/repair.png
+    - assets/login_logo.png
+    
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -61,9 +63,12 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 100),
-                const Text(
-                  'Welcome',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                Container(
+                  width: screenWidth * 0.5, 
+                  child: Image.asset(
+                    'assets/login_logo.png',
+                    fit: BoxFit.contain, // Ensure the image scales properly
+                  ),
                 ),
                 const SizedBox(height: 5),
                 const Text(

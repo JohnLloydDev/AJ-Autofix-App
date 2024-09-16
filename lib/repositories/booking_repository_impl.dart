@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 
 class BookingRepositoryImpl extends BookingRepository {
-  static const String baseUrl = "https://aj-auto-fix-api.vercel.app/api";
+  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
 
   @override
   Future<List<Booking>> getAllBooking() async {

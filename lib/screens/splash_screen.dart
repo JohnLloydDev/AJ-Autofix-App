@@ -50,14 +50,12 @@ class _SplashScreenState extends State<SplashScreen>
             end: Alignment.bottomLeft,
           ),
         ),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'A & J Autofix',
-              style: TextStyle(color: Colors.white, fontSize: 35),
-            ),
-          ],
+        child: Center( // Center the image
+          child: Image.asset(
+            'assets/a&j_autofix_logo_splash_screen.png', // Path to the image
+            width: 300, // Adjust the width as needed
+            height: 300, // Adjust the height as needed
+          ),
         ),
       ),
     );

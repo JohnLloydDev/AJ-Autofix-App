@@ -8,8 +8,8 @@ import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/admin_repository.dart';
 
 class AdminRepositoryImpl extends AdminRepository {
-  static const String baseUrl = "https://aj-auto-fix-api.vercel.app/api";
-
+  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
+  
   @override
   Future<void> deleteUser(String id) async {
     final response = await http.delete(Uri.parse('$baseUrl/users/$id'));

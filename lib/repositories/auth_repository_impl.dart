@@ -6,7 +6,7 @@ import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepositoryImpl implements AuthRepository {
-  static const String baseUrl = "https://aj-auto-fix-api.vercel.app/api";
+  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
 
   @override
   Future<User> userLogin(User user) async {
