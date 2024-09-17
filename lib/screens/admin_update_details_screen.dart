@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
@@ -24,6 +26,28 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
   late TextEditingController emailController;
   late TextEditingController contactNumberController;
   String dropdownValue = 'user';
+
+  ImageProvider? _getProfileImage(String? profilePicture) {
+    if (profilePicture == null || profilePicture.isEmpty) {
+      return const AssetImage('assets/default_profile.png');
+    }
+
+    if (profilePicture.startsWith('http') ||
+        profilePicture.startsWith('https')) {
+      return NetworkImage(profilePicture);
+    }
+
+    try {
+      final file = File(profilePicture);
+      if (file.existsSync()) {
+        return FileImage(file);
+      }
+    } catch (e) {
+      debugPrint('Error loading image file: $e');
+    }
+
+    return null;
+  }
 
   @override
   void initState() {
@@ -99,6 +123,15 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                   } else if (state is UserDataLoadedById) {
                     return Column(
                       children: [
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        CircleAvatar(
+                          backgroundImage: _getProfileImage(
+                                  state.user.profilePicture) ??
+                              const AssetImage('assets/default_profile.png'),
+                          radius: 50,
+                        ),
                         const SizedBox(height: 20),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -249,6 +282,9 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                 final contactNumber =
                                     contactNumberController.text;
 
+                                final profilePicture =
+                                    state.user.profilePicture;
+
                                 final user = User(
                                   fullname: fullname,
                                   username: username,
@@ -256,6 +292,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                   contactNumber: contactNumber,
                                   password: '',
                                   role: dropdownValue,
+                                  profilePicture: profilePicture,
                                 );
 
                                 BlocProvider.of<UserBloc>(context).add(

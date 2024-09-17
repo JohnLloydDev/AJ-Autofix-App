@@ -34,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> userRegistration(User user, File? profilePicture) async {
     var request =
-        http.MultipartRequest('POST', Uri.parse('$baseUrl/api/auth/registration'));
+        http.MultipartRequest('POST', Uri.parse('$baseUrl/auth/registration'));
 
     request.fields['fullname'] = user.fullname;
     request.fields['username'] = user.username;

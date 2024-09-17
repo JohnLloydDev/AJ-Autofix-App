@@ -444,9 +444,9 @@ class ServiceCard extends StatelessWidget {
 
 extension StringCapitalize on String {
   String capitalize() {
-    if (this.isEmpty) {
+    if (isEmpty) {
       return '';
     }
-    return '${this[0].toUpperCase()}${this.substring(1)}';
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 }
