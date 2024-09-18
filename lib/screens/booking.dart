@@ -1,22 +1,131 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import the intl package
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'home.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 
 class Booking extends StatefulWidget {
   const Booking({super.key});
-
   @override
   State<Booking> createState() => _BookingState();
 }
 
 class _BookingState extends State<Booking> {
   String selectedService = 'Standard Car Service';
-  String carType = ''; // Store the type of car input
+  String carType = '';
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
-  final int _selectedIndex = 1; // Default to Booking tab
+  final int _selectedIndex = 1;
 
+  // Backend URL
+  final String baseUrl = 'http://<your-server-ip>:<port>/api/bookings';
+
+  // Future to create a booking
+  Future<void> createBooking() async {
+    final url = Uri.parse(baseUrl);
+    final body = jsonEncode({
+      'userId': '<user_id>', // Replace this with the actual user ID
+      'service': selectedService,
+      'carType': carType,
+      'date': selectedDate.toIso8601String(),
+      'time': selectedTime.format(context),
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        final booking = jsonDecode(response.body);
+        print('Booking created: $booking');
+        // Additional logic for success (e.g., show a success message)
+      } else {
+        print('Failed to create booking: ${response.body}');
+        // Handle error (e.g., show an error message)
+      }
+    } catch (error) {
+      print('Error creating booking: $error');
+      // Handle error
+    }
+  }
+
+  // Future to fetch bookings
+  Future<void> fetchBookings() async {
+    final url = Uri.parse(baseUrl);
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> bookings = jsonDecode(response.body);
+        print('Fetched bookings: $bookings');
+        // Store bookings in a state variable if needed
+      } else {
+        print('Failed to fetch bookings: ${response.body}');
+        // Handle error
+      }
+    } catch (error) {
+      print('Error fetching bookings: $error');
+      // Handle error
+    }
+  }
+
+  // Future to update a booking
+  Future<void> updateBooking(String bookingId) async {
+    final url = Uri.parse('$baseUrl/$bookingId');
+    final body = jsonEncode({
+      'service': selectedService,
+      'carType': carType,
+      'date': selectedDate.toIso8601String(),
+      'time': selectedTime.format(context),
+    });
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final booking = jsonDecode(response.body);
+        print('Booking updated: $booking');
+        // Additional logic for success
+      } else {
+        print('Failed to update booking: ${response.body}');
+        // Handle error
+      }
+    } catch (error) {
+      print('Error updating booking: $error');
+      // Handle error
+    }
+  }
+
+  // Future to delete a booking
+  Future<void> deleteBooking(String bookingId) async {
+    final url = Uri.parse('$baseUrl/$bookingId');
+
+    try {
+      final response = await http.delete(url);
+
+      if (response.statusCode == 200) {
+        print('Booking deleted successfully');
+        // Additional logic for success
+      } else {
+        print('Failed to delete booking: ${response.body}');
+        // Handle error
+      }
+    } catch (error) {
+      print('Error deleting booking: $error');
+      // Handle error
+    }
+  }
+
+  // Date picker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -31,6 +140,7 @@ class _BookingState extends State<Booking> {
     }
   }
 
+  // Time picker
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -45,15 +155,15 @@ class _BookingState extends State<Booking> {
 
   void _onItemTapped(int index) {
     switch (index) {
-      case 0: // Home tab
+      case 0:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
-      case 1: // Booking tab (Current screen)
+      case 1:
         break;
-      case 2: // Map tab
+      case 2:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const ShopMap()),
@@ -67,7 +177,7 @@ class _BookingState extends State<Booking> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Booking'),
-        backgroundColor: Colors.lightBlue, // Light blue header
+        backgroundColor: Colors.lightBlue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -104,7 +214,7 @@ class _BookingState extends State<Booking> {
               ),
               onChanged: (value) {
                 setState(() {
-                  carType = value; // Update the carType with the input value
+                  carType = value;
                 });
               },
             ),
@@ -150,13 +260,13 @@ class _BookingState extends State<Booking> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
-                // Handle booking submission
+                createBooking();
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.blue,
-                side: const BorderSide(color: Colors.blue), // White text
-                minimumSize: const Size(double.infinity, 50), // Adjust button height
+                side: const BorderSide(color: Colors.blue),
+                minimumSize: const Size(double.infinity, 50),
               ),
               child: const Text('BOOK NOW'),
             ),
