@@ -1,11 +1,9 @@
-
 import 'dart:convert';
 
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/repositories/booking_repository.dart';
 import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
-
 
 class BookingRepositoryImpl extends BookingRepository {
   static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
@@ -116,6 +114,27 @@ class BookingRepositoryImpl extends BookingRepository {
       return jsonData.map((json) => Booking.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load bookings');
+    }
+  }
+
+  @override
+  Future<void> createBooking(Booking booking) async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/bookings/bookings'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(booking.toJson()),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create booking: ${response.body}');
     }
   }
 }

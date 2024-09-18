@@ -24,7 +24,16 @@ class UserDataLoadedById extends UserState {
   const UserDataLoadedById(this.user);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [user];
+}
+
+class UserDataLoadedByAuth extends UserState {
+  final User user;
+
+  const UserDataLoadedByAuth(this.user);
+
+  @override
+  List<Object> get props => [user];
 }
 
 class UserDataSuccess extends UserState {

@@ -37,5 +37,17 @@ class UpdateUser extends UserEvent {
   List<Object> get props => [id, user];
 }
 
+class UserUpdate extends UserEvent{
+  final User user;
+
+ const UserUpdate(this.user);
+
+@override
+List<Object> get props => [user];
+}
+
+class GetUserByAuthEvent extends UserEvent {}
+
+
 class AdminReset extends UserEvent{}
 

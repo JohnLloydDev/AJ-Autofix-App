@@ -1,4 +1,3 @@
-
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
@@ -17,21 +16,19 @@ void main() {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(AuthRepositoryImpl()),
-        ), 
-        BlocProvider(
-          create: (context) =>
-              UserBloc((AdminRepositoryImpl()..add(GetUsers())),
-              ), 
         ),
-         BlocProvider(
+        BlocProvider(
+          create: (context) => UserBloc(AdminRepositoryImpl())..add(GetUsers()),
+        ),
+        BlocProvider(
           create: (context) =>
               BookingBloc(BookingRepositoryImpl())..add(GetAllPendingBooking()),
         ),
-         BlocProvider(
+        BlocProvider(
           create: (context) =>
               BookingBloc(BookingRepositoryImpl())..add(GetBooking()),
         ),
-         BlocProvider(
+        BlocProvider(
           create: (context) =>
               BookingBloc(BookingRepositoryImpl())..add(GetBooking()),
         ),
@@ -40,7 +37,6 @@ void main() {
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -53,4 +49,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

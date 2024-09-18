@@ -1,5 +1,3 @@
-
-
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/repositories/booking_repository.dart';
@@ -58,6 +56,17 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         emit(BookingPendingLoaded(pendingBookings));
       } catch (e) {
         emit(RequestError('Failed to fetch pending bookings: $e'));
+      }
+    });
+
+    on<CreateBooking>((event, emit) async {
+      emit(BookingLoading());
+
+      try {
+        await bookingRepository.createBooking(event.booking);
+        emit(const BookingSuccess(message: 'Booking created successfully!'));
+      } catch (e) {
+        emit(RequestError('Failed to create booking: $e'));
       }
     });
   }

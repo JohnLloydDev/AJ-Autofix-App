@@ -1,3 +1,4 @@
+import 'package:aj_autofix/models/booking_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class BookingEvent extends Equatable {
@@ -37,3 +38,12 @@ class RejectBooking extends BookingEvent {
 }
 
 class GetAllPendingBooking extends BookingEvent {}
+
+class CreateBooking extends BookingEvent{
+  final Booking booking;
+  
+  const CreateBooking(this.booking);
+
+  @override
+  List<Object> get props => [booking];
+}

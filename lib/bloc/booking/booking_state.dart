@@ -31,6 +31,16 @@ class BookingLoadedById extends BookingState {
   List<Object> get props => [booking];
 }
 
+class BookingSuccess extends BookingState{
+  final String message;
+
+  const BookingSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+  
+}
+
 
 class RequestError extends BookingState {
   final String error;
