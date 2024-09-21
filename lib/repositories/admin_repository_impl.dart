@@ -67,7 +67,7 @@ class AdminRepositoryImpl extends AdminRepository {
   }
 
   @override
-  Future<void> userUpdate(String id, User user) async {
+  Future<void> userUpdate(User user) async {
     final accessToken = await SecureStorage.readToken('access_token');
 
     if (accessToken == null) {
@@ -76,7 +76,7 @@ class AdminRepositoryImpl extends AdminRepository {
 
     final userJson = jsonEncode(user.toJson());
     final response = await http.put(
-      Uri.parse('$baseUrl/users/update/$id'),
+      Uri.parse('$baseUrl/update'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -99,7 +99,7 @@ class AdminRepositoryImpl extends AdminRepository {
     }
 
     final response = await http.get(
-      Uri.parse('$baseUrl/users/user/getUser'),
+      Uri.parse('$baseUrl/user/getUser'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',

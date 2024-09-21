@@ -1,8 +1,5 @@
-import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
-import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_user_screen.dart';
-import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -50,38 +47,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     }
   }
 
-  Future<void> _handleLogout(BuildContext context) async {
-  try {
-    BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
-
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    if (context.mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
-  } catch (e) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logout failed: $e')),
-      );
-    }
-  }
-}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          actions: [
-          IconButton(
-              onPressed: () {
-                _handleLogout(context);
-              },
-              icon: const Icon((Icons.logout)))
-        ],
         automaticallyImplyLeading: false,
         title: const Text('Admin Panel'),
       ),

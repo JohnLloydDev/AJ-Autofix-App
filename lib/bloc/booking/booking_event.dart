@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -41,15 +39,6 @@ class RejectBooking extends BookingEvent {
 
 class GetAllPendingBooking extends BookingEvent {}
 
-class AddService extends BookingEvent {
-  final Service service;
-  const AddService(this.service);
-
-  @override
-  List<Object> get props => [service];
-}
-
-
 class CreateBooking extends BookingEvent{
   final Booking booking;
   
@@ -58,5 +47,3 @@ class CreateBooking extends BookingEvent{
   @override
   List<Object> get props => [booking];
 }
-
-

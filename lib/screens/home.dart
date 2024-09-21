@@ -1,14 +1,11 @@
-import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
-import 'package:aj_autofix/bloc/auth/auth_event.dart';
-import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/screens/booking.dart';
 import 'package:aj_autofix/screens/contact_us.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pendingrequest.dart';
+import 'package:aj_autofix/screens/profile.dart';
 import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -112,13 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     switch (index) {
-      case 1:
+      case 1: 
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Booking()),
         );
         break;
-      case 2:
+      case 2: 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const ShopMap()),
@@ -161,9 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Image.asset(
-              'assets/a&j_logo_home.png',
-              height: 40,
-              fit: BoxFit.contain,
+              'assets/a&j_logo_home.png', 
+              height: 40, 
+              fit: BoxFit.contain, 
             ),
           ],
         ),
@@ -181,10 +178,10 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             const SizedBox(
-              height: 100,
+              height: 100, 
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Color(0xFF9FA8DA),
+                  color: Color(0xFF9FA8DA), 
                 ),
                 child: Center(
                   child: Text(
@@ -204,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(userId: '',)));
+                        builder: (context) => const ProfileScreen()));
               },
             ),
             const Divider(),
@@ -242,29 +239,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
-                onTap: () async {
-                  try {
-                    BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
-
-                    await Future.delayed(const Duration(milliseconds: 300));
-
-                    if (context.mounted) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Logout failed: $e')),
-                      );
-                    }
-                  }
-                }),
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
+              },
+            ),
           ],
         ),
       ),
@@ -274,10 +257,12 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: double.infinity,
-              height: 100,
+              width: double
+                  .infinity, 
+              height: 100, 
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0),
+                borderRadius:
+                    BorderRadius.circular(16.0), 
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -287,16 +272,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
+                borderRadius: BorderRadius.circular(
+                    16.0), 
                 child: Image.asset(
                   'assets/repair.png',
                   width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
+                  height: double.infinity, 
+                  fit: BoxFit.cover, 
                 ),
               ),
             ),
             const SizedBox(height: 16),
+
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -308,6 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -322,6 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -467,7 +456,7 @@ class ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      color: Colors.white,
+      color: Colors.white, 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -503,12 +492,13 @@ class ServiceCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               servicePrice,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.center, 
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const Spacer(), 
             Align(
-              alignment: Alignment.bottomRight,
+              alignment:
+                  Alignment.bottomRight, 
               child: IconButton(
                 onPressed: onAddPressed,
                 icon: Icon(

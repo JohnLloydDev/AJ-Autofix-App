@@ -39,12 +39,11 @@ class UpdateUser extends UserEvent {
 
 class UserUpdate extends UserEvent{
   final User user;
-  final String id;
 
-const UserUpdate(this.user, this.id);
+ const UserUpdate(this.user);
 
 @override
-List<Object> get props => [user, id];
+List<Object> get props => [user];
 }
 
 class GetUserByAuthEvent extends UserEvent {}

@@ -26,16 +26,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailed(e.toString()));
       }
     });
-
-    on<LogoutRequest>((event, emit) async {
-      try {
-        await _authRepositoryImpl.userLogout();
-        emit(const AuthSucceed('Logout Success'));
-      } catch (e) {
-        emit(AuthFailed(e.toString()));
-      }
-    });
-
     on<AuthReset>((event, emit) => emit(AuthInitial()));
   }
 }

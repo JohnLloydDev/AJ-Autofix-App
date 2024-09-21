@@ -9,13 +9,8 @@ import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize("7adf71e0-29d4-45cc-be81-e3fd7d04a32d");
-  OneSignal.Notifications.requestPermission(true);
   runApp(
     MultiBlocProvider(
       providers: [
@@ -36,10 +31,6 @@ void main() {
         BlocProvider(
           create: (context) =>
               BookingBloc(BookingRepositoryImpl())..add(GetBooking()),
-        ),
-        BlocProvider(
-          create: (context) =>
-              UserBloc(AdminRepositoryImpl())..add(GetUserByAuthEvent()),
         ),
       ],
       child: const MyApp(),
