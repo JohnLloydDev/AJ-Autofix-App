@@ -44,84 +44,39 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   final Set<String> _selectedCategories = {};
-
-  final Set<int> _selectedServices = {};
+  final Set<String> _selectedServices = {};
 
   List<Map<String, String>> services = [
-    // Window
-    {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
-    {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
-    {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
-    {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
-    // Door
-    {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
-    {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
-    {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
-    {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
-    // Engine category
-    {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
-    {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
-    {
-      'name': 'Spark Plug Replacement',
-      'price': 'PHP 800',
-      'category': 'engine'
-    },
-    {
-      'name': 'Air Filter Replacement',
-      'price': 'PHP 600',
-      'category': 'engine'
-    },
-    {
-      'name': 'Fuel Injector Cleaning',
-      'price': 'PHP 2,200',
-      'category': 'engine'
-    },
-    {
-      'name': 'Timing Belt Replacement',
-      'price': 'PHP 4,500',
-      'category': 'engine'
-    },
-    // Wheel category
-    {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
-    {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
-    {
-      'name': 'Brake Pad Replacement',
-      'price': 'PHP 1,800',
-      'category': 'wheel'
-    },
-    {
-      'name': 'Brake Fluid Replacement',
-      'price': 'PHP 600',
-      'category': 'wheel'
-    },
-    // Electrical category
-    {
-      'name': 'Alternator Repair',
-      'price': 'PHP 3,500',
-      'category': 'electrical'
-    },
-    {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
-    {
-      'name': 'Car Alarm',
-      'price': 'PHP 1,500 - 1,800',
-      'category': 'electrical'
-    },
-    {
-      'name': 'Battery Replacement',
-      'price': 'PHP 4,000',
-      'category': 'electrical'
-    },
-    {
-      'name': 'Headlight Bulb Replacement',
-      'price': 'PHP 500',
-      'category': 'electrical'
-    },
-    {
-      'name': 'Power Window Switch Repair',
-      'price': 'PHP 1,000',
-      'category': 'electrical'
-    }
-  ];
+  // Window
+  {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
+  {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
+  {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
+  {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
+  // Door
+  {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
+  {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
+  {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
+  {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
+  // Engine category
+  {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
+  {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
+  {'name': 'Spark Plug Replacement', 'price': 'PHP 800', 'category': 'engine'},
+  {'name': 'Air Filter Replacement', 'price': 'PHP 600', 'category': 'engine'},
+  {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
+  {'name': 'Timing Belt Replacement', 'price': 'PHP 4,500', 'category': 'engine'},
+  // Wheel category
+  {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
+  {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
+  {'name': 'Brake Pad Replacement', 'price': 'PHP 1,800', 'category': 'wheel'},
+  {'name': 'Brake Fluid Replacement', 'price': 'PHP 600', 'category': 'wheel'},
+  // Electrical category
+  {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
+  {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
+  {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
+  {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
+  {'name': 'Headlight Bulb Replacement', 'price': 'PHP 500', 'category': 'electrical'},
+  {'name': 'Power Window Switch Repair', 'price': 'PHP 1,000', 'category': 'electrical'}
+];
 
   List<Map<String, String>> _filteredServices = [];
 
@@ -187,12 +142,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _toggleServiceSelection(int index) {
+  void _toggleServiceSelection(String serviceName) {
     setState(() {
-      if (_selectedServices.contains(index)) {
-        _selectedServices.remove(index);
+      if (_selectedServices.contains(serviceName)) {
+        _selectedServices.remove(serviceName); // Deselect if already selected
       } else {
-        _selectedServices.add(index);
+        _selectedServices.add(serviceName); // Add to selected if not selected
       }
     });
   }
@@ -373,15 +328,75 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  childAspectRatio: 1,
+                  childAspectRatio: 0.9,
                 ),
                 itemCount: _filteredServices.length,
                 itemBuilder: (context, index) {
+                  final service = _filteredServices[index];
+                  final serviceName = service['name']!;
+
+                  // Determine if the service is selected based on global state
+                  final isSelected = _selectedServices.contains(serviceName);
+
+                  // Determine the image path for the service
+                  String? imagePath;
+                  if (serviceName == 'Power Window Motor') {
+                    imagePath = 'assets/motor.png';
+                  } else if (serviceName == 'Power Window Cable') {
+                    imagePath = 'assets/cable.png';
+                  } else if (serviceName == 'Powerlock 1pc') {
+                    imagePath = 'assets/power_lock_1pc.jpg';
+                  } else if (serviceName == 'Powerlock Set') {
+                    imagePath = 'assets/power_lock_set.png';
+                  } else if (serviceName == 'Door Lock') {
+                    imagePath = 'assets/door_lock.png';
+                  } else if (serviceName == 'Handle Replacement') {
+                    imagePath = 'assets/door_handle.png';
+                  } else if (serviceName == 'Door Lock Repair') {
+                    imagePath = 'assets/door_lock.png';
+                  } else if (serviceName == 'Handle Repair') {
+                    imagePath = 'assets/door_handle.png';
+                  } else if (serviceName == 'Coolant Flush') {
+                    imagePath = 'assets/coolant_flush.png';
+                  } else if (serviceName == 'Engine Oil Change') {
+                    imagePath = 'assets/change_oil.png';
+                  } else if (serviceName == 'Spark Plug') {
+                    imagePath = 'assets/spark_plug.png';
+                  } else if (serviceName == 'Air Filter') {
+                    imagePath = 'assets/air_flilter.png';
+                  } else if (serviceName == 'Fuel Injector Cleaning') {
+                    imagePath = 'assets/fuel_injector.png';
+                  } else if (serviceName == 'Timing Belt') {
+                    imagePath = 'assets/timing_belt.png';
+                  } else if (serviceName == 'Tire Replacement') {
+                    imagePath = 'assets/tire.png';
+                  } else if (serviceName == 'Wheel Alignment') {
+                    imagePath = 'assets/wheel_alignment.png';
+                  } else if (serviceName == 'Brake Pad Set') {
+                    imagePath = 'assets/brake_pads.png';
+                  } else if (serviceName == 'Brake Fluid') {
+                    imagePath = 'assets/brake_fluid.png';
+                  } else if (serviceName == 'Alternator Repair') {
+                    imagePath = 'assets/alternator.png';
+                  } else if (serviceName == 'Fuse Replacement') {
+                    imagePath = 'assets/fuse.png';
+                  } else if (serviceName == 'Car Alarm') {
+                    imagePath = 'assets/car_alarm.png';
+                  } else if (serviceName == 'Battery Replacement') {
+                    imagePath = 'assets/car_battery.png';
+                  } else if (serviceName == 'Headlight Bulb') {
+                    imagePath = 'assets/headlight_bulb.png';
+                  } else if (serviceName == 'Power Window Switch') {
+                    imagePath = 'assets/power_window_switch.png';
+                  }
+
                   return ServiceCard(
-                    serviceName: _filteredServices[index]['name']!,
-                    servicePrice: _filteredServices[index]['price']!,
-                    isSelected: _selectedServices.contains(index),
-                    onAddPressed: () => _toggleServiceSelection(index),
+                    serviceName: serviceName,
+                    servicePrice: service['price']!,
+                    imagePath: imagePath,
+                    isSelected:
+                        isSelected, // Global selection state is used here
+                    onAddPressed: () => _toggleServiceSelection(serviceName),
                   );
                 },
               ),
@@ -435,6 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class ServiceCard extends StatelessWidget {
   final String serviceName;
   final String servicePrice;
+  final String? imagePath;
   final bool isSelected;
   final VoidCallback onAddPressed;
 
@@ -442,6 +458,7 @@ class ServiceCard extends StatelessWidget {
     super.key,
     required this.serviceName,
     required this.servicePrice,
+    this.imagePath,
     required this.isSelected,
     required this.onAddPressed,
   });
@@ -457,14 +474,28 @@ class ServiceCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment:
+              MainAxisAlignment.center,
+          crossAxisAlignment:
+              CrossAxisAlignment.center,
           children: [
+            if (imagePath != null) // Display the image if imagePath is provided
+              ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(8.0), // Adjust radius as needed
+                child: Image.asset(
+                  imagePath!,
+                  height: 70, // Adjust the height as needed
+                  width: 100, // Set the width for the image
+                  fit: BoxFit.cover,
+                ),
+              ),
+            const SizedBox(height: 8),
             Text(
               serviceName,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
@@ -475,7 +506,7 @@ class ServiceCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            const Spacer(),
+            const Spacer(), 
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
@@ -483,7 +514,7 @@ class ServiceCard extends StatelessWidget {
                 icon: Icon(
                   isSelected ? Icons.check_circle : Icons.add_circle,
                   color: isSelected ? Colors.green : Colors.black,
-                  size: 30,
+                  size: 25, // Adjust the icon size as needed
                 ),
               ),
             ),
