@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
@@ -11,7 +10,6 @@ import 'package:aj_autofix/screens/admin_update_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class AdminUsersScreen extends StatefulWidget {
   const AdminUsersScreen({super.key});
@@ -171,8 +169,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                   icon: const Icon(Icons.edit),
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
-                                    backgroundColor:
-                                        Colors.blue[700], 
+                                    backgroundColor: Colors.blue[700],
                                     elevation: 2,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -232,26 +229,26 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   }
 
   ImageProvider _getProfileImage(String? profilePicture) {
-  if (profilePicture == null || profilePicture.isEmpty) {
-    return const AssetImage('assets/default_profile.png') as ImageProvider;
-  }
-
-  if (profilePicture.startsWith('http') || profilePicture.startsWith('https')) {
-    return NetworkImage(profilePicture);
-  }
-
-  try {
-    final file = File(profilePicture);
-    if (file.existsSync()) {
-      return FileImage(file);
-    } else {
+    if (profilePicture == null || profilePicture.isEmpty) {
       return const AssetImage('assets/default_profile.png') as ImageProvider;
     }
-  } catch (e) {
-    return const AssetImage('assets/default_profile.png') as ImageProvider;
-  }
-}
 
+    if (profilePicture.startsWith('http') ||
+        profilePicture.startsWith('https')) {
+      return NetworkImage(profilePicture);
+    }
+
+    try {
+      final file = File(profilePicture);
+      if (file.existsSync()) {
+        return FileImage(file);
+      } else {
+        return const AssetImage('assets/default_profile.png') as ImageProvider;
+      }
+    } catch (e) {
+      return const AssetImage('assets/default_profile.png') as ImageProvider;
+    }
+  }
 
   void showDeleteDialog(BuildContext context, String userId) {
     showDialog(

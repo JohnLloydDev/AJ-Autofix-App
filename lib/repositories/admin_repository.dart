@@ -5,7 +5,7 @@ abstract class AdminRepository {
   Future<User> getUsers(String id);
   Future<void> updateUser(String id, User user);
   Future<void> deleteUser(String id);
-  Future<void> userUpdate(User user);
+  Future<void> userUpdate(String id, User user);
   Future<User> getUserByAuth();
 
 }

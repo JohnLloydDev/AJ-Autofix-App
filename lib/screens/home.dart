@@ -1,11 +1,14 @@
+import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
+import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/screens/booking.dart';
 import 'package:aj_autofix/screens/contact_us.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pendingrequest.dart';
-import 'package:aj_autofix/screens/profile.dart';
 import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -45,36 +48,80 @@ class _HomeScreenState extends State<HomeScreen> {
   final Set<int> _selectedServices = {};
 
   List<Map<String, String>> services = [
-  // Window
-  {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
-  {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
-  {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
-  {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
-  // Door
-  {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
-  {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
-  {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
-  {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
-  // Engine category
-  {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
-  {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
-  {'name': 'Spark Plug Replacement', 'price': 'PHP 800', 'category': 'engine'},
-  {'name': 'Air Filter Replacement', 'price': 'PHP 600', 'category': 'engine'},
-  {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
-  {'name': 'Timing Belt Replacement', 'price': 'PHP 4,500', 'category': 'engine'},
-  // Wheel category
-  {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
-  {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
-  {'name': 'Brake Pad Replacement', 'price': 'PHP 1,800', 'category': 'wheel'},
-  {'name': 'Brake Fluid Replacement', 'price': 'PHP 600', 'category': 'wheel'},
-  // Electrical category
-  {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
-  {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
-  {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
-  {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
-  {'name': 'Headlight Bulb Replacement', 'price': 'PHP 500', 'category': 'electrical'},
-  {'name': 'Power Window Switch Repair', 'price': 'PHP 1,000', 'category': 'electrical'}
-];
+    // Window
+    {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
+    {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
+    {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
+    {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
+    // Door
+    {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
+    {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
+    {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
+    {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
+    // Engine category
+    {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
+    {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
+    {
+      'name': 'Spark Plug Replacement',
+      'price': 'PHP 800',
+      'category': 'engine'
+    },
+    {
+      'name': 'Air Filter Replacement',
+      'price': 'PHP 600',
+      'category': 'engine'
+    },
+    {
+      'name': 'Fuel Injector Cleaning',
+      'price': 'PHP 2,200',
+      'category': 'engine'
+    },
+    {
+      'name': 'Timing Belt Replacement',
+      'price': 'PHP 4,500',
+      'category': 'engine'
+    },
+    // Wheel category
+    {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
+    {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
+    {
+      'name': 'Brake Pad Replacement',
+      'price': 'PHP 1,800',
+      'category': 'wheel'
+    },
+    {
+      'name': 'Brake Fluid Replacement',
+      'price': 'PHP 600',
+      'category': 'wheel'
+    },
+    // Electrical category
+    {
+      'name': 'Alternator Repair',
+      'price': 'PHP 3,500',
+      'category': 'electrical'
+    },
+    {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
+    {
+      'name': 'Car Alarm',
+      'price': 'PHP 1,500 - 1,800',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Battery Replacement',
+      'price': 'PHP 4,000',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Headlight Bulb Replacement',
+      'price': 'PHP 500',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Power Window Switch Repair',
+      'price': 'PHP 1,000',
+      'category': 'electrical'
+    }
+  ];
 
   List<Map<String, String>> _filteredServices = [];
 
@@ -110,13 +157,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     switch (index) {
-      case 1: 
+      case 1:
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Booking()),
         );
         break;
-      case 2: 
+      case 2:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const ShopMap()),
@@ -159,9 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Image.asset(
-              'assets/a&j_logo_home.png', 
-              height: 40, 
-              fit: BoxFit.contain, 
+              'assets/a&j_logo_home.png',
+              height: 40,
+              fit: BoxFit.contain,
             ),
           ],
         ),
@@ -179,10 +226,10 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             const SizedBox(
-              height: 100, 
+              height: 100,
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Color(0xFF9FA8DA), 
+                  color: Color(0xFF9FA8DA),
                 ),
                 child: Center(
                   child: Text(
@@ -202,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ProfileScreen()));
+                        builder: (context) => const ProfileScreen(userId: '',)));
               },
             ),
             const Divider(),
@@ -240,15 +287,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-              },
-            ),
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
+                onTap: () async {
+                  try {
+                    BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
+
+                    await Future.delayed(const Duration(milliseconds: 300));
+
+                    if (context.mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Logout failed: $e')),
+                      );
+                    }
+                  }
+                }),
           ],
         ),
       ),
@@ -258,12 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: double
-                  .infinity, 
-              height: 100, 
+              width: double.infinity,
+              height: 100,
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(16.0), 
+                borderRadius: BorderRadius.circular(16.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -273,18 +332,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    16.0), 
+                borderRadius: BorderRadius.circular(16.0),
                 child: Image.asset(
                   'assets/repair.png',
                   width: double.infinity,
-                  height: double.infinity, 
-                  fit: BoxFit.cover, 
+                  height: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
             const SizedBox(height: 16),
-
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -296,7 +353,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -311,7 +367,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -395,17 +450,15 @@ class ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      color: Colors.white, 
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center,
-          crossAxisAlignment:
-              CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               serviceName,
@@ -419,13 +472,12 @@ class ServiceCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               servicePrice,
-              textAlign: TextAlign.center, 
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            const Spacer(), 
+            const Spacer(),
             Align(
-              alignment:
-                  Alignment.bottomRight, 
+              alignment: Alignment.bottomRight,
               child: IconButton(
                 onPressed: onAddPressed,
                 icon: Icon(
