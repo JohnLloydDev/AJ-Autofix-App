@@ -59,6 +59,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       }
     });
 
+     on<AddService>((event, emit) {
+    });
+
+
     on<CreateBooking>((event, emit) async {
       emit(BookingLoading());
 
@@ -69,5 +73,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         emit(RequestError('Failed to create booking: $e'));
       }
     });
+
+    
   }
 }

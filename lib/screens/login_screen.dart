@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
                 if (state.role == 'user') {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Home()));
+                      MaterialPageRoute(builder: (context) => const HomeScreen()));
                 } else if (state.role == 'admin' ||
                     state.role == 'service manager') {
                   Navigator.push(

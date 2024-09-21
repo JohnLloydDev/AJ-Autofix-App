@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -58,4 +60,14 @@ class BookingPendingLoaded extends BookingState {
 
   @override
   List<Object> get props => [pendingBookings];
+}
+
+class ServiceSelectionState extends BookingState {
+  final List<Service> selectedServices;
+
+  const ServiceSelectionState(this.selectedServices);
+
+  @override
+    List<Object> get props => [selectedServices];
+
 }

@@ -59,4 +59,33 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<void> userLogout() async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/logout'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to log out: ${response.reasonPhrase}');
+    }
+
+    await SecureStorage.deleteToken('access_token');
+  }
+  
+  // @override
+  // Future<void> setUserExternalId(String userId) async {
+  //   try{
+  //     //await OneSignal.shared.setUserExternalId(userId);
+
+  //   } catch (e) {
+
+  //   }
+  //   throw UnimplementedError();
+  // }
 }

@@ -28,6 +28,8 @@ class AuthFailed extends AuthState {
   List<Object> get props => [error];
 }
 
+class AuthLoggedOut extends AuthState {}
+
 class AuthSuccessWithRole extends AuthState {
   final String role;
 
