@@ -12,28 +12,29 @@ class ShopMap extends StatefulWidget {
 
 class ShopMapState extends State<ShopMap> {
   int _selectedIndex = 2;
-
-  final LatLng shopLocation = const LatLng(13.794185, 122.473262);
-
-  // Google Maps controller
+  final LatLng shopLocation = const LatLng(16.0884245, 120.3917141); // Shop location
   GoogleMapController? _mapController;
-
-  // Marker to be displayed at the shop location
   final Set<Marker> _markers = {};
 
   @override
   void initState() {
     super.initState();
-    _markers.add(
-      Marker(
-        markerId: const MarkerId('shopLocation'),
-        position: shopLocation,
-        infoWindow: const InfoWindow(
-          title: 'E & J Autofix',
-          snippet: 'Your trusted car shop',
-        ),
-      ),
-    );
+    
+    // Adding a delay to ensure map initialization
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('shopLocation'),
+            position: shopLocation,
+            infoWindow: const InfoWindow(
+              title: 'A & J Autofix',
+              snippet: 'Your trusted car shop',
+            ),
+          ),
+        );
+      });
+    });
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -44,7 +45,6 @@ class ShopMapState extends State<ShopMap> {
     setState(() {
       _selectedIndex = index;
     });
-
     switch (index) {
       case 0:
         Navigator.pushReplacement(
@@ -53,13 +53,18 @@ class ShopMapState extends State<ShopMap> {
         );
         break;
       case 1:
+        List<String> selectedServices = ['Oil Change', 'Tire Rotation'];
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Booking()),
+          MaterialPageRoute(
+            builder: (context) => BookingScreen(
+              selectedServices: selectedServices,
+            ),
+          ),
         );
         break;
       case 2:
-        break;
+        break; // Stay on the current page
       default:
         break;
     }
@@ -71,25 +76,15 @@ class ShopMapState extends State<ShopMap> {
       appBar: AppBar(
         title: const Text('Shop Location'),
         backgroundColor: Colors.lightBlue,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.directions),
-            onPressed: () {
-              // Optionally add functionality for directions here
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Directions Button Pressed')),
-              );
-            },
-          ),
-        ],
       ),
       body: GoogleMap(
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(
           target: shopLocation,
-          zoom: 15, // Set zoom level
+          zoom: 15,
         ),
-        markers: _markers, // Display marker at shop location
+        markers: _markers,
+        mapType: MapType.normal, // You can try MapType.hybrid for better results
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

@@ -36,11 +36,16 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.6
   flutter_secure_storage: ^9.2.2
-  google_maps_flutter: ^2.2.0
   http: ^1.2.2
   image_picker: ^1.1.2
   intl: ^0.18.0
   timelines: ^0.1.0
+  fluttertoast: ^8.0.9
+
+  dio: ^4.0.0
+  flutter_polyline_points: ^2.1.0
+  google_maps_flutter: ^2.2.0
+  
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -59,6 +64,28 @@ flutter:
     - assets/category_logo.png
     - assets/repair.png
     - assets/login_logo.png
+    - assets/cable.png
+    - assets/motor.png
+    - assets/power_lock_1pc.jpg
+    - assets/power_lock_set.png
+    - assets/door_lock.png
+    - assets/door_handle.png
+    - assets/coolant_flush.png
+    - assets/change_oil.png
+    - assets/spark_plug.png
+    - assets/air_flilter.png
+    - assets/fuel_injector.png
+    - assets/timing_belt.png
+    - assets/tire.png
+    - assets/wheel_alignment.png
+    - assets/brake_pads.png
+    - assets/brake_fluid.png
+    - assets/alternator.png
+    - assets/fuse.png
+    - assets/car_alarm.png
+    - assets/car_battery.png
+    - assets/headlight_bulb.png
+    - assets/power_window_switch.png
     
 
   # The following line ensures that the Material Icons font is

@@ -9,6 +9,7 @@ import 'package:aj_autofix/screens/pendingrequest.dart';
 import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -53,29 +54,29 @@ class _HomeScreenState extends State<HomeScreen> {
   {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
   {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
   // Door
-  {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
+  {'name': 'Door Lock', 'price': 'PHP 550', 'category': 'door'},
   {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
   {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
   {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
   // Engine category
   {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
   {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
-  {'name': 'Spark Plug Replacement', 'price': 'PHP 800', 'category': 'engine'},
-  {'name': 'Air Filter Replacement', 'price': 'PHP 600', 'category': 'engine'},
+  {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
+  {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
   {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
-  {'name': 'Timing Belt Replacement', 'price': 'PHP 4,500', 'category': 'engine'},
+  {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
   // Wheel category
   {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
   {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
-  {'name': 'Brake Pad Replacement', 'price': 'PHP 1,800', 'category': 'wheel'},
-  {'name': 'Brake Fluid Replacement', 'price': 'PHP 600', 'category': 'wheel'},
+  {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
+  {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
   // Electrical category
   {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
   {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
   {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
   {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
-  {'name': 'Headlight Bulb Replacement', 'price': 'PHP 500', 'category': 'electrical'},
-  {'name': 'Power Window Switch Repair', 'price': 'PHP 1,000', 'category': 'electrical'}
+  {'name': 'Headlight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
+  {'name': 'Power Window Switch', 'price': 'PHP 1,000', 'category': 'electrical'}
 ];
 
   List<Map<String, String>> _filteredServices = [];
@@ -115,7 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Booking()),
+          MaterialPageRoute(
+            builder: (context) => BookingScreen(selectedServices:_selectedServices.toList()), // Pass selectedServices here
+          ),
         );
         break;
       case 2:
@@ -510,7 +513,20 @@ class ServiceCard extends StatelessWidget {
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
-                onPressed: onAddPressed,
+                onPressed: () {
+                  onAddPressed();
+                  Fluttertoast.showToast(
+                    msg: isSelected
+                        ? "Service removed from booking"
+                        : "Service added to booking",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.black,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                },
                 icon: Icon(
                   isSelected ? Icons.check_circle : Icons.add_circle,
                   color: isSelected ? Colors.green : Colors.black,
