@@ -12,7 +12,7 @@ class ShopMap extends StatefulWidget {
 
 class ShopMapState extends State<ShopMap> {
   int _selectedIndex = 2;
-  final LatLng shopLocation = const LatLng(16.0884245, 120.3917141); 
+  final LatLng shopLocation = const LatLng(16.0885986,120.3918851); 
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
 
