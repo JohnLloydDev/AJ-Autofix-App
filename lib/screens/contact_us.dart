@@ -1,4 +1,9 @@
+import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
+import 'package:aj_autofix/bloc/contact/contact_event.dart';
+import 'package:aj_autofix/bloc/contact/contact_state.dart';
+import 'package:aj_autofix/repositories/contact_repository_impl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
@@ -10,7 +15,8 @@ class ContactUsScreen extends StatefulWidget {
 class _ContactUsScreenState extends State<ContactUsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(resizeToAvoidBottomInset: false,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Contact Us'),
         leading: IconButton(
@@ -90,70 +96,113 @@ class ContactInfoContainer extends StatelessWidget {
   }
 }
 
-
-class ContactFormContainer extends StatelessWidget {
+class ContactFormContainer extends StatefulWidget {
   const ContactFormContainer({super.key});
 
   @override
+  State<ContactFormContainer> createState() => _ContactFormContainerState();
+}
+
+class _ContactFormContainerState extends State<ContactFormContainer> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+    return BlocProvider(
+      create: (context) => ContactBloc(ContactRepository()), // Make sure to import ContactBloc and ContactRepository
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade300),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
             ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+          ],
+        ),
+        child: BlocListener<ContactBloc, ContactState>(
+          listener: (context, state) {
+            if (state is ContactSentSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Message sent successfully')),
+              );
+              nameController.clear();
+              emailController.clear();
+              messageController.clear();
+            } else if (state is ContactSentFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+          child: Column(
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: 'Message',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: 16),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              // Handle send message
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: 16),
+              TextField(
+                controller: messageController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: 'Message',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
               ),
-            ),
-            child: const Text('Send Message'),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  // Dispatch the event to send the email
+                  context.read<ContactBloc>().add(SendContactEmailEvent(
+                    name: nameController.text,
+                    email: emailController.text,
+                    message: messageController.text,
+                  ));
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Send Message'),
+              ),
+              BlocBuilder<ContactBloc, ContactState>(
+                builder: (context, state) {
+                  if (state is ContactSending) {
+                    return const CircularProgressIndicator();
+                  }
+                  return Container();
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
