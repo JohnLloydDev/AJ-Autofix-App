@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ProfileUpdateScreen(userId: user.id),
+                            ProfileUpdateScreen(userId: user.id!),
                       ),
                     );
                   },

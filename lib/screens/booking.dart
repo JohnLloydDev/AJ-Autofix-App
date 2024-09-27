@@ -1,5 +1,3 @@
-import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
-import 'package:aj_autofix/bloc/auth/auth_state.dart'; 
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
@@ -7,48 +5,19 @@ import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'home.dart';
 import 'shopmap.dart';
+import 'package:intl/intl.dart';
 
-class BookingScreen extends StatefulWidget {
-  final List<String> selectedServices;
+class BookingScreen extends StatelessWidget {
+  final User? currentUser; // Optional parameter
+  final List<String> selectedServices; // Required parameter
 
   const BookingScreen({
     super.key,
+    this.currentUser,
     required this.selectedServices,
   });
-
-  @override
-  BookingScreenState createState() => BookingScreenState();
-}
-
-class BookingScreenState extends State<BookingScreen> {
-  String carType = '';
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
-  late TextEditingController serviceController;
-
-  User? user;
-
-  @override
-  void initState() {
-    super.initState();
-    serviceController =
-        TextEditingController(text: widget.selectedServices.join(', '));
-  }
-
-  @override
-  void dispose() {
-    serviceController.dispose();
-    super.dispose();
-  }
-
-  String formatTimeOfDay(TimeOfDay timeOfDay) {
-    final now = DateTime.now();
-    final parsedTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
-    return '${parsedTime.hour}:${parsedTime.minute.toString().padLeft(2, '0')}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,18 +45,15 @@ class BookingScreenState extends State<BookingScreen> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final authState = context.watch<AuthBloc>().state;
-
-            if (authState is AuthSuccessWithRole) {
-              user = authState.user;
-            }
-
-            if (user == null) {
-              return const Center(child: Text("User not logged in"));
-            }
+            String carType = '';
+            DateTime selectedDate = DateTime.now();
+            TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
+            final TextEditingController serviceController =
+                TextEditingController(text: selectedServices.join(', '));
 
             return Column(
               children: [
+                // Read-only field for selected services
                 TextFormField(
                   controller: serviceController,
                   decoration: const InputDecoration(
@@ -105,9 +71,7 @@ class BookingScreenState extends State<BookingScreen> {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    setState(() {
-                      carType = value;
-                    });
+                    carType = value;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -119,10 +83,8 @@ class BookingScreenState extends State<BookingScreen> {
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2101),
                     );
-                    if (picked != null) {
-                      setState(() {
-                        selectedDate = picked;
-                      });
+                    if (picked != null && picked != selectedDate) {
+                      selectedDate = picked;
                     }
                   },
                   child: InputDecorator(
@@ -148,10 +110,8 @@ class BookingScreenState extends State<BookingScreen> {
                       context: context,
                       initialTime: selectedTime,
                     );
-                    if (picked != null) {
-                      setState(() {
-                        selectedTime = picked;
-                      });
+                    if (picked != null && picked != selectedTime) {
+                      selectedTime = picked;
                     }
                   },
                   child: InputDecorator(
@@ -173,7 +133,16 @@ class BookingScreenState extends State<BookingScreen> {
                 const SizedBox(height: 16),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () {
+                    if (currentUser == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Error.'),
+                        ),
+                      );
+                      return;
+                    }
+
                     if (carType.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -183,17 +152,13 @@ class BookingScreenState extends State<BookingScreen> {
                       return;
                     }
 
-                    if (user == null || user!.id.isEmpty) {
-                      return;
-                    }
-
                     final booking = Booking(
-                      userId: user!.id,
-                      serviceType: widget.selectedServices,
+                      user: currentUser,
+                      serviceType: selectedServices,
                       vehicleType: carType,
-                      time: formatTimeOfDay(selectedTime),
                       date: selectedDate,
-                      status: 'Pending',
+                      time: selectedTime.format(context),
+                      status: 'pending',
                     );
 
                     context.read<BookingBloc>().add(CreateBooking(booking));
@@ -236,7 +201,7 @@ class BookingScreenState extends State<BookingScreen> {
               );
               break;
             case 1:
-              break;
+              break; // Stay on the current page
             case 2:
               Navigator.pushReplacement(
                 context,

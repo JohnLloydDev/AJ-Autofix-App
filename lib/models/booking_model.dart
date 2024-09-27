@@ -1,9 +1,8 @@
+import 'package:aj_autofix/models/user_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:aj_autofix/models/user_model.dart'; 
 
 class Booking extends Equatable {
   final String? id;
-  final String? userId;
   final User? user;
   final List<String> serviceType;
   final String vehicleType;
@@ -13,8 +12,7 @@ class Booking extends Equatable {
 
   const Booking({
     this.id,
-    this.userId, 
-    this.user, 
+    this.user,
     required this.serviceType,
     required this.vehicleType,
     required this.time,
@@ -24,22 +22,21 @@ class Booking extends Equatable {
 
   factory Booking.fromJson(Map<String, dynamic> json) {
     return Booking(
-      id: json['id'] as String?,
-      userId: json['userId'] is String ? json['userId'] : json['userId']?['id'] as String?, 
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      id: json['_id'],
+      user: json['userId'] != null ? User.fromJson(json['userId']) : null,
       serviceType: List<String>.from(json['serviceType'] ?? []),
       vehicleType: json['vehicleType'] ?? '',
       time: json['time'] ?? '',
-      date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
+      date:
+          json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
       status: json['status'] ?? 'pending',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'userId': userId, 
-      'user': user?.toJson(), 
+      '_id': id,
+      'userId': user?.toJson(),
       'serviceType': serviceType,
       'vehicleType': vehicleType,
       'time': time,
@@ -49,7 +46,6 @@ class Booking extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, userId, user, serviceType, vehicleType, time, date, status];
+  List<Object?> get props =>
+      [id, user, serviceType, vehicleType, time, date, status];
 }
-
-

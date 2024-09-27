@@ -84,13 +84,9 @@ class AdminRepositoryImpl extends AdminRepository {
       body: userJson,
     );
 
-    if (response.statusCode == 403) {
-      final responseBody = response.body;
+    if (response.statusCode != 200) {
       throw Exception(
-          'Forbidden: Failed to update user. Status code: ${response.statusCode}. Response: $responseBody');
-    } else if (response.statusCode != 200) {
-      throw Exception(
-          'Failed to update user. Status code: ${response.statusCode}. Response: ${response.body}');
+          'Failed to update user. Status code: ${response.statusCode}');
     }
   }
 

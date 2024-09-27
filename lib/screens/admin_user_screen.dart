@@ -148,15 +148,24 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                 margin: const EdgeInsets.only(right: 8.0),
                                 child: IconButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AdminUpdateDetailsScreen(
-                                                id: user.id),
-                                      ),
-                                    );
-                                                                    },
+                                    if (user.id != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AdminUpdateDetailsScreen(
+                                                  id: user.id!),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text('User ID is missing!')),
+                                      );
+                                    }
+                                  },
                                   icon: const Icon(Icons.edit),
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
@@ -170,7 +179,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  showDeleteDialog(context, user.id);
+                                  showDeleteDialog(context, user.id!);
                                 },
                                 icon: const Icon(Icons.delete),
                                 style: ElevatedButton.styleFrom(

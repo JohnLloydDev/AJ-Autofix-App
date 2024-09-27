@@ -118,7 +118,7 @@ class BookingRepositoryImpl extends BookingRepository {
   }
 
   @override
-  Future<Booking> createBooking(String id, Booking booking) async {
+  Future<void> createBooking(Booking booking) async {
     final accessToken = await SecureStorage.readToken('access_token');
 
     if (accessToken == null) {
@@ -126,20 +126,15 @@ class BookingRepositoryImpl extends BookingRepository {
     }
 
     final response = await http.post(
-      Uri.parse('$baseUrl/bookings/bookings/'),
+      Uri.parse('$baseUrl/bookings/bookings'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
       },
-      body: jsonEncode(booking.toJson()), 
+      body: jsonEncode(booking.toJson()),
     );
-
-
-    if (response.statusCode == 201) {
-      return Booking.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception(
-          'Failed to create booking: ${response.statusCode} ${response.body}');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create booking: ${response.body}');
     }
   }
 }

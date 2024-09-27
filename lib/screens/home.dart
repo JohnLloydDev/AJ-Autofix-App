@@ -48,24 +48,29 @@ class _HomeScreenState extends State<HomeScreen> {
   final Set<String> _selectedServices = {};
 
   List<Map<String, String>> services = [
+  // Window
   {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
   {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
   {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
   {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
+  // Door
   {'name': 'Door Lock', 'price': 'PHP 550', 'category': 'door'},
   {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
   {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
   {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
+  // Engine category
   {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
   {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
   {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
   {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
   {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
   {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
+  // Wheel category
   {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
   {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
   {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
   {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
+  // Electrical category
   {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
   {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
   {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
@@ -112,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookingScreen(selectedServices:_selectedServices.toList()), 
+            builder: (context) => BookingScreen(selectedServices:_selectedServices.toList()), // Pass selectedServices here
           ),
         );
         break;
@@ -143,9 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleServiceSelection(String serviceName) {
     setState(() {
       if (_selectedServices.contains(serviceName)) {
-        _selectedServices.remove(serviceName); 
+        _selectedServices.remove(serviceName); // Deselect if already selected
       } else {
-        _selectedServices.add(serviceName); 
+        _selectedServices.add(serviceName); // Add to selected if not selected
       }
     });
   }
@@ -333,8 +338,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   final service = _filteredServices[index];
                   final serviceName = service['name']!;
 
+                  // Determine if the service is selected based on global state
                   final isSelected = _selectedServices.contains(serviceName);
 
+                  // Determine the image path for the service
                   String? imagePath;
                   if (serviceName == 'Power Window Motor') {
                     imagePath = 'assets/motor.png';
@@ -391,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     servicePrice: service['price']!,
                     imagePath: imagePath,
                     isSelected:
-                        isSelected, 
+                        isSelected, // Global selection state is used here
                     onAddPressed: () => _toggleServiceSelection(serviceName),
                   );
                 },
@@ -475,14 +482,14 @@ class ServiceCard extends StatelessWidget {
           crossAxisAlignment:
               CrossAxisAlignment.center,
           children: [
-            if (imagePath != null) 
+            if (imagePath != null) // Display the image if imagePath is provided
               ClipRRect(
                 borderRadius:
-                    BorderRadius.circular(8.0),
+                    BorderRadius.circular(8.0), // Adjust radius as needed
                 child: Image.asset(
                   imagePath!,
-                  height: 70, 
-                  width: 100,
+                  height: 70, // Adjust the height as needed
+                  width: 100, // Set the width for the image
                   fit: BoxFit.cover,
                 ),
               ),
@@ -523,7 +530,7 @@ class ServiceCard extends StatelessWidget {
                 icon: Icon(
                   isSelected ? Icons.check_circle : Icons.add_circle,
                   color: isSelected ? Colors.green : Colors.black,
-                  size: 25, 
+                  size: 25, // Adjust the icon size as needed
                 ),
               ),
             ),

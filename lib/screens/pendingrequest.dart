@@ -19,7 +19,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white, 
+        backgroundColor: Colors.white, // Set your desired color
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

@@ -286,14 +286,13 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                     state.user.profilePicture;
 
                                 final user = User(
-                                  id: '',
                                   fullname: fullname,
                                   username: username,
                                   email: email,
                                   contactNumber: contactNumber,
                                   password: '',
                                   role: dropdownValue,
-                                  profilePicture: profilePicture, 
+                                  profilePicture: profilePicture,
                                 );
 
                                 BlocProvider.of<UserBloc>(context).add(

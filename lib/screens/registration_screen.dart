@@ -263,7 +263,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         : null;
 
                                 final user = User(
-                                  id: '',
                                   profilePicture: profilePictureBase64,
                                   fullname: fullname,
                                   username: username,
