@@ -170,7 +170,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          '   Booked By: ${booking.user?.fullname ?? 'Unknown'}',
+                                          '   Booked By: ${booking.user?.fullname}',
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18),
@@ -387,7 +387,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Booked By: ${booking.user?.fullname ?? 'Unknown'}',
+                        'Booked By: ${booking.user?.fullname}',
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
