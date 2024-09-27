@@ -50,11 +50,11 @@ class _SplashScreenState extends State<SplashScreen>
             end: Alignment.bottomLeft,
           ),
         ),
-        child: Center( // Center the image
+        child: Center(
           child: Image.asset(
-            'assets/a&j_autofix_logo_splash_screen.png', // Path to the image
-            width: 300, // Adjust the width as needed
-            height: 300, // Adjust the height as needed
+            'assets/a&j_logo.png', 
+            width: 300, 
+            height: 300, 
           ),
         ),
       ),

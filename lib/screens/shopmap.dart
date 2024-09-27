@@ -12,7 +12,7 @@ class ShopMap extends StatefulWidget {
 
 class ShopMapState extends State<ShopMap> {
   int _selectedIndex = 2;
-  final LatLng shopLocation = const LatLng(16.0884245, 120.3917141); // Shop location
+  final LatLng shopLocation = const LatLng(16.0884245, 120.3917141); 
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
 
@@ -64,7 +64,7 @@ class ShopMapState extends State<ShopMap> {
         );
         break;
       case 2:
-        break; // Stay on the current page
+        break; 
       default:
         break;
     }
@@ -74,6 +74,18 @@ class ShopMapState extends State<ShopMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFDCDCDC), 
+                Color(0xFF6E88A1), 
+              ],
+            ),
+          ),
+        ),
         title: const Text('Shop Location'),
         backgroundColor: Colors.lightBlue,
       ),
@@ -84,7 +96,7 @@ class ShopMapState extends State<ShopMap> {
           zoom: 15,
         ),
         markers: _markers,
-        mapType: MapType.normal, // You can try MapType.hybrid for better results
+        mapType: MapType.normal, 
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

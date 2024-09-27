@@ -86,6 +86,8 @@ flutter:
     - assets/car_battery.png
     - assets/headlight_bulb.png
     - assets/power_window_switch.png
+    - assets/a&j_logo.png
+    
     
 
   # The following line ensures that the Material Icons font is

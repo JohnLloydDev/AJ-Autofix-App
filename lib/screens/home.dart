@@ -44,35 +44,55 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
 
-  final Set<String> _selectedCategories = {};
+  final Set<String> _selectedCategories = {'all'};
   final Set<String> _selectedServices = {};
 
   List<Map<String, String>> services = [
-  {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
-  {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
-  {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
-  {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
-  {'name': 'Door Lock', 'price': 'PHP 550', 'category': 'door'},
-  {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
-  {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
-  {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
-  {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
-  {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
-  {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
-  {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
-  {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
-  {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
-  {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
-  {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
-  {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
-  {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
-  {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
-  {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
-  {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
-  {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
-  {'name': 'Headlight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
-  {'name': 'Power Window Switch', 'price': 'PHP 1,000', 'category': 'electrical'}
-];
+    {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
+    {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
+    {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
+    {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
+    {'name': 'Door Lock', 'price': 'PHP 550', 'category': 'door'},
+    {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
+    {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
+    {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
+    {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
+    {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
+    {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
+    {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
+    {
+      'name': 'Fuel Injector Cleaning',
+      'price': 'PHP 2,200',
+      'category': 'engine'
+    },
+    {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
+    {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
+    {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
+    {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
+    {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
+    {
+      'name': 'Alternator Repair',
+      'price': 'PHP 3,500',
+      'category': 'electrical'
+    },
+    {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
+    {
+      'name': 'Car Alarm',
+      'price': 'PHP 1,500 - 1,800',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Battery Replacement',
+      'price': 'PHP 4,000',
+      'category': 'electrical'
+    },
+    {'name': 'Headlight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
+    {
+      'name': 'Power Window Switch',
+      'price': 'PHP 1,000',
+      'category': 'electrical'
+    }
+  ];
 
   List<Map<String, String>> _filteredServices = [];
 
@@ -112,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookingScreen(selectedServices:_selectedServices.toList()), 
+            builder: (context) =>
+                BookingScreen(selectedServices: _selectedServices.toList()),
           ),
         );
         break;
@@ -143,9 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleServiceSelection(String serviceName) {
     setState(() {
       if (_selectedServices.contains(serviceName)) {
-        _selectedServices.remove(serviceName); 
+        _selectedServices.remove(serviceName);
       } else {
-        _selectedServices.add(serviceName); 
+        _selectedServices.add(serviceName);
       }
     });
   }
@@ -156,6 +177,18 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFDCDCDC),
+                Color(0xFF6E88A1),
+              ],
+            ),
+          ),
+        ),
         title: Row(
           children: [
             Image.asset(
@@ -182,7 +215,14 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 100,
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Color(0xFF9FA8DA),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFDCDCDC), // Light color
+                      Color(0xFF6E88A1), // Dark color
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
                 child: Center(
                   child: Text(
@@ -202,7 +242,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(userId: '',)));
+                        builder: (context) => const ProfileScreen(
+                              userId: '',
+                            )));
               },
             ),
             const Divider(),
@@ -390,8 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     serviceName: serviceName,
                     servicePrice: service['price']!,
                     imagePath: imagePath,
-                    isSelected:
-                        isSelected, 
+                    isSelected: isSelected,
                     onAddPressed: () => _toggleServiceSelection(serviceName),
                   );
                 },
@@ -424,20 +465,61 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _categoryTextButton(String category) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          foregroundColor: _selectedCategories.contains(category.toLowerCase())
-              ? Colors.white
-              : Colors.black,
-          backgroundColor: _selectedCategories.contains(category.toLowerCase())
-              ? Colors.purple
-              : Colors.grey[300],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: _selectedCategories.contains(category.toLowerCase())
+                ? [
+                    const Color.fromARGB(
+                        255, 221, 221, 221), // Light color for selected
+                    const Color.fromARGB(
+                        255, 110, 136, 161), // Dark color for selected
+                  ]
+                : [
+                    Colors.grey[300]!, // Light color for unselected
+                    Colors.grey[300]!, // Dark color for unselected
+                  ],
           ),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: _selectedCategories.contains(category.toLowerCase())
+              ? [
+                  const BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 5,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : [],
         ),
-        onPressed: () => _onCategorySelected(category.toLowerCase()),
-        child: Text(category),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor:
+                _selectedCategories.contains(category.toLowerCase())
+                    ? Colors.white // Text color for selected
+                    : Colors.black, // Text color for unselected
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
+          onPressed: () {
+            _onCategorySelected(category.toLowerCase());
+
+            if (category.toLowerCase() == 'all') {
+              setState(() {
+                if (_selectedCategories.contains('all')) {
+                  _selectedCategories.clear();
+                } else {
+                  _selectedCategories.clear();
+                  _selectedCategories.add('all');
+                }
+              });
+            }
+          },
+          child: Text(category),
+        ),
       ),
     );
   }
@@ -470,18 +552,15 @@ class ServiceCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center,
-          crossAxisAlignment:
-              CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (imagePath != null) 
+            if (imagePath != null)
               ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(8.0),
                 child: Image.asset(
                   imagePath!,
-                  height: 70, 
+                  height: 70,
                   width: 100,
                   fit: BoxFit.cover,
                 ),
@@ -502,7 +581,7 @@ class ServiceCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            const Spacer(), 
+            const Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
@@ -523,7 +602,7 @@ class ServiceCard extends StatelessWidget {
                 icon: Icon(
                   isSelected ? Icons.check_circle : Icons.add_circle,
                   color: isSelected ? Colors.green : Colors.black,
-                  size: 25, 
+                  size: 25,
                 ),
               ),
             ),
