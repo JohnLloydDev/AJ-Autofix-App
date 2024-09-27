@@ -8,7 +8,6 @@ import 'package:aj_autofix/repositories/admin_repository_impl.dart';
 import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/repositories/review_repository_impl.dart';
-import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,8 +44,8 @@ void main() {
               UserBloc(AdminRepositoryImpl())..add(GetUserByAuthEvent()),
         ),
         BlocProvider(
-        create: (context) => ReviewBloc(ReviewRepositoryImpl()),
-        )
+          create: (context) => ReviewBloc(ReviewRepositoryImpl()),
+        ),
       ],
       child: const MyApp(),
     ),
