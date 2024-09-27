@@ -21,7 +21,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<UserLogin>((event, emit) async {
       try {
         final User user = await _authRepositoryImpl.userLogin(event.user);
-        emit(AuthSuccessWithRole(user.role));
+
+        emit(AuthSuccessWithRole(user.role, user));
       } catch (e) {
         emit(AuthFailed(e.toString()));
       }

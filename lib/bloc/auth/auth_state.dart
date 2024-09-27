@@ -1,3 +1,4 @@
+import 'package:aj_autofix/models/user_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthState extends Equatable {
@@ -31,12 +32,13 @@ class AuthFailed extends AuthState {
 class AuthLoggedOut extends AuthState {}
 
 class AuthSuccessWithRole extends AuthState {
+  final User user;
   final String role;
 
-  const AuthSuccessWithRole(this.role);
+  const AuthSuccessWithRole(this.role, this.user);
 
   @override
-  List<Object> get props => [role];
+  List<Object> get props => [role, user];
 }
 
 
