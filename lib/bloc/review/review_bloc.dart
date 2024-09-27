@@ -26,10 +26,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       CreateReview event, Emitter<ReviewState> emit) async {
     try {
       emit(ReviewLoading());
-      await reviewRepository.createReviews(event.review);
+ 
       emit(ReviewCreated());
-      final reviews = await reviewRepository.getAllReviews();
-      emit(ReviewLoaded(reviews));
+     await reviewRepository.createReviews(event.review);
+      add(FetchReviews());
+    
     } catch (e) {
       emit(ReviewError(e.toString()));
     }

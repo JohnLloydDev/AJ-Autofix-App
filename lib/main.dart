@@ -2,6 +2,7 @@ import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
+import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/repositories/admin_repository_impl.dart';
@@ -44,8 +45,9 @@ void main() {
               UserBloc(AdminRepositoryImpl())..add(GetUserByAuthEvent()),
         ),
         BlocProvider(
-          create: (context) => ReviewBloc(ReviewRepositoryImpl()),
+          create: (context) => ReviewBloc(ReviewRepositoryImpl())..add(FetchReviews()),
         ),
+        
       ],
       child: const MyApp(),
     ),
