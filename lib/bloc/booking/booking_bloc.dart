@@ -67,13 +67,20 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       emit(BookingLoading());
 
       try {
-        await bookingRepository.createBooking(event.booking);
+        final userId = event.booking.userId;
+        if (userId!.isEmpty) {
+          emit(const RequestError('User ID is required to create a booking.'));
+          return;
+        }
+
+        await bookingRepository.createBooking(userId, event.booking);
         emit(const BookingSuccess(message: 'Booking created successfully!'));
       } catch (e) {
         emit(RequestError('Failed to create booking: $e'));
       }
     });
+  }
 
     
   }
-}
+

@@ -38,14 +38,18 @@ class _LoginScreenState extends State<LoginScreen> {
           child: BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccessWithRole) {
+                
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Login Success'),
                       behavior: SnackBarBehavior.floating),
                 );
                 if (state.role == 'user') {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()));
                 } else if (state.role == 'admin' ||
                     state.role == 'service manager') {
                   Navigator.push(
@@ -64,10 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 100),
                 SizedBox(
-                  width: screenWidth * 0.5, 
+                  width: screenWidth * 0.5,
                   child: Image.asset(
                     'assets/login_logo.png',
-                    fit: BoxFit.contain, // Ensure the image scales properly
+                    fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -143,11 +147,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             final email = emailController.text;
                             final password = passwordController.text;
                             final user = User(
+                              id: '',
                               email: email,
                               password: password,
                             );
-                            BlocProvider.of<AuthBloc>(context)
-                                .add(UserLogin(user));
+                            BlocProvider.of<AuthBloc>(context).add(UserLogin(
+                                user));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepPurple,
