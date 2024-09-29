@@ -73,11 +73,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 100), 
+                    const SizedBox(height: 100),
                     _buildCardView(context),
                     const SizedBox(height: 20),
-                    _buildSignInLink(context),
-                    const SizedBox(height: 5),
                   ],
                 ),
               ),
@@ -96,13 +94,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
-          width: 350, 
+          width: 350,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               CircleAvatar(
-                radius: 60, 
+                radius: 60,
                 backgroundImage: _profilePicture != null
                     ? FileImage(_profilePicture!)
                     : const AssetImage('assets/default_profile.png')
@@ -145,6 +143,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               _buildPasswordField(),
               const SizedBox(height: 20),
               _buildRegisterButton(),
+              const SizedBox(height: 20), 
+              _buildSignInLink(context),
             ],
           ),
         ),
@@ -165,7 +165,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           controller: controller,
           decoration: InputDecoration(
             suffixIcon: Icon(icon),
-            contentPadding: const EdgeInsets.symmetric(vertical: 12), 
+            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
             border: InputBorder.none,
             hintText: hintText,
           ),
@@ -188,7 +188,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12), 
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -289,7 +289,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           "Already have an account?",
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: Color.fromARGB(255, 22, 20, 20),
+            color: Color.fromARGB(255, 73, 69, 69),
           ),
         ),
         TextButton(

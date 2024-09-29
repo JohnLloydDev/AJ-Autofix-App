@@ -43,8 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-
-  final Set<String> _selectedCategories = {'all'};
+  final Set<String> _selectedCategories = {};
   final Set<String> _selectedServices = {};
 
   List<Map<String, String>> services = [
@@ -132,8 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                BookingScreen(selectedServices: _selectedServices.toList()),
+            builder: (context) => BookingScreen(
+                selectedServices: _selectedServices.toList().cast<String>()),
           ),
         );
         break;
@@ -217,8 +216,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xFFDCDCDC), // Light color
-                      Color(0xFF6E88A1), // Dark color
+                      Color(0xFFDCDCDC),
+                      Color(0xFF6E88A1),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -287,9 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () async {
                   try {
                     BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
-
                     await Future.delayed(const Duration(milliseconds: 300));
-
                     if (context.mounted) {
                       Navigator.pushReplacement(
                         context,
@@ -313,6 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Banner Image
             Container(
               width: double.infinity,
               height: 100,
@@ -337,6 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Search Bar
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -348,6 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Category Buttons
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -362,6 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Services Grid
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -374,58 +375,82 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (context, index) {
                   final service = _filteredServices[index];
                   final serviceName = service['name']!;
-
                   final isSelected = _selectedServices.contains(serviceName);
-
                   String? imagePath;
-                  if (serviceName == 'Power Window Motor') {
-                    imagePath = 'assets/motor.png';
-                  } else if (serviceName == 'Power Window Cable') {
-                    imagePath = 'assets/cable.png';
-                  } else if (serviceName == 'Powerlock 1pc') {
-                    imagePath = 'assets/power_lock_1pc.jpg';
-                  } else if (serviceName == 'Powerlock Set') {
-                    imagePath = 'assets/power_lock_set.png';
-                  } else if (serviceName == 'Door Lock') {
-                    imagePath = 'assets/door_lock.png';
-                  } else if (serviceName == 'Handle Replacement') {
-                    imagePath = 'assets/door_handle.png';
-                  } else if (serviceName == 'Door Lock Repair') {
-                    imagePath = 'assets/door_lock.png';
-                  } else if (serviceName == 'Handle Repair') {
-                    imagePath = 'assets/door_handle.png';
-                  } else if (serviceName == 'Coolant Flush') {
-                    imagePath = 'assets/coolant_flush.png';
-                  } else if (serviceName == 'Engine Oil Change') {
-                    imagePath = 'assets/change_oil.png';
-                  } else if (serviceName == 'Spark Plug') {
-                    imagePath = 'assets/spark_plug.png';
-                  } else if (serviceName == 'Air Filter') {
-                    imagePath = 'assets/air_flilter.png';
-                  } else if (serviceName == 'Fuel Injector Cleaning') {
-                    imagePath = 'assets/fuel_injector.png';
-                  } else if (serviceName == 'Timing Belt') {
-                    imagePath = 'assets/timing_belt.png';
-                  } else if (serviceName == 'Tire Replacement') {
-                    imagePath = 'assets/tire.png';
-                  } else if (serviceName == 'Wheel Alignment') {
-                    imagePath = 'assets/wheel_alignment.png';
-                  } else if (serviceName == 'Brake Pad Set') {
-                    imagePath = 'assets/brake_pads.png';
-                  } else if (serviceName == 'Brake Fluid') {
-                    imagePath = 'assets/brake_fluid.png';
-                  } else if (serviceName == 'Alternator Repair') {
-                    imagePath = 'assets/alternator.png';
-                  } else if (serviceName == 'Fuse Replacement') {
-                    imagePath = 'assets/fuse.png';
-                  } else if (serviceName == 'Car Alarm') {
-                    imagePath = 'assets/car_alarm.png';
-                  } else if (serviceName == 'Battery Replacement') {
-                    imagePath = 'assets/car_battery.png';
-                  } else if (serviceName == 'Headlight Bulb') {
-                    imagePath = 'assets/headlight_bulb.png';
-                  } else if (serviceName == 'Power Window Switch') {
-                    imagePath = 'assets/power_window_switch.png';
+
+                  switch (serviceName) {
+                    case 'Power Window Motor':
+                      imagePath = 'assets/motor.png';
+                      break;
+                    case 'Power Window Cable':
+                      imagePath = 'assets/cable.png';
+                      break;
+                    case 'Powerlock 1pc':
+                      imagePath = 'assets/power_lock_1pc.jpg';
+                      break;
+                    case 'Powerlock Set':
+                      imagePath = 'assets/power_lock_set.png';
+                      break;
+                    case 'Door Lock':
+                      imagePath = 'assets/door_lock.png';
+                      break;
+                    case 'Handle Replacement':
+                    case 'Handle Repair':
+                      imagePath = 'assets/door_handle.png';
+                      break;
+                    case 'Door Lock Repair':
+                      imagePath = 'assets/door_lock.png';
+                      break;
+                    case 'Coolant Flush':
+                      imagePath = 'assets/coolant_flush.png';
+                      break;
+                    case 'Engine Oil Change':
+                      imagePath = 'assets/change_oil.png';
+                      break;
+                    case 'Spark Plug':
+                      imagePath = 'assets/spark_plug.png';
+                      break;
+                    case 'Air Filter':
+                      imagePath = 'assets/air_flilter.png';
+                      break;
+                    case 'Fuel Injector Cleaning':
+                      imagePath = 'assets/fuel_injector.png';
+                      break;
+                    case 'Timing Belt':
+                      imagePath = 'assets/timing_belt.png';
+                      break;
+                    case 'Tire Replacement':
+                      imagePath = 'assets/tire.png';
+                      break;
+                    case 'Wheel Alignment':
+                      imagePath = 'assets/wheel_alignment.png';
+                      break;
+                    case 'Brake Pad Set':
+                      imagePath = 'assets/brake_pads.png';
+                      break;
+                    case 'Brake Fluid':
+                      imagePath = 'assets/brake_fluid.png';
+                      break;
+                    case 'Alternator Repair':
+                      imagePath = 'assets/alternator.png';
+                      break;
+                    case 'Fuse Replacement':
+                      imagePath = 'assets/fuse.png';
+                      break;
+                    case 'Car Alarm':
+                      imagePath = 'assets/car_alarm.png';
+                      break;
+                    case 'Battery Replacement':
+                      imagePath = 'assets/car_battery.png';
+                      break;
+                    case 'Headlight Bulb':
+                      imagePath = 'assets/headlight_bulb.png';
+                      break;
+                    case 'Power Window Switch':
+                      imagePath = 'assets/power_window_switch.png';
+                      break;
+                    default:
+                      imagePath = null;
                   }
 
                   return ServiceCard(
@@ -441,6 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         items: const [
@@ -463,6 +489,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _categoryTextButton(String category) {
+    bool isSelected;
+    if (category.toLowerCase() == 'all') {
+      isSelected = _selectedCategories.isEmpty;
+    } else {
+      isSelected = _selectedCategories.contains(category.toLowerCase());
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
@@ -470,20 +503,18 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: _selectedCategories.contains(category.toLowerCase())
+            colors: isSelected
                 ? [
-                    const Color.fromARGB(
-                        255, 221, 221, 221), // Light color for selected
-                    const Color.fromARGB(
-                        255, 110, 136, 161), // Dark color for selected
+                    const Color.fromARGB(255, 221, 221, 221),
+                    const Color.fromARGB(255, 110, 136, 161),
                   ]
                 : [
-                    Colors.grey[300]!, // Light color for unselected
-                    Colors.grey[300]!, // Dark color for unselected
+                    Colors.grey[300]!,
+                    Colors.grey[300]!,
                   ],
           ),
           borderRadius: BorderRadius.circular(20.0),
-          boxShadow: _selectedCategories.contains(category.toLowerCase())
+          boxShadow: isSelected
               ? [
                   const BoxShadow(
                     color: Colors.black26,
@@ -495,10 +526,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: TextButton(
           style: TextButton.styleFrom(
-            foregroundColor:
-                _selectedCategories.contains(category.toLowerCase())
-                    ? Colors.white // Text color for selected
-                    : Colors.black, // Text color for unselected
+            foregroundColor: isSelected ? Colors.white : Colors.black,
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
@@ -506,19 +534,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           onPressed: () {
             _onCategorySelected(category.toLowerCase());
-
-            if (category.toLowerCase() == 'all') {
-              setState(() {
-                if (_selectedCategories.contains('all')) {
-                  _selectedCategories.clear();
-                } else {
-                  _selectedCategories.clear();
-                  _selectedCategories.add('all');
-                }
-              });
-            }
           },
-          child: Text(category),
+          child: Text(category.capitalize()),
         ),
       ),
     );

@@ -53,14 +53,9 @@ class ShopMapState extends State<ShopMap> {
         );
         break;
       case 1:
-        List<String> selectedServices = ['Oil Change', 'Tire Rotation'];
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => BookingScreen(
-              selectedServices: selectedServices,
-            ),
-          ),
+          MaterialPageRoute(builder: (context) => const BookingScreen(selectedServices: [],)),
         );
         break;
       case 2:
