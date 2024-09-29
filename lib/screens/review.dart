@@ -5,14 +5,23 @@ import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/review/review_state.dart';
 
-class ReviewScreen extends StatelessWidget {
+class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Fetch all reviews when the screen is built
-    context.read<ReviewBloc>().add(FetchReviews());
+  ReviewScreenState createState() => ReviewScreenState();
+}
 
+class ReviewScreenState extends State<ReviewScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch all reviews when the screen is first loaded
+    context.read<ReviewBloc>().add(FetchReviews());
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reviews'),
@@ -25,9 +34,6 @@ class ReviewScreen extends StatelessWidget {
                 content: Text('Error: ${state.message}'),
               ),
             );
-          } else if (state is ReviewCreated) {
-            // Fetch reviews again after a review is successfully created
-            context.read<ReviewBloc>().add(FetchReviews());
           }
         },
         child: BlocBuilder<ReviewBloc, ReviewState>(
@@ -58,112 +64,117 @@ class ReviewScreen extends StatelessWidget {
   }
 
   void _showAddReviewDialog(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    String? content;
-    int? rating;
+  final formKey = GlobalKey<FormState>();
+  String? content;
+  int? rating;
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Rate the service',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Rate the service',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<int>(
-                    decoration: const InputDecoration(
-                      labelText: 'Put your rate',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: List.generate(5, (index) => index + 1)
-                        .map((rating) => DropdownMenuItem(
-                              value: rating,
-                              child: Text(rating.toString()),
-                            ))
-                        .toList(),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please select a rating';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      rating = value;
-                    },
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<int>(
+                  decoration: const InputDecoration(
+                    labelText: 'Put your rate',
+                    border: OutlineInputBorder(),
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'Write your review',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter review content';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      content = value;
-                    },
+                  items: List.generate(5, (index) => index + 1)
+                      .map((rating) => DropdownMenuItem(
+                            value: rating,
+                            child: Text(rating.toString()),
+                          ))
+                      .toList(),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a rating';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    rating = value;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Write your review',
+                    border: OutlineInputBorder(),
                   ),
-                  const SizedBox(height: 24),
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 15,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter review content';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    content = value;
+                  },
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 15,
                       ),
-                      onPressed: () {
-                        if (formKey.currentState?.validate() ?? false) {
-                          // Create the new review
-                          final newReview = Review(
-                            rating: rating!,
-                            content: content!,
-                            fullname: '',
-                          );
-
-                          // Add the review to the bloc
-                          context
-                              .read<ReviewBloc>()
-                              .add(CreateReview(newReview));
-
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: const Text('Submit'),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
+                    onPressed: () {
+                      if (formKey.currentState?.validate() ?? false) {
+                        // Create the new review
+                        final newReview = Review(
+                          rating: rating!,
+                          content: content!,
+                          fullname: '', // Set appropriate fullname if needed
+                        );
+
+                        // Add the review to the bloc
+                        context.read<ReviewBloc>().add(CreateReview(newReview));
+
+                        // Close the dialog and navigate back to the ReviewScreen
+                        Navigator.of(context).pop(); // Close the dialog
+                      }
+                    },
+                    child: const Text('Submit'),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  ).then((_) {
+    // This will be executed after the dialog is closed
+    // Fetch reviews again to update the ReviewScreen
+    context.read<ReviewBloc>().add(FetchReviews());
+  });
 }
+
+}
+
 class ReviewCard extends StatelessWidget {
   final Review review;
 
