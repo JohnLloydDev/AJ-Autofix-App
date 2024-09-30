@@ -189,10 +189,10 @@ class BookingScreenState extends State<BookingScreen> {
                                           onPressed: () {
                                             setState(() {
                                               widget.selectedServices.removeAt(
-                                                  index); // Remove the service from the list
+                                                  index);
                                               serviceCount = widget
                                                   .selectedServices
-                                                  .length; // Update the service count
+                                                  .length;
                                             });
 
                                             Fluttertoast.showToast(
