@@ -4,7 +4,6 @@ import 'package:aj_autofix/bloc/contact/contact_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class ContactFormPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -41,27 +40,27 @@ class ContactFormPage extends StatelessWidget {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: InputDecoration(labelText: 'Name'),
+                  decoration: const InputDecoration(labelText: 'Name'),
                 ),
                 TextField(
                   controller: emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                 ),
                 TextField(
                   controller: messageController,
-                  decoration: InputDecoration(labelText: 'Message'),
+                  decoration: const InputDecoration(labelText: 'Message'),
                   maxLines: 5,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     context.read<ContactBloc>().add(SendContactEvent(
-                      name: nameController.text,
-                      email: emailController.text,
-                      message: messageController.text,
-                    ));
+                          name: nameController.text,
+                          email: emailController.text,
+                          message: messageController.text,
+                        ));
                   },
-                  child: Text('Send'),
+                  child: const Text('Send'),
                 ),
               ],
             ),

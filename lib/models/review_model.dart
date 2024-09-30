@@ -4,38 +4,37 @@ import 'package:equatable/equatable.dart';
 class Review extends Equatable {
   final String? id;
   final User? user;
-  final String fullname;
   final int rating;
   final String content;
 
   const Review({
     this.id,
     this.user,
-    required this.fullname,
     required this.rating,
     required this.content,
   });
 
-  factory Review.fromJson(Map<String, dynamic> json) {
-    return Review(
-      id: json['_id'],
-      user: json['userId'] != null ? User.fromJson(json['userId']) : null, 
-      fullname: json['fullname'] ?? '', 
-      rating: json['rating'] ?? 0, 
-      content: json['content'] ?? '',
-    );
-  }
+ factory Review.fromJson(Map<String, dynamic> json) {
+  return Review(
+    id: json['_id'],
+    user: json['userId'] != null && json['userId'] is Map<String, dynamic>
+      ? User.fromJson(json['userId'])
+      : null, 
+    rating: json['rating'] ?? 0,
+    content: json['content'] ?? '',
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'userId': user?.toJson(),
-      'fullname': fullname,  
+      'userId': user?.id,
       'rating': rating,
       'content': content,
     };
   }
 
   @override
-  List<Object?> get props => [id, user, fullname, rating, content];
+  List<Object?> get props => [id, user, rating, content];
 }

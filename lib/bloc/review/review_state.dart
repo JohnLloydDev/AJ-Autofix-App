@@ -30,4 +30,12 @@ class ReviewError extends ReviewState {
   List<Object?> get props => [message];
 }
 
-class ReviewCreated extends ReviewState {}
+class ReviewCreated extends ReviewState {
+  final Review review; 
+  final bool isUpdate; 
+
+  const ReviewCreated({required this.review, required this.isUpdate});
+
+    @override
+  List<Object?> get props => [review, isUpdate];
+}

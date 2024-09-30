@@ -7,38 +7,41 @@ import 'package:http/http.dart' as http;
 class ReviewRepositoryImpl extends ReviewRepository {
   static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
 
-  @override
-  Future<List<Review>> getAllReviews() async {
-    final accessToken = await SecureStorage.readToken('access_token');
-    if (accessToken == null) {
-      throw Exception('No access token found');
-    }
-
-    final response = await http.get(
-      Uri.parse("$baseUrl/reviews/reviews"),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-
-      // Ensure you are accessing the 'reviews' key
-      if (jsonResponse['success'] == true) {
-        final List<dynamic> jsonData =
-            jsonResponse['reviews']; // Accessing the reviews list
-        return jsonData.map((json) => Review.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load Reviews: ${jsonResponse['message']}');
-      }
-    } else {
-      throw Exception('Failed to load Reviews: ${response.body}');
-    }
+@override
+Future<List<Review>> getAllReviews() async {
+  final accessToken = await SecureStorage.readToken('access_token');
+  if (accessToken == null) {
+    throw Exception('No access token found');
   }
 
+  final response = await http.get(
+    Uri.parse("$baseUrl/reviews/reviews"),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final jsonResponse = jsonDecode(response.body);
+
+    if (jsonResponse['success'] == true) {
+      final List<dynamic>? jsonData = jsonResponse['reviews'];
+
+      if (jsonData != null) {
+        return jsonData.map((json) => Review.fromJson(json)).toList();
+      } else {
+        throw Exception('Reviews key is null or not a list');
+      }
+    } else {
+      throw Exception('Failed to load Reviews: ${jsonResponse['message']}');
+    }
+  } else {
+    throw Exception('Failed to load Reviews: ${response.body}');
+  }
+}
+
   @override
-  Future<void> createReviews(Review review) async {
+  Future<Map<String, dynamic>> createReviews(Review review) async {
     final accessToken = await SecureStorage.readToken('access_token');
 
     if (accessToken == null) {
@@ -53,12 +56,17 @@ class ReviewRepositoryImpl extends ReviewRepository {
       },
       body: jsonEncode(review.toJson()),
     );
-    if (response.statusCode == 200) {
-    
-      return jsonDecode(response.body);
+
+
+    if (response.statusCode == 201) {
+      try {
+
+        return jsonDecode(response.body);
+      } catch (e) {
+        throw Exception('Invalid JSON response: ${response.body}');
+      }
     } else {
-      throw Exception('Failed to create review');
-    }
+      throw Exception('Failed to create review: ${response.body}');
     }
   }
-
+}

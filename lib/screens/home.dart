@@ -4,7 +4,6 @@ import 'package:aj_autofix/screens/contact_form.dart';
 import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/screens/booking.dart';
-import 'package:aj_autofix/screens/contact_us.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pendingrequest.dart';
 import 'package:aj_autofix/screens/review.dart';
@@ -51,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-
   final Set<String> _selectedCategories = {};
   final Set<String> _selectedServices = {};
   int _selectedServiceCount = 0;
@@ -141,7 +139,12 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookingScreen(selectedServices:_selectedServices.toList()), 
+            builder: (context) => BookingScreen(
+              selectedServices:
+                  _selectedServices.toList().cast<String>(), // Existing code
+              selectedServiceCount:
+                  _selectedServiceCount, // Pass the selected service count here
+            ),
           ),
         );
         break;
@@ -177,16 +180,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleServiceSelection(String serviceName) {
     setState(() {
       if (_selectedServices.contains(serviceName)) {
-        _selectedServices.remove(serviceName); 
+        _selectedServices.remove(serviceName);
+        _selectedServiceCount--;
       } else {
-        _selectedServices.add(serviceName); 
+        _selectedServices.add(serviceName);
+        _selectedServiceCount++;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -229,7 +233,14 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 100,
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Color(0xFF9FA8DA),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFDCDCDC),
+                      Color(0xFF6E88A1),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
                 child: Center(
                   child: Text(
@@ -536,20 +547,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          foregroundColor: _selectedCategories.contains(category.toLowerCase())
-              ? Colors.white
-              : Colors.black,
-          backgroundColor: _selectedCategories.contains(category.toLowerCase())
-              ? Colors.purple
-              : Colors.grey[300],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isSelected
+                ? [
+                    const Color.fromARGB(255, 221, 221, 221),
+                    const Color.fromARGB(255, 110, 136, 161),
+                  ]
+                : [
+                    Colors.grey[300]!,
+                    Colors.grey[300]!,
+                  ],
           ),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: isSelected
+              ? [
+                  const BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 5,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : [],
         ),
-        onPressed: () => _onCategorySelected(category.toLowerCase()),
-        child: Text(category),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: isSelected ? Colors.white : Colors.black,
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
+          onPressed: () {
+            _onCategorySelected(category.toLowerCase());
+          },
+          child: Text(category.capitalize()),
+        ),
       ),
     );
   }

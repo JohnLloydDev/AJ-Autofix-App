@@ -1,3 +1,4 @@
+import 'package:aj_autofix/models/review_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/repositories/review_repository.dart';
 import 'review_event.dart';
@@ -26,11 +27,18 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       CreateReview event, Emitter<ReviewState> emit) async {
     try {
       emit(ReviewLoading());
-
-     await reviewRepository.createReviews(event.review);
-     emit(ReviewCreated());
-      add(FetchReviews());
-    
+      final response = await reviewRepository.createReviews(event.review);
+      if (response.containsKey('review') &&
+          response['review'] is Map<String, dynamic>) {
+        final Map<String, dynamic> reviewData = response['review'];
+        final review = Review.fromJson(reviewData);
+        final bool isUpdate = response['isUpdate'] as bool;
+        emit(ReviewCreated(review: review, isUpdate: isUpdate));
+        add(FetchReviews());
+      } else {
+        throw Exception(
+            "Invalid response format: 'review' key not found or incorrect type");
+      }
     } catch (e) {
       emit(ReviewError(e.toString()));
     }
