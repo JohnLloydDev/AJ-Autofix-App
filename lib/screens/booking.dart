@@ -38,10 +38,14 @@ class BookingScreenState extends State<BookingScreen> {
   TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
 
   User? user;
+  late List<String> services;
+  late int serviceCount;
 
   @override
   void initState() {
     super.initState();
+    services = List.from(widget.selectedServices);
+    serviceCount = widget.selectedServiceCount;
   }
 
   String formatTimeOfDay(TimeOfDay timeOfDay) {
@@ -87,10 +91,8 @@ class BookingScreenState extends State<BookingScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BookingConfirmationScreen(
-                    selectedServices:
-                        widget.selectedServices, // Pass the selected services
-                    selectedServiceCount: widget
-                        .selectedServices.length, // Count of selected services
+                    selectedServices: widget.selectedServices,
+                    selectedServiceCount: widget.selectedServices.length,
                   ),
                 ),
               );
@@ -146,78 +148,78 @@ class BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    constraints: const BoxConstraints(
-                      maxHeight: 300,
-                    ),
-                    child: widget.selectedServices.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: widget.selectedServices.length,
-                            itemBuilder: (context, index) {
-                              final serviceName =
-                                  widget.selectedServices[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: SizedBox(
-                                  width: 350,
-                                  height: 50,
-                                  child: Card(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              serviceName,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                  widget.selectedServices.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: widget.selectedServices.length,
+                          itemBuilder: (context, index) {
+                            final serviceName = widget.selectedServices[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: SizedBox(
+                                width: 350,
+                                height: 50,
+                                child: Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            serviceName,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.remove_circle,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                widget.selectedServices
-                                                    .removeAt(index);
-                                              });
-                                              Fluttertoast.showToast(
-                                                msg:
-                                                    "Removed $serviceName from booking",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.black54,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0,
-                                              );
-                                            },
-                                            tooltip: 'Remove Service',
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.remove_circle,
+                                            color: Colors.red,
                                           ),
-                                        ],
-                                      ),
+                                          onPressed: () {
+                                            setState(() {
+                                              widget.selectedServices.removeAt(
+                                                  index);
+                                              serviceCount = widget
+                                                  .selectedServices
+                                                  .length;
+                                            });
+
+                                            Fluttertoast.showToast(
+                                              msg:
+                                                  "Removed $serviceName from booking",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.black54,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0,
+                                            );
+                                          },
+                                          tooltip: 'Remove Service',
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-                          )
-                        : const Text(
-                            'No services selected.',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                  ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Text(
+                          'No services selected.',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                   const SizedBox(height: kSpacing),
                   TextFormField(
                     decoration: const InputDecoration(
@@ -259,7 +261,7 @@ class BookingScreenState extends State<BookingScreen> {
                   ),
                   const SizedBox(height: kSpacing),
                   ElevatedButton(
-                    onPressed: () async {
+                    onPressed: () {
                       if (carType.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -343,14 +345,14 @@ class BookingScreenState extends State<BookingScreen> {
             icon: Stack(
               children: [
                 const Icon(Icons.receipt),
-                if (widget.selectedServiceCount > 0) // Use selectedServiceCount
+                if (serviceCount > 0)
                   Positioned(
                     right: 0,
                     top: -1,
                     child: Container(
                       padding: const EdgeInsets.all(1),
                       decoration: const BoxDecoration(
-                        color: Colors.red, // Red circle background
+                        color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       constraints: const BoxConstraints(
@@ -359,9 +361,9 @@ class BookingScreenState extends State<BookingScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          '${widget.selectedServiceCount}', // Display the service count
+                          '$serviceCount',
                           style: const TextStyle(
-                            color: Colors.white, // White number
+                            color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -382,27 +384,26 @@ class BookingScreenState extends State<BookingScreen> {
         onTap: (index) {
           switch (index) {
             case 0:
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => Home(
-                    selectedServices:
-                        widget.selectedServices, // Pass the selected services
-                    selectedServiceCount: widget
-                        .selectedServices.length, // Count of selected services
+                    selectedServices: widget.selectedServices,
+                    selectedServiceCount: widget.selectedServices.length,
                   ),
                 ),
               );
               break;
             case 1:
+              // Stay on the current screen (Booking)
               break;
             case 2:
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ShopMap(
-                    selectedServices: widget.selectedServices, // Pass the selected services
-                    selectedServiceCount: widget.selectedServiceCount, // Pass the count
+                    selectedServices: widget.selectedServices,
+                    selectedServiceCount: widget.selectedServiceCount,
                   ),
                 ),
               );
@@ -529,7 +530,7 @@ class BookingConfirmationScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Home(

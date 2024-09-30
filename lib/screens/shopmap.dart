@@ -4,13 +4,13 @@ import 'home.dart';
 import 'booking.dart';
 
 class ShopMap extends StatefulWidget {
-  final List<String> selectedServices; // Add this line
+  final List<String> selectedServices;
   final int selectedServiceCount;
 
   const ShopMap({
     super.key,
-    required this.selectedServices, // Modify constructor to require this parameter
-    required this.selectedServiceCount, // Modify constructor to require this parameter
+    required this.selectedServices,
+    required this.selectedServiceCount,
   });
   @override
   ShopMapState createState() => ShopMapState();
@@ -26,7 +26,6 @@ class ShopMapState extends State<ShopMap> {
   void initState() {
     super.initState();
 
-    // Adding a delay to ensure map initialization
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _markers.add(
@@ -53,25 +52,25 @@ class ShopMapState extends State<ShopMap> {
     });
     switch (index) {
       case 0:
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => Home(
               selectedServices:
-                  widget.selectedServices, // Use the property from the widget
+                  widget.selectedServices,
               selectedServiceCount: widget
-                  .selectedServiceCount, // Use the property from the widget
+                  .selectedServiceCount,
             ),
           ),
         );
         break;
       case 1:
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const BookingScreen(
-              selectedServices: [], // Pass the selected services list
-              selectedServiceCount: 0, // Initialize selectedServiceCount to 0
+              selectedServices: [],
+              selectedServiceCount: 0,
             ),
           ),
         );

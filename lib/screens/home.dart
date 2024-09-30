@@ -12,13 +12,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatefulWidget {
-  final List<String> selectedServices; // Add this parameter
+  final List<String> selectedServices;
   final int selectedServiceCount;
 
   const Home({
     super.key,
-    required this.selectedServices, // Include in constructor
-    required this.selectedServiceCount, // Include in constructor
+    required this.selectedServices,
+    required this.selectedServiceCount,
   });
 
   @override
@@ -64,41 +64,21 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
     {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
     {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
-    {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
+    {'name': 'Engine Change Oil', 'price': 'PHP 1,000', 'category': 'engine'},
     {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
     {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
-    {
-      'name': 'Fuel Injector Cleaning',
-      'price': 'PHP 2,200',
-      'category': 'engine'
-    },
+    {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
     {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
     {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
     {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
     {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
     {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
-    {
-      'name': 'Alternator Repair',
-      'price': 'PHP 3,500',
-      'category': 'electrical'
-    },
+    {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
     {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
-    {
-      'name': 'Car Alarm',
-      'price': 'PHP 1,500 - 1,800',
-      'category': 'electrical'
-    },
-    {
-      'name': 'Battery Replacement',
-      'price': 'PHP 4,000',
-      'category': 'electrical'
-    },
-    {'name': 'Headlight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
-    {
-      'name': 'Power Window Switch',
-      'price': 'PHP 1,000',
-      'category': 'electrical'
-    }
+    {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
+    {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
+    {'name': 'HeadLight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
+    {'name': 'Power Window Switch', 'price': 'PHP 1,000', 'category': 'electrical'}
   ];
 
   List<Map<String, String>> _filteredServices = [];
@@ -141,15 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(
             builder: (context) => BookingScreen(
               selectedServices:
-                  _selectedServices.toList().cast<String>(), // Existing code
+                  _selectedServices.toList().cast<String>(),
               selectedServiceCount:
-                  _selectedServiceCount, // Pass the selected service count here
+                  _selectedServiceCount,
             ),
           ),
         );
         break;
       case 2:
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ShopMap(
@@ -421,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     case 'Coolant Flush':
                       imagePath = 'assets/coolant_flush.png';
                       break;
-                    case 'Engine Oil Change':
+                    case 'Engine Change Oil':
                       imagePath = 'assets/change_oil.png';
                       break;
                     case 'Spark Plug':
@@ -460,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     case 'Battery Replacement':
                       imagePath = 'assets/car_battery.png';
                       break;
-                    case 'Headlight Bulb':
+                    case 'HeadLight Bulb':
                       imagePath = 'assets/headlight_bulb.png';
                       break;
                     case 'Power Window Switch':
@@ -483,7 +463,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         items: [
@@ -496,14 +475,14 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Icon(Icons.receipt),
                 if (_selectedServiceCount >
-                    0) // Show only if there are selected services
+                    0)
                   Positioned(
                     right: 0,
                     top: -1,
                     child: Container(
                       padding: const EdgeInsets.all(1),
                       decoration: const BoxDecoration(
-                        color: Colors.red, // Red circle background
+                        color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       constraints: const BoxConstraints(
@@ -512,9 +491,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          '$_selectedServiceCount', // Display the service count
+                          '$_selectedServiceCount',
                           style: const TextStyle(
-                            color: Colors.white, // White number
+                            color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
