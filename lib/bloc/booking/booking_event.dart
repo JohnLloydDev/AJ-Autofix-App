@@ -12,13 +12,16 @@ abstract class BookingEvent extends Equatable {
 
 class GetBooking extends BookingEvent {}
 
-class GetBookingById extends BookingEvent {
-  final String id;
+class GetUserBooking extends BookingEvent {}
 
-  const GetBookingById(this.id);
+
+class GetBookingById extends BookingEvent {
+  final String bookingId;
+
+  const GetBookingById(this.bookingId);
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [bookingId];
 }
 
 class AcceptBooking extends BookingEvent {

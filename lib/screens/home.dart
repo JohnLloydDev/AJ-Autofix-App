@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
+
   final Set<String> _selectedCategories = {};
   final Set<String> _selectedServices = {};
   int _selectedServiceCount = 0;
@@ -140,12 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookingScreen(
-              selectedServices:
-                  _selectedServices.toList().cast<String>(), // Existing code
-              selectedServiceCount:
-                  _selectedServiceCount, // Pass the selected service count here
-            ),
+            builder: (context) => BookingScreen(selectedServices:_selectedServices.toList()), 
           ),
         );
         break;
@@ -181,17 +177,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleServiceSelection(String serviceName) {
     setState(() {
       if (_selectedServices.contains(serviceName)) {
-        _selectedServices.remove(serviceName);
-        _selectedServiceCount--;
+        _selectedServices.remove(serviceName); 
       } else {
-        _selectedServices.add(serviceName);
-        _selectedServiceCount++;
+        _selectedServices.add(serviceName); 
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -234,14 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 100,
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFFDCDCDC),
-                      Color(0xFF6E88A1),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: Color(0xFF9FA8DA),
                 ),
                 child: Center(
                   child: Text(
@@ -548,45 +536,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isSelected
-                ? [
-                    const Color.fromARGB(255, 221, 221, 221),
-                    const Color.fromARGB(255, 110, 136, 161),
-                  ]
-                : [
-                    Colors.grey[300]!,
-                    Colors.grey[300]!,
-                  ],
+      child: TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: _selectedCategories.contains(category.toLowerCase())
+              ? Colors.white
+              : Colors.black,
+          backgroundColor: _selectedCategories.contains(category.toLowerCase())
+              ? Colors.purple
+              : Colors.grey[300],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: isSelected
-              ? [
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 5,
-                    offset: Offset(0, 2),
-                  ),
-                ]
-              : [],
         ),
-        child: TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: isSelected ? Colors.white : Colors.black,
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-          ),
-          onPressed: () {
-            _onCategorySelected(category.toLowerCase());
-          },
-          child: Text(category.capitalize()),
-        ),
+        onPressed: () => _onCategorySelected(category.toLowerCase()),
+        child: Text(category),
       ),
     );
   }

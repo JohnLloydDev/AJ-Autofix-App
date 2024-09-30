@@ -20,7 +20,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<GetBookingById>((event, emit) async {
       emit(BookingLoading());
       try {
-        final booking = await bookingRepository.getBookingById(event.id);
+        final booking = await bookingRepository.getBookingById(event.bookingId);
+
         emit(BookingLoadedById(booking));
       } catch (e) {
         emit(RequestError('Failed to fetch booking by ID: $e'));
@@ -59,9 +60,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       }
     });
 
-     on<AddService>((event, emit) {
-    });
-
+    on<AddService>((event, emit) {});
 
     on<CreateBooking>((event, emit) async {
       emit(BookingLoading());
@@ -79,8 +78,15 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         emit(RequestError('Failed to create booking: $e'));
       }
     });
-  }
 
-    
+    on<GetUserBooking>((event, emit) async {
+      try{
+        emit(BookingLoading());
+        final booking = await bookingRepository.getUserBooking();
+        emit(BookingLoaded(booking));
+      }catch (e){
+        emit(RequestError(e.toString()));
+      }
+    });
   }
-
+}

@@ -8,4 +8,5 @@ abstract class BookingRepository {
   Future<Booking> rejectBooking(String id);
   Future<List<Booking>> getAllPendingBooking();
   Future<Booking> createBooking(String id, Booking booking);
+  Future<List<Booking>> getUserBooking();
 }

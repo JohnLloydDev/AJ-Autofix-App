@@ -36,6 +36,10 @@ void main() {
         ),
         BlocProvider(
           create: (context) =>
+              BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
+        ),
+        BlocProvider(
+          create: (context) =>
               BookingBloc(BookingRepositoryImpl())..add(GetBooking()),
         ),
         BlocProvider(

@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -21,7 +20,7 @@ class BookingLoaded extends BookingState {
   const BookingLoaded(this.bookings);
 
   @override
-  List<Object> get props => [bookings ];
+  List<Object> get props => [bookings];
 }
 
 class BookingLoadedById extends BookingState {
@@ -42,7 +41,6 @@ class BookingSuccess extends BookingState{
   List<Object> get props => [message];
   
 }
-
 
 class RequestError extends BookingState {
   final String error;

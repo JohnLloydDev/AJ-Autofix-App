@@ -76,21 +76,13 @@ class BookingRepositoryImpl extends BookingRepository {
 
   @override
   Future<Booking> getBookingById(String id) async {
-    final accessToken = await SecureStorage.readToken('access_token');
-
-    if (accessToken == null) {
-      throw Exception('No access token found');
-    }
     final response = await http.get(
-      Uri.parse('$baseUrl/bookings/bookings/$id/accept'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
+      Uri.parse('$baseUrl/bookings/bookings/get/$id'),
     );
+
     if (response.statusCode == 200) {
-      final Map<String, dynamic> bookingId = json.decode(response.body);
-      return Booking.fromJson(bookingId);
+      final Map<String, dynamic> booking = json.decode(response.body);
+      return Booking.fromJson(booking);
     } else {
       throw Exception('Failed to load booking with ID: $id');
     }
@@ -131,15 +123,38 @@ class BookingRepositoryImpl extends BookingRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
       },
-      body: jsonEncode(booking.toJson()), 
+      body: jsonEncode(booking.toJson()),
     );
-
 
     if (response.statusCode == 201) {
       return Booking.fromJson(jsonDecode(response.body));
     } else {
       throw Exception(
           'Failed to create booking: ${response.statusCode} ${response.body}');
+    }
+  }
+
+  @override
+  Future<List<Booking>> getUserBooking() async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/bookings/booking'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      },
+    );
+
+    if (response.statusCode == 200){
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((json) => Booking.fromJson(json)).toList();
+    } else {
+      throw Exception('failed to load bookings');
     }
   }
 }
