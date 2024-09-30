@@ -1,13 +1,14 @@
+// contact_state.dart
 abstract class ContactState {}
 
 class ContactInitial extends ContactState {}
 
-class ContactSending extends ContactState {}
+class ContactSubmitting extends ContactState {}
 
-class ContactSentSuccess extends ContactState {}
+class ContactSuccess extends ContactState {}
 
-class ContactSentFailure extends ContactState {
-  final String error;
+class ContactFailure extends ContactState {
+  final String errorMessage;
 
-  ContactSentFailure(this.error);
+  ContactFailure(this.errorMessage);
 }

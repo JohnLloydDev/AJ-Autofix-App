@@ -1,6 +1,7 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
+import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/repositories/admin_repository_impl.dart';
 import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
+import 'package:aj_autofix/repositories/contact_repository_impl.dart';
 import 'package:aj_autofix/repositories/review_repository_impl.dart';
 import 'package:aj_autofix/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -45,9 +47,13 @@ void main() {
               UserBloc(AdminRepositoryImpl())..add(GetUserByAuthEvent()),
         ),
         BlocProvider(
-          create: (context) => ReviewBloc(ReviewRepositoryImpl())..add(FetchReviews()),
+          create: (context) =>
+              ReviewBloc(ReviewRepositoryImpl())..add(FetchReviews()),
         ),
-        
+        BlocProvider(
+          create: (context) =>
+              ContactBloc(ContactRepositoryImpl()),
+        ),
       ],
       child: const MyApp(),
     ),

@@ -1,5 +1,6 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/screens/contact_form.dart';
 import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/screens/booking.dart';
@@ -265,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ContactUsScreen()));
+                        builder: (context) => ContactFormPage()));
               },
             ),
             const Divider(),
