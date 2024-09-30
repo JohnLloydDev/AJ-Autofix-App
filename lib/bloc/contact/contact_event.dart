@@ -1,9 +1,10 @@
+// contact_event.dart
 abstract class ContactEvent {}
 
-class SendContactEmailEvent extends ContactEvent {
+class SendContactEvent extends ContactEvent {
   final String name;
   final String email;
   final String message;
 
-  SendContactEmailEvent({required this.name, required this.email, required this.message});
+  SendContactEvent({required this.name, required this.email, required this.message});
 }
