@@ -20,10 +20,12 @@ const BorderRadius kBorderRadius = BorderRadius.all(Radius.circular(8.0));
 
 class BookingScreen extends StatefulWidget {
   final List<String> selectedServices;
+  final int selectedServiceCount;
 
   const BookingScreen({
     super.key,
     required this.selectedServices,
+    required this.selectedServiceCount,
   });
 
   @override
@@ -84,7 +86,12 @@ class BookingScreenState extends State<BookingScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const BookingConfirmationScreen(),
+                  builder: (context) => BookingConfirmationScreen(
+                    selectedServices:
+                        widget.selectedServices, // Pass the selected services
+                    selectedServiceCount: widget
+                        .selectedServices.length, // Count of selected services
+                  ),
                 ),
               );
             } else if (state is RequestError) {
@@ -139,7 +146,6 @@ class BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
                   Container(
                     constraints: const BoxConstraints(
                       maxHeight: 300,
@@ -148,7 +154,8 @@ class BookingScreenState extends State<BookingScreen> {
                         ? ListView.builder(
                             itemCount: widget.selectedServices.length,
                             itemBuilder: (context, index) {
-                              final serviceName = widget.selectedServices[index];
+                              final serviceName =
+                                  widget.selectedServices[index];
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: SizedBox(
@@ -188,13 +195,10 @@ class BookingScreenState extends State<BookingScreen> {
                                               Fluttertoast.showToast(
                                                 msg:
                                                     "Removed $serviceName from booking",
-                                                toastLength:
-                                                    Toast.LENGTH_SHORT,
-                                                gravity:
-                                                    ToastGravity.BOTTOM,
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
                                                 timeInSecForIosWeb: 1,
-                                                backgroundColor:
-                                                    Colors.black54,
+                                                backgroundColor: Colors.black54,
                                                 textColor: Colors.white,
                                                 fontSize: 16.0,
                                               );
@@ -277,7 +281,8 @@ class BookingScreenState extends State<BookingScreen> {
                       if (widget.selectedServices.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Please select at least one service.'),
+                            content:
+                                Text('Please select at least one service.'),
                           ),
                         );
                         return;
@@ -329,16 +334,47 @@ class BookingScreenState extends State<BookingScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt),
+            icon: Stack(
+              children: [
+                const Icon(Icons.receipt),
+                if (widget.selectedServiceCount > 0) // Use selectedServiceCount
+                  Positioned(
+                    right: 0,
+                    top: -1,
+                    child: Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: const BoxDecoration(
+                        color: Colors.red, // Red circle background
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 15,
+                        minHeight: 15,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${widget.selectedServiceCount}', // Display the service count
+                          style: const TextStyle(
+                            color: Colors.white, // White number
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             label: 'Booking',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Map',
           ),
@@ -348,16 +384,27 @@ class BookingScreenState extends State<BookingScreen> {
             case 0:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Home()),
+                MaterialPageRoute(
+                  builder: (context) => Home(
+                    selectedServices:
+                        widget.selectedServices, // Pass the selected services
+                    selectedServiceCount: widget
+                        .selectedServices.length, // Count of selected services
+                  ),
+                ),
               );
               break;
             case 1:
-              // Already on Booking screen
               break;
             case 2:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const ShopMap()),
+                MaterialPageRoute(
+                  builder: (context) => ShopMap(
+                    selectedServices: widget.selectedServices, // Pass the selected services
+                    selectedServiceCount: widget.selectedServiceCount, // Pass the count
+                  ),
+                ),
               );
               break;
           }
@@ -452,7 +499,14 @@ class TimePickerField extends StatelessWidget {
 }
 
 class BookingConfirmationScreen extends StatelessWidget {
-  const BookingConfirmationScreen({super.key});
+  final List<String> selectedServices;
+  final int selectedServiceCount;
+
+  const BookingConfirmationScreen({
+    super.key,
+    required this.selectedServices,
+    required this.selectedServiceCount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -477,7 +531,12 @@ class BookingConfirmationScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const Home()),
+                  MaterialPageRoute(
+                    builder: (context) => Home(
+                      selectedServices: selectedServices,
+                      selectedServiceCount: selectedServiceCount,
+                    ),
+                  ),
                 );
               },
               child: const Text('Go to Home'),
