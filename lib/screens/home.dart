@@ -59,38 +59,18 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Engine Oil Change', 'price': 'PHP 1,000', 'category': 'engine'},
     {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
     {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
-    {
-      'name': 'Fuel Injector Cleaning',
-      'price': 'PHP 2,200',
-      'category': 'engine'
-    },
+    {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
     {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
     {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
     {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
     {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
     {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
-    {
-      'name': 'Alternator Repair',
-      'price': 'PHP 3,500',
-      'category': 'electrical'
-    },
+    {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
     {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
-    {
-      'name': 'Car Alarm',
-      'price': 'PHP 1,500 - 1,800',
-      'category': 'electrical'
-    },
-    {
-      'name': 'Battery Replacement',
-      'price': 'PHP 4,000',
-      'category': 'electrical'
-    },
+    {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
+    {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
     {'name': 'Headlight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
-    {
-      'name': 'Power Window Switch',
-      'price': 'PHP 1,000',
-      'category': 'electrical'
-    }
+    {'name': 'Power Window Switch', 'price': 'PHP 1,000', 'category': 'electrical'}
   ];
 
   List<Map<String, String>> _filteredServices = [];

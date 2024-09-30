@@ -1,5 +1,3 @@
-// booking.dart
-
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -15,7 +13,6 @@ import 'home.dart';
 import 'shopmap.dart';
 import 'login_screen.dart';
 
-// Define constants for styling
 const double kPadding = 16.0;
 const double kSpacing = 16.0;
 const Color kPrimaryColor = Colors.lightBlue;
