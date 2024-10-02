@@ -57,6 +57,18 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFDCDCDC),
+                Color(0xFF6E88A1),
+              ],
+            ),
+          ),
+        ),
         title: const Text('Profile Update'),
         actions: [
           BlocBuilder<UserBloc, UserState>(
@@ -108,7 +120,7 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                       backgroundImage: profilePicture != null
                           ? FileImage(profilePicture!) 
                           : _getProfileImage(user.profilePicture), 
-                      radius: 40,
+                      radius: 50,
                       backgroundColor: Colors.grey[300],
                     ),
                   ),

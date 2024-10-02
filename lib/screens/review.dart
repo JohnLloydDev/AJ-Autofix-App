@@ -24,6 +24,19 @@ class ReviewScreenState extends State<ReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFDCDCDC),
+                Color(0xFF6E88A1),
+              ],
+            ),
+          ),
+        ),
+
         title: const Text('Reviews'),
       ),
       body: BlocListener<ReviewBloc, ReviewState>(

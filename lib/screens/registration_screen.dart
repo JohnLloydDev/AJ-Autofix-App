@@ -188,7 +188,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -260,8 +260,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
-            padding: const EdgeInsets.symmetric(vertical: 15),
+            backgroundColor: const Color(0xFF6E88A1),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -305,7 +305,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.w800,
               decoration: TextDecoration.underline,
-              color: Colors.deepPurple,
+              color: Color(0xFF6E88A1),
             ),
           ),
         ),

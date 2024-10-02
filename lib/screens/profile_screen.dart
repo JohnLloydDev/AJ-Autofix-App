@@ -29,7 +29,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFDCDCDC),
+                Color(0xFF6E88A1),
+              ],
+            ),
+          ),
+        ),
         title: const Text('Profile'),
+      
         actions: [
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
@@ -68,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     backgroundImage: _getProfileImage(user.profilePicture),
-                    radius: 40,
+                    radius: 80,
                     backgroundColor: Colors.grey[300],
                   ),
                   _buildProfileDetail('Full Name', user.fullname),

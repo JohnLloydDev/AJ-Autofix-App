@@ -56,10 +56,8 @@ class ShopMapState extends State<ShopMap> {
           context,
           MaterialPageRoute(
             builder: (context) => Home(
-              selectedServices:
-                  widget.selectedServices,
-              selectedServiceCount: widget
-                  .selectedServiceCount,
+              selectedServices: widget.selectedServices,
+              selectedServiceCount: widget.selectedServiceCount,
             ),
           ),
         );
@@ -85,7 +83,9 @@ class ShopMapState extends State<ShopMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
+        automaticallyImplyLeading: false, 
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -111,55 +111,56 @@ class ShopMapState extends State<ShopMap> {
         mapType: MapType.normal,
       ),
       bottomNavigationBar: BottomNavigationBar(
-  currentIndex: _selectedIndex,
-  items: [
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: Stack(
-        children: [
-          const Icon(Icons.receipt),
-          if (widget.selectedServiceCount > 0)
-            Positioned(
-              right: 0,
-              top: -1,
-              child: Container(
-                padding: const EdgeInsets.all(1),
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                constraints: const BoxConstraints(
-                  minWidth: 15,
-                  minHeight: 15,
-                ),
-                child: Center(
-                  child: Text(
-                    '${widget.selectedServiceCount}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color(0xFF6E88A1),
+        unselectedItemColor: Colors.grey,
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Stack(
+              children: [
+                const Icon(Icons.receipt),
+                if (widget.selectedServiceCount > 0)
+                  Positioned(
+                    right: 0,
+                    top: -1,
+                    child: Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 15,
+                        minHeight: 15,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${widget.selectedServiceCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
+              ],
             ),
+            label: 'Booking',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
         ],
+        onTap: _onItemTapped,
       ),
-      label: 'Booking',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.map),
-      label: 'Map',
-    ),
-  ],
-  onTap: _onItemTapped,
-),
-
     );
   }
 

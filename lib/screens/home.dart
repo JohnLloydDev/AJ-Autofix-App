@@ -67,18 +67,38 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Engine Change Oil', 'price': 'PHP 1,000', 'category': 'engine'},
     {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
     {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
-    {'name': 'Fuel Injector Cleaning', 'price': 'PHP 2,200', 'category': 'engine'},
+    {
+      'name': 'Fuel Injector Cleaning',
+      'price': 'PHP 2,200',
+      'category': 'engine'
+    },
     {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
     {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
     {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
     {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
     {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
-    {'name': 'Alternator Repair', 'price': 'PHP 3,500', 'category': 'electrical'},
+    {
+      'name': 'Alternator Repair',
+      'price': 'PHP 3,500',
+      'category': 'electrical'
+    },
     {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
-    {'name': 'Car Alarm', 'price': 'PHP 1,500 - 1,800', 'category': 'electrical'},
-    {'name': 'Battery Replacement', 'price': 'PHP 4,000', 'category': 'electrical'},
+    {
+      'name': 'Car Alarm',
+      'price': 'PHP 1,500 - 1,800',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Battery Replacement',
+      'price': 'PHP 4,000',
+      'category': 'electrical'
+    },
     {'name': 'HeadLight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
-    {'name': 'Power Window Switch', 'price': 'PHP 1,000', 'category': 'electrical'}
+    {
+      'name': 'Power Window Switch',
+      'price': 'PHP 1,000',
+      'category': 'electrical'
+    }
   ];
 
   List<Map<String, String>> _filteredServices = [];
@@ -120,10 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BookingScreen(
-              selectedServices:
-                  _selectedServices.toList().cast<String>(),
-              selectedServiceCount:
-                  _selectedServiceCount,
+              selectedServices: _selectedServices.toList().cast<String>(),
+              selectedServiceCount: _selectedServiceCount,
             ),
           ),
         );
@@ -234,8 +252,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('My Profile'),
+              leading: const Icon(Icons.person, color: Color(0xFF6E88A1),),
+              title: const Text('My Profile', style: TextStyle(color: Color(0xFF6E88A1)), ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -247,8 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.pending),
-              title: const Text('Pending'),
+              leading: const Icon(Icons.pending, color: Color(0xFF6E88A1),),
+              title: const Text('Pending', style: TextStyle(color: Color(0xFF6E88A1)),),
               onTap: () {
                 Navigator.push(
                     context,
@@ -258,19 +276,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.contact_mail),
-              title: const Text('Contact Us'),
+              leading: const Icon(Icons.contact_mail, color: Color(0xFF6E88A1),),
+              title: const Text('Contact Us',style: TextStyle(color:Color(0xFF6E88A1)),),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ContactFormPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ContactFormPage()));
               },
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.star),
-              title: const Text('Reviews'),
+              leading: const Icon(Icons.star, color: Color(0xFF6E88A1),),
+              title: const Text('Reviews', style: TextStyle(color: Color(0xFF6E88A1)),),
               onTap: () {
                 Navigator.push(
                     context,
@@ -280,8 +296,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
+                leading: const Icon(Icons.logout, color: Color(0xFF6E88A1),),
+                title: const Text('Logout', style: TextStyle(color: Color(0xFF6E88A1)),),
                 onTap: () async {
                   try {
                     BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
@@ -465,6 +481,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        selectedItemColor:
+            const Color(0xFF6E88A1), 
+        unselectedItemColor: Colors.grey,
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -474,8 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Stack(
               children: [
                 const Icon(Icons.receipt),
-                if (_selectedServiceCount >
-                    0)
+                if (_selectedServiceCount > 0)
                   Positioned(
                     right: 0,
                     top: -1,
@@ -505,6 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             label: 'Booking',
+            
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.map),
@@ -639,7 +658,7 @@ class ServiceCard extends StatelessWidget {
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.black,
+                    backgroundColor: Color.fromARGB(100, 0, 0, 0),
                     textColor: Colors.white,
                     fontSize: 16.0,
                   );

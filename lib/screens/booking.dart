@@ -64,6 +64,7 @@ class BookingScreenState extends State<BookingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, 
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -188,11 +189,10 @@ class BookingScreenState extends State<BookingScreen> {
                                           ),
                                           onPressed: () {
                                             setState(() {
-                                              widget.selectedServices.removeAt(
-                                                  index);
+                                              widget.selectedServices
+                                                  .removeAt(index);
                                               serviceCount = widget
-                                                  .selectedServices
-                                                  .length;
+                                                  .selectedServices.length;
                                             });
 
                                             Fluttertoast.showToast(
@@ -336,6 +336,8 @@ class BookingScreenState extends State<BookingScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
+        selectedItemColor: const Color(0xFF6E88A1),
+        unselectedItemColor: Colors.grey,
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -513,6 +515,8 @@ class BookingConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, 
+        
         title: const Text('Booking Confirmed'),
         backgroundColor: kPrimaryColor,
       ),

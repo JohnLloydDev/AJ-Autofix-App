@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 .add(UserLogin(user));
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.deepPurple,
+                                            backgroundColor: const Color(0xFF6E88A1),
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 10),
                                             shape: RoundedRectangleBorder(
@@ -247,6 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontStyle: FontStyle.italic,
                                           fontWeight: FontWeight.w800,
                                           decoration: TextDecoration.underline,
+                                          color: Color(0xFF6E88A1),
                                         ),
                                       ),
                                     ),
