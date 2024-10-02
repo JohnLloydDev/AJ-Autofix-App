@@ -198,7 +198,7 @@ class ReviewCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              review.user?.fullname ?? '',
+              review.user?.fullname ?? "Anonymous",
               style: const TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 8),
