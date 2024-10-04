@@ -286,7 +286,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                     state.user.profilePicture;
 
                                 final user = User(
-                                  id: '',
+                                  id: widget.id,
                                   fullname: fullname,
                                   username: username,
                                   email: email,

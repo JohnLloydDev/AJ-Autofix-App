@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 
 class BookingRepositoryImpl extends BookingRepository {
   static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
-
   @override
   Future<List<Booking>> getAllBooking() async {
     final accessToken = await SecureStorage.readToken('access_token');
@@ -16,7 +15,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.get(
-      Uri.parse("$baseUrl/bookings/bookings"),
+      Uri.parse("$baseUrl/bookings/bookings/"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -75,6 +74,28 @@ class BookingRepositoryImpl extends BookingRepository {
   }
 
   @override
+  Future<Booking> completeBooking(String id) async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+    final response = await http.put(
+      Uri.parse('$baseUrl/bookings/bookings/$id/complete'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Booking.fromJson(json.decode(response.body)['booking']);
+    } else {
+      throw Exception('Failed to reject booking');
+    }
+  }
+
+  @override
   Future<Booking> getBookingById(String id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/bookings/bookings/get/$id'),
@@ -97,6 +118,27 @@ class BookingRepositoryImpl extends BookingRepository {
     }
     final response = await http.get(
       Uri.parse("$baseUrl/bookings/admin/bookings/pending"),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Booking.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load bookings');
+    }
+  }
+
+    @override
+  Future<List<Booking>> getAllAcceptedBooking() async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+    final response = await http.get(
+      Uri.parse("$baseUrl/bookings/admin/bookings/accepted"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -134,7 +176,7 @@ class BookingRepositoryImpl extends BookingRepository {
     }
   }
 
-  @override
+    @override
   Future<List<Booking>> getUserBooking() async {
     final accessToken = await SecureStorage.readToken('access_token');
 
@@ -143,7 +185,7 @@ class BookingRepositoryImpl extends BookingRepository {
     }
 
     final response = await http.get(
-      Uri.parse('$baseUrl/bookings/booking'),
+      Uri.parse('$baseUrl/bookings/bookings/user'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'

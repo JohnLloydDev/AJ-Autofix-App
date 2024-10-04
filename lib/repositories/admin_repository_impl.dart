@@ -53,7 +53,7 @@ class AdminRepositoryImpl extends AdminRepository {
     final userJson = jsonEncode(user.toJson());
 
     final response = await http.put(
-      Uri.parse('$baseUrl/users/$id'),
+      Uri.parse('$baseUrl/users/admin/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',

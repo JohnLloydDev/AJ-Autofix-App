@@ -28,24 +28,23 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  onesignal_flutter: ^5.1.2
   bloc: ^8.1.4
   cupertino_icons: ^1.0.6
+  dio: ^4.0.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
+  flutter_polyline_points: ^2.1.0
+  flutter_rating_bar: ^4.0.1
   flutter_secure_storage: ^9.2.2
+  fluttertoast: ^8.0.9
+  google_maps_flutter: ^2.2.0
   http: ^1.2.2
   image_picker: ^1.1.2
   intl: ^0.18.0
+  onesignal_flutter: ^5.1.2
   timelines: ^0.1.0
-  fluttertoast: ^8.0.9
-
-  dio: ^4.0.0
-  flutter_polyline_points: ^2.1.0
-  google_maps_flutter: ^2.2.0
-  
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -88,8 +87,6 @@ flutter:
     - assets/power_window_switch.png
     - assets/a&j_logo.png
     - assets/logo.png
-    
-    
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

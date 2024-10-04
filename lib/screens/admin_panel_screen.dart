@@ -1,8 +1,15 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/bloc/user/user_bloc.dart';
+import 'package:aj_autofix/bloc/user/user_event.dart';
+import 'package:aj_autofix/bloc/user/user_state.dart';
+import 'package:aj_autofix/repositories/admin_repository_impl.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
+import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
 import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_user_screen.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -21,11 +28,13 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   int totalApproved = 0;
   int totalPending = 0;
   int totalRejected = 0;
+  int totalUsers = 0; 
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<BookingBloc>(context).add(GetBooking());
+    BlocProvider.of<UserBloc>(context).add(GetUsers());
   }
 
   void _onItemTapped(int index) {
@@ -39,48 +48,67 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AdminUsersScreen()),
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  UserBloc(AdminRepositoryImpl())..add(GetUsers()),
+              child: const AdminUsersScreen(),
+            ),
+          ),
         );
+        break;
       case 2:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AdminServicesScreen()),
         );
         break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetAllAcceptedBooking()),
+              child: const AdminCompletedBookingsScreen(),
+            ),
+          ),
+        );
+        break;
     }
   }
 
   Future<void> _handleLogout(BuildContext context) async {
-  try {
-    BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
+    try {
+      BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
 
-    await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 300));
 
-    if (context.mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
-  } catch (e) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logout failed: $e')),
-      );
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Logout failed: $e')),
+        );
+      }
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          actions: [
+        actions: [
           IconButton(
               onPressed: () {
                 _handleLogout(context);
               },
-              icon: const Icon((Icons.logout)))
+              icon: const Icon(Icons.logout))
         ],
         automaticallyImplyLeading: false,
         title: const Text('Admin Panel'),
@@ -109,22 +137,37 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       .where((booking) =>
                           booking.status.toLowerCase() == 'rejected')
                       .length;
-                      
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    shrinkWrap: true,
-                    children: [
-                      _buildDashboardItem(
-                          'Total\nUsers', '15', Colors.purple, Icons.people),
-                      _buildDashboardItem('Total\nRejected', '$totalRejected',
-                          Colors.red, Icons.request_page),
-                      _buildDashboardItem('Total\nPending', '$totalPending',
-                          Colors.orange, Icons.thumb_up),
-                      _buildDashboardItem('Total\nApproved', '$totalApproved',
-                          Colors.green, Icons.done_all),
-                    ],
+
+                  return BlocBuilder<UserBloc, UserState>(
+                    builder: (context, userState) {
+                      if (userState is UserDataLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (userState is UserDataLoaded) {
+                        totalUsers = userState.userdata.length; 
+
+                        return GridView.count(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          shrinkWrap: true,
+                          children: [
+                            _buildDashboardItem('Total\nUsers', '$totalUsers',
+                                Colors.purple, Icons.people),
+                            _buildDashboardItem(
+                                'Total\nRejected',
+                                '$totalRejected',
+                                Colors.red,
+                                Icons.request_page),
+                            _buildDashboardItem('Total\nPending',
+                                '$totalPending', Colors.orange, Icons.thumb_up),
+                            _buildDashboardItem('Total\nApproved',
+                                '$totalApproved', Colors.green, Icons.done_all),
+                          ],
+                        );
+                      } else {
+                        return const Center(child: Text('No data available'));
+                      }
+                    },
                   );
                 } else {
                   return const Center(child: Text('No data available'));
@@ -195,18 +238,23 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.space_dashboard_outlined),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
+            icon: Icon(CupertinoIcons.person_2),
             label: 'Users',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
+            icon: Icon(CupertinoIcons.calendar),
             label: 'Bookings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.check_mark_circled),
+            label: 'Complete',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -224,6 +272,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         break;
       case 'rejected':
         badgeColor = Colors.red;
+        break;
+      case 'completed':
+        badgeColor = Colors.blue;
         break;
       default:
         badgeColor = Colors.orange;

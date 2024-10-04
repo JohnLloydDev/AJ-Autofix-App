@@ -1,12 +1,15 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_event.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/contact_form.dart';
 import 'package:aj_autofix/screens/profile_screen.dart';
+import 'package:aj_autofix/screens/show_reviews_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/screens/booking.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pendingrequest.dart';
-import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -269,9 +272,15 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Pending', style: TextStyle(color: Color(0xFF6E88A1)),),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UserPendingRequest()));
+                            context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => BookingBloc(BookingRepositoryImpl())
+                        ..add(GetUserBooking()),
+                      child: const UserPendingRequest(),
+                    ),
+                  ),
+                );
               },
             ),
             const Divider(),
@@ -291,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReviewScreen()));
+                        builder: (context) => const ShowReviewsScreen()));
               },
             ),
             const Divider(),
@@ -658,7 +667,7 @@ class ServiceCard extends StatelessWidget {
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 1,
-                    backgroundColor: Color.fromARGB(100, 0, 0, 0),
+                    backgroundColor: const Color.fromARGB(100, 0, 0, 0),
                     textColor: Colors.white,
                     fontSize: 16.0,
                   );

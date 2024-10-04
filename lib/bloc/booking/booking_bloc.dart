@@ -50,11 +50,32 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       }
     });
 
+    on<CompletedBooking>((event, emit) async {
+      emit(BookingLoading());
+      try {
+        await bookingRepository.completeBooking(event.bookingId);
+        final acceptedBookings = await bookingRepository.getAllAcceptedBooking();
+        emit(BookingAcceptedLoaded(acceptedBookings));
+      } catch (e) {
+        emit(RequestError('Failed to accept booking: $e'));
+      }
+    });
+
     on<GetAllPendingBooking>((event, emit) async {
       try {
         emit(BookingLoading());
         final pendingBookings = await bookingRepository.getAllPendingBooking();
         emit(BookingPendingLoaded(pendingBookings));
+      } catch (e) {
+        emit(RequestError('Failed to fetch pending bookings: $e'));
+      }
+    });
+
+    on<GetAllAcceptedBooking>((event, emit) async {
+      try {
+        emit(BookingLoading());
+        final acceptBooking = await bookingRepository.getAllAcceptedBooking();
+        emit(BookingAcceptedLoaded(acceptBooking));
       } catch (e) {
         emit(RequestError('Failed to fetch pending bookings: $e'));
       }
@@ -83,7 +104,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       try{
         emit(BookingLoading());
         final booking = await bookingRepository.getUserBooking();
-        emit(BookingLoaded(booking));
+        emit(BookingUserLoaded(booking));
       }catch (e){
         emit(RequestError(e.toString()));
       }

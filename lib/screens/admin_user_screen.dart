@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/repositories/admin_repository_impl.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
+import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_update_details_screen.dart';
@@ -42,6 +47,18 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => const AdminServicesScreen()));
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+              BookingBloc(BookingRepositoryImpl())..add(GetAllAcceptedBooking()),
+              child: const AdminCompletedBookingsScreen(),
+            ),
+          ),
+        );
         break;
     }
   }
@@ -151,12 +168,15 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            AdminUpdateDetailsScreen(
-                                                id: user.id),
+                                        builder: (context) => BlocProvider(
+                                          create: (context) =>
+                                              UserBloc(AdminRepositoryImpl()),
+                                          child: AdminUpdateDetailsScreen(
+                                              id: user.id),
+                                        ),
                                       ),
                                     );
-                                                                    },
+                                  },
                                   icon: const Icon(Icons.edit),
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
@@ -199,6 +219,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.space_dashboard_outlined),
@@ -211,6 +232,10 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.calendar),
             label: 'Bookings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.check_mark_circled),
+            label: 'Completed',
           ),
         ],
         currentIndex: _selectedIndex,

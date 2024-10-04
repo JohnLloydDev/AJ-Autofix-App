@@ -5,23 +5,24 @@ import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/repositories/admin_repository_impl.dart';
-import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
+import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_user_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AdminServicesScreen extends StatefulWidget {
-  const AdminServicesScreen({super.key});
+class AdminCompletedBookingsScreen extends StatefulWidget {
+  const AdminCompletedBookingsScreen({super.key});
 
   @override
-  State<AdminServicesScreen> createState() => _AdminServicesScreenState();
+  State<AdminCompletedBookingsScreen> createState() =>
+      _AdminCompletedBookingsScreenState();
 }
 
-class _AdminServicesScreenState extends State<AdminServicesScreen> {
-  int _selectedIndex = 2;
+class _AdminCompletedBookingsScreenState
+    extends State<AdminCompletedBookingsScreen> {
+  int _selectedIndex = 3;
 
   final TextEditingController _searchController = TextEditingController();
   List<Booking> _filteredBookings = [];
@@ -29,7 +30,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<BookingBloc>().add(GetAllPendingBooking());
+    context.read<BookingBloc>().add(GetAllAcceptedBooking());
     _searchController.addListener(_filterBookings);
   }
 
@@ -43,9 +44,9 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
     final query = _searchController.text.toLowerCase();
     final bookingBloc = context.read<BookingBloc>();
 
-    if (bookingBloc.state is BookingPendingLoaded) {
+    if (bookingBloc.state is BookingAcceptedLoaded) {
       final bookings =
-          (bookingBloc.state as BookingPendingLoaded).pendingBookings;
+          (bookingBloc.state as BookingAcceptedLoaded).acceptedBookings;
       setState(() {
         _filteredBookings = bookings.where((booking) {
           final fullnameMatch =
@@ -83,19 +84,12 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
         );
         break;
       case 2:
-        break;
-      case 3:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) =>
-              BookingBloc(BookingRepositoryImpl())..add(GetAllAcceptedBooking()),
-              child: const AdminCompletedBookingsScreen(),
-            ),
-          ),
+          MaterialPageRoute(builder: (context) => const AdminServicesScreen()),
         );
         break;
+      case 3:
     }
   }
 
@@ -129,8 +123,8 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                 builder: (context, state) {
                   if (state is BookingLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is BookingPendingLoaded) {
-                    final bookings = state.pendingBookings.reversed.toList();
+                  } else if (state is BookingAcceptedLoaded) {
+                    final bookings = state.acceptedBookings;
 
                     _filteredBookings = bookings.where((booking) {
                       final query = _searchController.text.toLowerCase();
@@ -142,6 +136,9 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                           booking.vehicleType.toLowerCase().contains(query);
                       return fullnameMatch || vehicleTypeMatch;
                     }).toList();
+
+                    // Reverse the filtered bookings list
+                    _filteredBookings = _filteredBookings.reversed.toList();
 
                     if (_filteredBookings.isEmpty) {
                       return const Center(child: Text('No bookings found'));
@@ -201,18 +198,18 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                                   ),
                                   const SizedBox(height: 8.0),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       ElevatedButton.icon(
                                         onPressed: () {
                                           final bloc =
                                               BlocProvider.of<BookingBloc>(
                                                   context);
-                                          bloc.add(AcceptBooking(booking.id!));
+                                          bloc.add(
+                                              CompletedBooking(booking.id!));
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
+                                          backgroundColor: Colors.blue,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -221,29 +218,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                                         ),
                                         icon: const Icon(Icons.check,
                                             color: Colors.white),
-                                        label: const Text('Approve',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                      const SizedBox(width: 8.0),
-                                      ElevatedButton.icon(
-                                        onPressed: () {
-                                          final bloc =
-                                              BlocProvider.of<BookingBloc>(
-                                                  context);
-                                          bloc.add(RejectBooking(booking.id!));
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          minimumSize: const Size(140, 43),
-                                        ),
-                                        icon: const Icon(Icons.close,
-                                            color: Colors.white),
-                                        label: const Text('Reject',
+                                        label: const Text('Completed',
                                             style:
                                                 TextStyle(color: Colors.white)),
                                       ),
@@ -297,15 +272,10 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
     Color badgeColor;
 
     switch (status) {
-      case 'approved':
-        badgeColor = Colors.green;
-        break;
-      case 'rejected':
-        badgeColor = Colors.red;
-        break;
       default:
-        badgeColor = Colors.orange;
+        badgeColor = Colors.green;
     }
+
     return Container(
       width: 90,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -446,11 +416,9 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                           fontFamily: "Montserrat",
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: booking.status == 'approved'
+                          color: booking.status == 'Approved'
                               ? Colors.green
-                              : booking.status == 'rejected'
-                                  ? Colors.red
-                                  : Colors.orange,
+                              : Colors.black,
                         ),
                       ),
                     ),
