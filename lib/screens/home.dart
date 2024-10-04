@@ -210,10 +210,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: Row(
           children: [
-            Image.asset(
-              'assets/a&j_logo_home.png',
-              height: 40,
-              fit: BoxFit.contain,
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0),
+              child: Image.asset(
+                'assets/home_logo.png',
+                height: 40,
+                fit: BoxFit.contain,
+              ),
             ),
           ],
         ),
@@ -255,8 +259,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person, color: Color(0xFF6E88A1),),
-              title: const Text('My Profile', style: TextStyle(color: Color(0xFF6E88A1)), ),
+              leading: const Icon(
+                Icons.person,
+                color: Color(0xFF6E88A1),
+              ),
+              title: const Text(
+                'My Profile',
+                style: TextStyle(color: Color(0xFF6E88A1)),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -268,11 +278,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.pending, color: Color(0xFF6E88A1),),
-              title: const Text('Pending', style: TextStyle(color: Color(0xFF6E88A1)),),
+              leading: const Icon(
+                Icons.pending,
+                color: Color(0xFF6E88A1),
+              ),
+              title: const Text(
+                'Pending',
+                style: TextStyle(color: Color(0xFF6E88A1)),
+              ),
               onTap: () {
                 Navigator.push(
-                            context,
+                  context,
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
                       create: (context) => BookingBloc(BookingRepositoryImpl())
@@ -285,8 +301,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.contact_mail, color: Color(0xFF6E88A1),),
-              title: const Text('Contact Us',style: TextStyle(color:Color(0xFF6E88A1)),),
+              leading: const Icon(
+                Icons.contact_mail,
+                color: Color(0xFF6E88A1),
+              ),
+              title: const Text(
+                'Contact Us',
+                style: TextStyle(color: Color(0xFF6E88A1)),
+              ),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ContactFormPage()));
@@ -294,8 +316,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.star, color: Color(0xFF6E88A1),),
-              title: const Text('Reviews', style: TextStyle(color: Color(0xFF6E88A1)),),
+              leading: const Icon(
+                Icons.star,
+                color: Color(0xFF6E88A1),
+              ),
+              title: const Text(
+                'Reviews',
+                style: TextStyle(color: Color(0xFF6E88A1)),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -305,8 +333,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(),
             ListTile(
-                leading: const Icon(Icons.logout, color: Color(0xFF6E88A1),),
-                title: const Text('Logout', style: TextStyle(color: Color(0xFF6E88A1)),),
+                leading: const Icon(
+                  Icons.logout,
+                  color: Color(0xFF6E88A1),
+                ),
+                title: const Text(
+                  'Logout',
+                  style: TextStyle(color: Color(0xFF6E88A1)),
+                ),
                 onTap: () async {
                   try {
                     BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
@@ -490,8 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        selectedItemColor:
-            const Color(0xFF6E88A1), 
+        selectedItemColor: const Color(0xFF6E88A1),
         unselectedItemColor: Colors.grey,
         items: [
           const BottomNavigationBarItem(
@@ -532,7 +565,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             label: 'Booking',
-            
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.map),
