@@ -5,19 +5,15 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/user_model.dart';
-import 'package:aj_autofix/screens/pendingrequest.dart';
+import 'package:aj_autofix/screens/home.dart';
+import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
-import 'home.dart';
-import 'shopmap.dart';
+import 'package:aj_autofix/screens/booking_confirmation_screen.dart';
+import '../utils/constants.dart';
+import '../widgets/date_picker_field.dart';
 import 'login_screen.dart';
-
-const double kPadding = 16.0;
-const double kSpacing = 16.0;
-const Color kPrimaryColor = Colors.lightBlue;
-const BorderRadius kBorderRadius = BorderRadius.all(Radius.circular(8.0));
 
 class BookingScreen extends StatefulWidget {
   final List<String> selectedServices;
@@ -84,21 +80,30 @@ class BookingScreenState extends State<BookingScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BookingConfirmationScreen(
-                    selectedServices: widget.selectedServices,
-                    selectedServiceCount: widget.selectedServices.length,
-                    selectedTimeSlot: selectedTimeSlot!,
-                    bookingDate: selectedDate,
-                    vehicleType: carType,
+
+              if (selectedTimeSlot != null) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookingConfirmationScreen(
+                      selectedServices: widget.selectedServices,
+                      selectedServiceCount: widget.selectedServices.length,
+                      selectedTimeSlot: selectedTimeSlot!,
+                      bookingDate: selectedDate,
+                      vehicleType: carType,
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Error: Time slot not selected.'),
+                  ),
+                );
+              }
             } else if (state is RequestError) {
               setState(() {
-                errorMessage = state.error; 
+                errorMessage = state.error;
               });
               return;
             }
@@ -191,8 +196,8 @@ class BookingScreenState extends State<BookingScreen> {
                                             setState(() {
                                               widget.selectedServices
                                                   .removeAt(index);
-                                              serviceCount = widget
-                                                  .selectedServices.length;
+                                              serviceCount =
+                                                  widget.selectedServices.length;
                                             });
 
                                             Fluttertoast.showToast(
@@ -252,7 +257,7 @@ class BookingScreenState extends State<BookingScreen> {
                   ),
                   const SizedBox(height: kSpacing),
 
-                  // New Time Slot Selection Grid
+                  // Time Slot Selection Grid
                   const Text(
                     'Select Time Slot:',
                     style: TextStyle(
@@ -279,6 +284,7 @@ class BookingScreenState extends State<BookingScreen> {
                         onPressed: () {
                           setState(() {
                             selectedTimeSlot = slot;
+                            errorMessage = null; // Clear previous errors
                           });
                         },
                         style: ElevatedButton.styleFrom(
@@ -330,14 +336,14 @@ class BookingScreenState extends State<BookingScreen> {
 
                       if (widget.selectedServices.isEmpty) {
                         setState(() {
-                          errorMessage = 'Please select a valid future date.';
+                          errorMessage = 'Please select at least one service.';
                         });
                         return;
                       }
 
                       if (selectedTimeSlot == null) {
                         setState(() {
-                          errorMessage = 'Please select a TimeSlot.';
+                          errorMessage = 'Please select a time slot.';
                         });
                         return;
                       }
@@ -367,6 +373,7 @@ class BookingScreenState extends State<BookingScreen> {
                         status: 'Pending',
                       );
 
+                      // Dispatch the booking event
                       context.read<BookingBloc>().add(CreateBooking(booking));
                     },
                     style: ElevatedButton.styleFrom(
@@ -463,119 +470,6 @@ class BookingScreenState extends State<BookingScreen> {
               break;
           }
         },
-      ),
-    );
-  }
-}
-
-class DatePickerField extends StatelessWidget {
-  final DateTime selectedDate;
-  final Function(DateTime) onDateSelected;
-
-  const DatePickerField({
-    super.key,
-    required this.selectedDate,
-    required this.onDateSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime.now(),
-          lastDate: DateTime(2101),
-        );
-        if (picked != null) {
-          onDateSelected(picked);
-        }
-      },
-      child: InputDecorator(
-        decoration: const InputDecoration(
-          labelText: 'Select Date',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(DateFormat('MM/dd/yyyy').format(selectedDate)),
-            const Icon(Icons.calendar_today, color: Colors.grey),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BookingConfirmationScreen extends StatelessWidget {
-  final List<String> selectedServices;
-  final int selectedServiceCount;
-  final String selectedTimeSlot;
-  final DateTime bookingDate;
-  final String vehicleType;
-
-  const BookingConfirmationScreen({
-    super.key,
-    required this.selectedServices,
-    required this.selectedServiceCount,
-    required this.selectedTimeSlot,
-    required this.bookingDate,
-    required this.vehicleType,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Booking Confirmed'),
-        backgroundColor: kPrimaryColor,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(kPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.check_circle, color: Colors.green[700], size: 100),
-              const SizedBox(height: 20),
-              const Text(
-                'Your booking has been successfully placed!',
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Vehicle: $vehicleType',
-                style: const TextStyle(fontSize: 16),
-              ),
-              Text(
-                'Date: ${DateFormat('MM/dd/yyyy').format(bookingDate)}',
-                style: const TextStyle(fontSize: 16),
-              ),
-              Text(
-                'Time Slot: $selectedTimeSlot',
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserPendingRequest(),
-                    ),
-                  );
-                },
-                child: const Text('Go to Pending Request'),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
