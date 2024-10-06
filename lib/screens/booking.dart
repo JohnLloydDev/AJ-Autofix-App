@@ -5,6 +5,7 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/screens/pendingrequest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,11 +36,21 @@ class BookingScreen extends StatefulWidget {
 class BookingScreenState extends State<BookingScreen> {
   String carType = '';
   DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = const TimeOfDay(hour: 10, minute: 0);
+
+  // Remove TimeOfDay since we're using predefined time slots
+  String? selectedTimeSlot;
 
   User? user;
   late List<String> services;
   late int serviceCount;
+
+  // Define the available time slots
+  final List<String> timeSlots = [
+    "8:00am-10:00am",
+    "10:00am-12:00pm",
+    "1:00pm-3:00pm",
+    "3:00pm-5:00pm",
+  ];
 
   @override
   void initState() {
@@ -48,23 +59,11 @@ class BookingScreenState extends State<BookingScreen> {
     serviceCount = widget.selectedServiceCount;
   }
 
-  String formatTimeOfDay(TimeOfDay timeOfDay) {
-    final now = DateTime.now();
-    final parsedTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      timeOfDay.hour,
-      timeOfDay.minute,
-    );
-    return DateFormat('HH:mm').format(parsedTime);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -94,6 +93,9 @@ class BookingScreenState extends State<BookingScreen> {
                   builder: (context) => BookingConfirmationScreen(
                     selectedServices: widget.selectedServices,
                     selectedServiceCount: widget.selectedServices.length,
+                    selectedTimeSlot: selectedTimeSlot!,
+                    bookingDate: selectedDate,
+                    vehicleType: carType,
                   ),
                 ),
               );
@@ -251,15 +253,59 @@ class BookingScreenState extends State<BookingScreen> {
                     },
                   ),
                   const SizedBox(height: kSpacing),
-                  TimePickerField(
-                    selectedTime: selectedTime,
-                    onTimeSelected: (picked) {
-                      setState(() {
-                        selectedTime = picked;
-                      });
+
+                  // New Time Slot Selection Grid
+                  const Text(
+                    'Select Time Slot:',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: timeSlots.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10.0,
+                      crossAxisSpacing: 10.0,
+                      childAspectRatio: 3,
+                    ),
+                    itemBuilder: (context, index) {
+                      final slot = timeSlots[index];
+                      final isSelected = selectedTimeSlot == slot;
+                      return ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedTimeSlot = slot;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              isSelected ? kPrimaryColor : Colors.grey[200],
+                          foregroundColor:
+                              isSelected ? Colors.white : Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: isSelected
+                                ? const BorderSide(
+                                    color: kPrimaryColor, width: 2)
+                                : const BorderSide(
+                                    color: Colors.grey, width: 1),
+                          ),
+                        ),
+                        child: Text(
+                          slot,
+                          textAlign: TextAlign.center,
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: kSpacing),
+
                   ElevatedButton(
                     onPressed: () {
                       if (carType.isEmpty) {
@@ -290,6 +336,15 @@ class BookingScreenState extends State<BookingScreen> {
                         return;
                       }
 
+                      if (selectedTimeSlot == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please select a time slot.'),
+                          ),
+                        );
+                        return;
+                      }
+
                       if (user == null || user!.id.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -310,7 +365,7 @@ class BookingScreenState extends State<BookingScreen> {
                         userId: user!.id,
                         serviceType: widget.selectedServices,
                         vehicleType: carType,
-                        time: formatTimeOfDay(selectedTime),
+                        time: selectedTimeSlot!,
                         date: selectedDate,
                         status: 'Pending',
                       );
@@ -397,7 +452,6 @@ class BookingScreenState extends State<BookingScreen> {
               );
               break;
             case 1:
-              // Stay on the current screen (Booking)
               break;
             case 2:
               Navigator.push(
@@ -460,93 +514,71 @@ class DatePickerField extends StatelessWidget {
   }
 }
 
-class TimePickerField extends StatelessWidget {
-  final TimeOfDay selectedTime;
-  final Function(TimeOfDay) onTimeSelected;
-
-  const TimePickerField({
-    super.key,
-    required this.selectedTime,
-    required this.onTimeSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        final TimeOfDay? picked = await showTimePicker(
-          context: context,
-          initialTime: selectedTime,
-        );
-        if (picked != null) {
-          onTimeSelected(picked);
-        }
-      },
-      child: InputDecorator(
-        decoration: const InputDecoration(
-          labelText: 'Select Time',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(selectedTime.format(context)),
-            const Icon(Icons.access_time, color: Colors.grey),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class BookingConfirmationScreen extends StatelessWidget {
   final List<String> selectedServices;
   final int selectedServiceCount;
+  final String selectedTimeSlot;
+  final DateTime bookingDate;
+  final String vehicleType;
 
   const BookingConfirmationScreen({
     super.key,
     required this.selectedServices,
     required this.selectedServiceCount,
+    required this.selectedTimeSlot,
+    required this.bookingDate,
+    required this.vehicleType,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, 
-        
+        automaticallyImplyLeading: false,
         title: const Text('Booking Confirmed'),
         backgroundColor: kPrimaryColor,
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.check_circle, color: Colors.green[700], size: 100),
-            const SizedBox(height: 20),
-            const Text(
-              'Your booking has been successfully placed!',
-              style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Home(
-                      selectedServices: selectedServices,
-                      selectedServiceCount: selectedServiceCount,
+        child: Padding(
+          padding: const EdgeInsets.all(kPadding),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.check_circle, color: Colors.green[700], size: 100),
+              const SizedBox(height: 20),
+              const Text(
+                'Your booking has been successfully placed!',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Vehicle: $vehicleType',
+                style: const TextStyle(fontSize: 16),
+              ),
+              Text(
+                'Date: ${DateFormat('MM/dd/yyyy').format(bookingDate)}',
+                style: const TextStyle(fontSize: 16),
+              ),
+              Text(
+                'Time Slot: $selectedTimeSlot',
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UserPendingRequest(),
                     ),
-                  ),
-                );
-              },
-              child: const Text('Go to Home'),
-            ),
-          ],
+                    (route) => false,
+                  );
+                },
+                child: const Text('Go to Pending Request'),
+              ),
+            ],
+          ),
         ),
       ),
     );
