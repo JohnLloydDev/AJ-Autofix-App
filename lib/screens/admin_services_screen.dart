@@ -12,6 +12,7 @@ import 'package:aj_autofix/screens/admin_user_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class AdminServicesScreen extends StatefulWidget {
   const AdminServicesScreen({super.key});
@@ -427,7 +428,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Date: ${booking.date}',
+                        'Date: ${DateFormat('MM/dd/yyyy').format(booking.date)}',
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),

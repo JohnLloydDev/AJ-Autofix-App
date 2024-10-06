@@ -7,7 +7,7 @@ class Booking extends Equatable {
   final User? user;
   final List<String> serviceType;
   final String vehicleType;
-  final String time;
+  final String? time;
   final DateTime date;
   final String status;
 

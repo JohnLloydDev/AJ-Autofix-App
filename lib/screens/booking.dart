@@ -36,15 +36,12 @@ class BookingScreen extends StatefulWidget {
 class BookingScreenState extends State<BookingScreen> {
   String carType = '';
   DateTime selectedDate = DateTime.now();
-
-  // Remove TimeOfDay since we're using predefined time slots
   String? selectedTimeSlot;
-
   User? user;
   late List<String> services;
   late int serviceCount;
+  String? errorMessage;
 
-  // Define the available time slots
   final List<String> timeSlots = [
     "8:00am-10:00am",
     "10:00am-12:00pm",
@@ -100,9 +97,10 @@ class BookingScreenState extends State<BookingScreen> {
                 ),
               );
             } else if (state is RequestError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              setState(() {
+                errorMessage = state.error; 
+              });
+              return;
             }
           },
           builder: (context, state) {
@@ -304,44 +302,43 @@ class BookingScreenState extends State<BookingScreen> {
                       );
                     },
                   ),
+                  const SizedBox(height: 8),
+                  if (errorMessage != null) ...[
+                    Text(
+                      errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   const SizedBox(height: kSpacing),
 
                   ElevatedButton(
                     onPressed: () {
                       if (carType.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please enter the type of car.'),
-                          ),
-                        );
+                        setState(() {
+                          errorMessage = 'Please enter the type of car.';
+                        });
                         return;
                       }
 
                       if (selectedDate.isBefore(DateTime.now())) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select a valid future date.'),
-                          ),
-                        );
+                        setState(() {
+                          errorMessage = 'Please select a valid future date.';
+                        });
                         return;
                       }
 
                       if (widget.selectedServices.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content:
-                                Text('Please select at least one service.'),
-                          ),
-                        );
+                        setState(() {
+                          errorMessage = 'Please select a valid future date.';
+                        });
                         return;
                       }
 
                       if (selectedTimeSlot == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select a time slot.'),
-                          ),
-                        );
+                        setState(() {
+                          errorMessage = 'Please select a TimeSlot.';
+                        });
                         return;
                       }
 
@@ -567,12 +564,11 @@ class BookingConfirmationScreen extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const UserPendingRequest(),
                     ),
-                    (route) => false,
                   );
                 },
                 child: const Text('Go to Pending Request'),

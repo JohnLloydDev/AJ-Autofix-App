@@ -54,7 +54,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       emit(BookingLoading());
       try {
         await bookingRepository.completeBooking(event.bookingId);
-        final acceptedBookings = await bookingRepository.getAllAcceptedBooking();
+        final acceptedBookings =
+            await bookingRepository.getAllAcceptedBooking();
         emit(BookingAcceptedLoaded(acceptedBookings));
       } catch (e) {
         emit(RequestError('Failed to accept booking: $e'));
@@ -92,20 +93,23 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           emit(const RequestError('User ID is required to create a booking.'));
           return;
         }
-
         await bookingRepository.createBooking(userId, event.booking);
         emit(const BookingSuccess(message: 'Booking created successfully!'));
       } catch (e) {
-        emit(RequestError('Failed to create booking: $e'));
+        if (e.toString().contains('The selected time is already occupied. Please choose another time.')) {
+          emit(const RequestError('The selected time is already occupied. Please choose another time.'));
+        } else {
+          emit(RequestError('Failed to create booking: $e'));
+        }
       }
     });
 
     on<GetUserBooking>((event, emit) async {
-      try{
+      try {
         emit(BookingLoading());
         final booking = await bookingRepository.getUserBooking();
         emit(BookingUserLoaded(booking));
-      }catch (e){
+      } catch (e) {
         emit(RequestError(e.toString()));
       }
     });

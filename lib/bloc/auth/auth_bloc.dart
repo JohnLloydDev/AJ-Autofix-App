@@ -14,7 +14,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.user, event.profilePicture);
         emit(const AuthSucceed('Registration Success'));
       } catch (e) {
-        emit(AuthFailed(e.toString()));
+        if (e.toString().contains('Email already exists')) {
+          emit(const AuthFailed('This email is already registered.'));
+        } else if (e.toString().contains('Username already exists')) {
+          emit(const AuthFailed('This username is already registered.'));
+        } else {
+          emit(const AuthFailed('Registration failed. Please try again.'));
+        }
       }
     });
 
@@ -24,7 +30,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         emit(AuthSuccessWithRole(user.role, user));
       } catch (e) {
-        emit(AuthFailed(e.toString()));
+        if (e.toString().contains('Invalid credentials')) {
+          emit(const AuthFailed('Invalid username or password.'));
+        } else {
+          emit(const AuthFailed('Login failed. Please try again.'));
+        }
       }
     });
 

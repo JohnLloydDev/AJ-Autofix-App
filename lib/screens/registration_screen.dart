@@ -24,6 +24,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   File? _profilePicture;
+  String? nameError;
+  String? usernameError;
+  String? emailError;
+  String? contactNumberError;
+  String? passwordError;
+  String? formErrorMessage;
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -132,18 +138,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildTextField(nameController, 'Full Name', Icons.person_outline),
+              _buildTextField(
+                  nameController, 'Full Name', Icons.person_outline, nameError),
               const SizedBox(height: 10),
-              _buildTextField(usernameController, 'Username', Icons.person_outlined),
+              _buildTextField(usernameController, 'Username',
+                  Icons.person_outlined, usernameError),
               const SizedBox(height: 10),
-              _buildTextField(emailController, 'Email', Icons.email_outlined),
+              _buildTextField(
+                  emailController, 'Email', Icons.email_outlined, emailError),
               const SizedBox(height: 10),
-              _buildTextField(contactNumberController, 'Contact Number', Icons.phone_outlined),
+              _buildTextField(contactNumberController, 'Contact Number',
+                  Icons.phone_outlined, contactNumberError),
               const SizedBox(height: 10),
               _buildPasswordField(),
               const SizedBox(height: 20),
               _buildRegisterButton(),
-              const SizedBox(height: 20), 
+              const SizedBox(height: 20),
               _buildSignInLink(context),
             ],
           ),
@@ -152,25 +162,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hintText, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            suffixIcon: Icon(icon),
-            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-            border: InputBorder.none,
-            hintText: hintText,
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      IconData icon, String? error) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                suffixIcon: Icon(icon),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+                border: InputBorder.none,
+                hintText: hintText,
+              ),
+            ),
           ),
         ),
-      ),
+        if (error != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            child: Text(
+              error,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
 
@@ -188,7 +212,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -216,66 +241,126 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               behavior: SnackBarBehavior.floating,
             ),
           );
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LoginScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()));
         } else if (state is AuthFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
-          );
+          setState(() {
+            formErrorMessage = state.error;
+          });
         }
       },
       builder: (context, state) {
         if (state is AuthIsProcessing) {
           return const CircularProgressIndicator();
         }
-        return ElevatedButton(
-          onPressed: () async {
-            final fullname = nameController.text;
-            final username = usernameController.text;
-            final email = emailController.text;
-            final contactNumber = contactNumberController.text;
-            final password = passwordController.text;
+        return Column(
+          children: [
+            if (formErrorMessage != null)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: Text(
+                  formErrorMessage!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ElevatedButton(
+              onPressed: () async {
+                setState(() {
+                  formErrorMessage = null;
+                  nameError = null;
+                  usernameError = null;
+                  emailError = null;
+                  contactNumberError = null;
+                  passwordError = null;
+                });
 
-            final authBloc = BlocProvider.of<AuthBloc>(context);
+                final fullname = nameController.text.trim();
+                final username = usernameController.text.trim();
+                final email = emailController.text.trim();
+                final contactNumber = contactNumberController.text;
+                final password = passwordController.text.trim();
 
-            final profilePictureBase64 =
-                _profilePicture != null
+                bool isValid = true;
+
+                if (fullname.length < 3) {
+                  setState(() {
+                    nameError = 'Fullname must be at least 3 characters long';
+                  });
+                  isValid = false;
+                }
+
+                if (username.length < 3) {
+                  setState(() {
+                    usernameError = 'Username must be at least 3 characters long';
+                  });
+                  isValid = false;
+                }
+
+                if (email.isEmpty || !email.contains('@')) {
+                  setState(() {
+                    emailError = 'Valid email is required';
+                  });
+                  isValid = false;
+                }
+
+                if (contactNumber.isEmpty || contactNumber.length < 10) {
+                  setState(() {
+                    contactNumberError = 'Valid contact number is required';
+                  });
+                  isValid = false;
+                }
+
+                if (password.isEmpty || password.length < 6) {
+                  setState(() {
+                    passwordError = 'Password must be at least 6 characters';
+                  });
+                  isValid = false;
+                }
+
+                if (!isValid) {
+                  return;
+                }
+
+                final authBloc = BlocProvider.of<AuthBloc>(context);
+
+                final profilePictureBase64 = _profilePicture != null
                     ? await _convertFileToBase64(_profilePicture!)
                     : null;
 
-            final user = User(
-              id: '',
-              profilePicture: profilePictureBase64,
-              fullname: fullname,
-              username: username,
-              email: email,
-              contactNumber: contactNumber,
-              password: password,
-            );
+                final user = User(
+                  id: '',
+                  profilePicture: profilePictureBase64,
+                  fullname: fullname,
+                  username: username,
+                  email: email,
+                  contactNumber: contactNumber,
+                  password: password,
+                );
 
-            if (mounted) {
-              authBloc.add(UserRegistration(user, _profilePicture));
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF6E88A1),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: const Center(
-            child: Text(
-              'Register',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+                if (mounted) {
+                  authBloc.add(UserRegistration(user, _profilePicture));
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6E88A1),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Center(
+                child: Text(
+                  'Register',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         );
       },
     );

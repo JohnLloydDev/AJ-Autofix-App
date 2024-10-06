@@ -130,7 +130,7 @@ class BookingRepositoryImpl extends BookingRepository {
     }
   }
 
-    @override
+  @override
   Future<List<Booking>> getAllAcceptedBooking() async {
     final accessToken = await SecureStorage.readToken('access_token');
 
@@ -168,15 +168,25 @@ class BookingRepositoryImpl extends BookingRepository {
       body: jsonEncode(booking.toJson()),
     );
 
+    final responseBody = response.body;
+
     if (response.statusCode == 201) {
-      return Booking.fromJson(jsonDecode(response.body));
+      return Booking.fromJson(jsonDecode(responseBody));
+    } else if (response.statusCode == 400) {
+      final errorBody = jsonDecode(responseBody);
+      if (errorBody['message'] == 'The selected time is already occupied. Please choose another time.') {
+        throw Exception('The selected time is already occupied. Please choose another time.');
+      } else {
+        throw Exception(
+            'Failed to create booking: ${response.statusCode} ${errorBody['message']}');
+      }
     } else {
       throw Exception(
-          'Failed to create booking: ${response.statusCode} ${response.body}');
+          'Failed to create booking: ${response.statusCode} $responseBody');
     }
   }
 
-    @override
+  @override
   Future<List<Booking>> getUserBooking() async {
     final accessToken = await SecureStorage.readToken('access_token');
 
@@ -192,7 +202,7 @@ class BookingRepositoryImpl extends BookingRepository {
       },
     );
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((json) => Booking.fromJson(json)).toList();
     } else {

@@ -31,33 +31,39 @@ class AuthRepositoryImpl implements AuthRepository {
     throw Exception(errorMessage);
   }
 
-  @override
-  Future<User> userRegistration(User user, File? profilePicture) async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse('$baseUrl/auth/registration'));
+@override
+Future<User> userRegistration(User user, File? profilePicture) async {
+  var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/auth/registration'));
 
-    request.fields['fullname'] = user.fullname;
-    request.fields['username'] = user.username;
-    request.fields['email'] = user.email;
-    request.fields['contactNumber'] = user.contactNumber;
-    request.fields['password'] = user.password;
+  request.fields['fullname'] = user.fullname;
+  request.fields['username'] = user.username;
+  request.fields['email'] = user.email;
+  request.fields['contactNumber'] = user.contactNumber;
+  request.fields['password'] = user.password;
 
-    if (profilePicture != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-          'profilePicture', profilePicture.path));
-    }
+  if (profilePicture != null) {
+    request.files.add(await http.MultipartFile.fromPath('profilePicture', profilePicture.path));
+  }
 
-    var response = await request.send();
+  var response = await request.send();
 
-    if (response.statusCode == 201) {
-      final responseBody = await response.stream.bytesToString();
-      final data = jsonDecode(responseBody);
-      final registeredUser = User.fromJson(data);
-      return registeredUser;
-    } else {
-      throw Exception('Failed to register: ${response.reasonPhrase}');
+  final responseBody = await response.stream.bytesToString();
+
+  if (response.statusCode == 201) {
+    final data = jsonDecode(responseBody);
+    final registeredUser = User.fromJson(data);
+    return registeredUser;
+  } else if (response.statusCode == 400) {
+    final errorBody = jsonDecode(responseBody);
+    if (errorBody['message'] == 'Email already exists') {
+      throw Exception('Email already exists');
+    } else if (errorBody['message'] == 'Username already exists') {
+      throw Exception('Username already exists');
     }
   }
+  throw Exception('Failed to register: ${response.reasonPhrase}');
+}
+
 
   @override
   Future<void> userLogout() async {
@@ -77,7 +83,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
     await SecureStorage.deleteToken('access_token');
   }
-  
+
   // @override
   // Future<void> setUserExternalId(String userId) async {
   //   try{
