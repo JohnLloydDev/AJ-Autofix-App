@@ -1,12 +1,11 @@
 import 'dart:convert';
-
+import '../utils/constants.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/repositories/booking_repository.dart';
 import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class BookingRepositoryImpl extends BookingRepository {
-  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
   @override
   Future<List<Booking>> getAllBooking() async {
     final accessToken = await SecureStorage.readToken('access_token');
@@ -15,7 +14,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.get(
-      Uri.parse("$baseUrl/bookings/bookings/"),
+      Uri.parse("${ApiConstants.baseUrl}/bookings/bookings/"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -37,7 +36,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.put(
-      Uri.parse('$baseUrl/bookings/bookings/$id/accept'),
+      Uri.parse('${ApiConstants.baseUrl}/bookings/bookings/$id/accept'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -59,7 +58,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.put(
-      Uri.parse('$baseUrl/bookings/bookings/$id/reject'),
+      Uri.parse('${ApiConstants.baseUrl}/bookings/bookings/$id/reject'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -81,7 +80,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.put(
-      Uri.parse('$baseUrl/bookings/bookings/$id/complete'),
+      Uri.parse('${ApiConstants.baseUrl}/bookings/bookings/$id/complete'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -98,7 +97,7 @@ class BookingRepositoryImpl extends BookingRepository {
   @override
   Future<Booking> getBookingById(String id) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/bookings/bookings/get/$id'),
+      Uri.parse('${ApiConstants.baseUrl}l/bookings/bookings/get/$id'),
     );
 
     if (response.statusCode == 200) {
@@ -117,7 +116,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.get(
-      Uri.parse("$baseUrl/bookings/admin/bookings/pending"),
+      Uri.parse("${ApiConstants.baseUrl}/bookings/admin/bookings/pending"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -138,7 +137,7 @@ class BookingRepositoryImpl extends BookingRepository {
       throw Exception('No access token found');
     }
     final response = await http.get(
-      Uri.parse("$baseUrl/bookings/admin/bookings/accepted"),
+      Uri.parse("${ApiConstants.baseUrl}/bookings/admin/bookings/accepted"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -160,7 +159,7 @@ class BookingRepositoryImpl extends BookingRepository {
     }
 
     final response = await http.post(
-      Uri.parse('$baseUrl/bookings/bookings/'),
+      Uri.parse('${ApiConstants.baseUrl}/bookings/bookings/'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -195,7 +194,7 @@ class BookingRepositoryImpl extends BookingRepository {
     }
 
     final response = await http.get(
-      Uri.parse('$baseUrl/bookings/bookings/user'),
+      Uri.parse('${ApiConstants.baseUrl}/bookings/bookings/user'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'

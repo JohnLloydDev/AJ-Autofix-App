@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import '../utils/constants.dart';
 class ContactRepositoryImpl {
-  final String baseUrl = 'https://aj-auto-fix.vercel.app/api';
+
 
   Future<bool> sendContact(String name, String email, String message) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/contacts/contacts'),
+      Uri.parse('${ApiConstants.baseUrl}/contacts/contacts'),
       headers: {
         'Content-Type': 'application/json',
       },

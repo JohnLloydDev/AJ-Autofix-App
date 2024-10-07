@@ -4,14 +4,15 @@ import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/auth_repository.dart';
 import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
+import '../utils/constants.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
+
 
   @override
   Future<User> userLogin(User user) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/auth/login'),
+      Uri.parse('${ApiConstants.baseUrl}/auth/login'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({'email': user.email, 'password': user.password}),
     );
@@ -33,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
 @override
 Future<User> userRegistration(User user, File? profilePicture) async {
-  var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/auth/registration'));
+  var request = http.MultipartRequest('POST', Uri.parse('${ApiConstants.baseUrl}/auth/registration'));
 
   request.fields['fullname'] = user.fullname;
   request.fields['username'] = user.username;
@@ -70,7 +71,7 @@ Future<User> userRegistration(User user, File? profilePicture) async {
     final accessToken = await SecureStorage.readToken('access_token');
 
     final response = await http.post(
-      Uri.parse('$baseUrl/auth/logout'),
+      Uri.parse('${ApiConstants.baseUrl}/auth/logout'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken',
@@ -83,15 +84,4 @@ Future<User> userRegistration(User user, File? profilePicture) async {
 
     await SecureStorage.deleteToken('access_token');
   }
-
-  // @override
-  // Future<void> setUserExternalId(String userId) async {
-  //   try{
-  //     //await OneSignal.shared.setUserExternalId(userId);
-
-  //   } catch (e) {
-
-  //   }
-  //   throw UnimplementedError();
-  // }
 }

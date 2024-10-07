@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 
+class ApiConstants {
+  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
+}
+
 const double kPadding = 16.0;
 const double kSpacing = 16.0;
 const Color kPrimaryColor = Colors.lightBlue;

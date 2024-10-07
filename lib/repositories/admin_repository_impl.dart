@@ -1,17 +1,14 @@
 import 'dart:convert';
-
 import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/admin_repository.dart';
+import '../utils/constants.dart';
 
 class AdminRepositoryImpl extends AdminRepository {
-  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
-
   @override
   Future<void> deleteUser(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/users/$id'));
+    final response = await http.delete(Uri.parse('${ApiConstants.baseUrl}/users/$id'));
     if (response.statusCode != 200) {
       throw Exception('Failed to delete student: ${response.reasonPhrase}');
     }
@@ -19,7 +16,7 @@ class AdminRepositoryImpl extends AdminRepository {
 
   @override
   Future<List<User>> getUser() async {
-    final response = await http.get(Uri.parse("$baseUrl/users/"));
+    final response = await http.get(Uri.parse("${ApiConstants.baseUrl}/users/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -32,7 +29,7 @@ class AdminRepositoryImpl extends AdminRepository {
   @override
   Future<User> getUsers(String id) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/users/$id'),
+      Uri.parse('${ApiConstants.baseUrl}/users/$id'),
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> userData = json.decode(response.body);
@@ -53,7 +50,7 @@ class AdminRepositoryImpl extends AdminRepository {
     final userJson = jsonEncode(user.toJson());
 
     final response = await http.put(
-      Uri.parse('$baseUrl/users/admin/$id'),
+      Uri.parse('${ApiConstants.baseUrl}/users/admin/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -76,7 +73,7 @@ class AdminRepositoryImpl extends AdminRepository {
 
     final userJson = jsonEncode(user.toJson());
     final response = await http.put(
-      Uri.parse('$baseUrl/users/update/$id'),
+      Uri.parse('${ApiConstants.baseUrl}/users/update/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
@@ -103,7 +100,7 @@ class AdminRepositoryImpl extends AdminRepository {
     }
 
     final response = await http.get(
-      Uri.parse('$baseUrl/users/user/getUser'),
+      Uri.parse('${ApiConstants.baseUrl}/users/user/getUser'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
