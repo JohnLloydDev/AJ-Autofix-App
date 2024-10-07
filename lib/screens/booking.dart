@@ -5,7 +5,9 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/home.dart';
+import 'package:aj_autofix/screens/notification_screen.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -196,8 +198,8 @@ class BookingScreenState extends State<BookingScreen> {
                                             setState(() {
                                               widget.selectedServices
                                                   .removeAt(index);
-                                              serviceCount =
-                                                  widget.selectedServices.length;
+                                              serviceCount = widget
+                                                  .selectedServices.length;
                                             });
 
                                             Fluttertoast.showToast(
@@ -256,8 +258,6 @@ class BookingScreenState extends State<BookingScreen> {
                     },
                   ),
                   const SizedBox(height: kSpacing),
-
-                  // Time Slot Selection Grid
                   const Text(
                     'Select Time Slot:',
                     style: TextStyle(
@@ -284,7 +284,7 @@ class BookingScreenState extends State<BookingScreen> {
                         onPressed: () {
                           setState(() {
                             selectedTimeSlot = slot;
-                            errorMessage = null; // Clear previous errors
+                            errorMessage = null;
                           });
                         },
                         style: ElevatedButton.styleFrom(
@@ -317,7 +317,6 @@ class BookingScreenState extends State<BookingScreen> {
                     const SizedBox(height: 8),
                   ],
                   const SizedBox(height: kSpacing),
-
                   ElevatedButton(
                     onPressed: () {
                       if (carType.isEmpty) {
@@ -373,7 +372,6 @@ class BookingScreenState extends State<BookingScreen> {
                         status: 'Pending',
                       );
 
-                      // Dispatch the booking event
                       context.read<BookingBloc>().add(CreateBooking(booking));
                     },
                     style: ElevatedButton.styleFrom(
@@ -394,6 +392,7 @@ class BookingScreenState extends State<BookingScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: 1,
         selectedItemColor: const Color(0xFF6E88A1),
         unselectedItemColor: Colors.grey,
@@ -441,6 +440,10 @@ class BookingScreenState extends State<BookingScreen> {
             icon: Icon(Icons.map),
             label: 'Map',
           ),
+           const BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'NOtification',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -468,6 +471,20 @@ class BookingScreenState extends State<BookingScreen> {
                 ),
               );
               break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => BookingBloc(BookingRepositoryImpl())
+                      ..add(GetUserBooking()),
+                    child: NotificationScreen(
+                      selectedServices: widget.selectedServices,
+                      selectedServiceCount: widget.selectedServiceCount,
+                    ),
+                  ),
+                ),
+              );
           }
         },
       ),

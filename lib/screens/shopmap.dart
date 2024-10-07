@@ -1,4 +1,9 @@
+import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_event.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
+import 'package:aj_autofix/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'home.dart';
 import 'booking.dart';
@@ -75,6 +80,20 @@ class ShopMapState extends State<ShopMap> {
         break;
       case 2:
         break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
+              child: NotificationScreen(
+                selectedServices: widget.selectedServices,
+                selectedServiceCount: widget.selectedServiceCount,
+              ),
+            ),
+          ),
+        );
       default:
         break;
     }
@@ -83,9 +102,8 @@ class ShopMapState extends State<ShopMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -111,6 +129,7 @@ class ShopMapState extends State<ShopMap> {
         mapType: MapType.normal,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF6E88A1),
         unselectedItemColor: Colors.grey,
@@ -157,6 +176,10 @@ class ShopMapState extends State<ShopMap> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Map',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notification',
           ),
         ],
         onTap: _onItemTapped,

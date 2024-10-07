@@ -4,6 +4,7 @@ import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/contact_form.dart';
+import 'package:aj_autofix/screens/notification_screen.dart';
 import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:aj_autofix/screens/show_reviews_screen.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +161,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
         break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
+              child: NotificationScreen(
+                selectedServices: const [],
+                selectedServiceCount: _selectedServiceCount,
+              ),
+            ),
+          ),
+        );
+        break;
       default:
         break;
     }
@@ -211,8 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16.0),
+              padding: const EdgeInsets.only(left: 16.0),
               child: Image.asset(
                 'assets/home_logo.png',
                 height: 40,
@@ -392,7 +407,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Search Bar
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -418,7 +432,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Services Grid
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -523,6 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF6E88A1),
         unselectedItemColor: Colors.grey,
@@ -569,6 +583,10 @@ class _HomeScreenState extends State<HomeScreen> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Map',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notification',
           ),
         ],
         onTap: _onItemTapped,

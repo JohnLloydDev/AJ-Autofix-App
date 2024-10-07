@@ -32,12 +32,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String? formErrorMessage;
 
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _profilePicture = File(image.path);
-      });
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        setState(() {
+          _profilePicture = File(image.path);
+        });
+      }
+    } catch (e) {
+      debugPrint('Error picking image: $e');
     }
   }
 
@@ -264,98 +269,102 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   style: const TextStyle(color: Colors.red, fontSize: 12),
                 ),
               ),
-            ElevatedButton(
-              onPressed: () async {
-                setState(() {
-                  formErrorMessage = null;
-                  nameError = null;
-                  usernameError = null;
-                  emailError = null;
-                  contactNumberError = null;
-                  passwordError = null;
-                });
-
-                final fullname = nameController.text.trim();
-                final username = usernameController.text.trim();
-                final email = emailController.text.trim();
-                final contactNumber = contactNumberController.text;
-                final password = passwordController.text.trim();
-
-                bool isValid = true;
-
-                if (fullname.length < 3) {
+            SizedBox(
+              width: 270,
+              child: ElevatedButton(
+                onPressed: () async {
                   setState(() {
-                    nameError = 'Fullname must be at least 3 characters long';
+                    formErrorMessage = null;
+                    nameError = null;
+                    usernameError = null;
+                    emailError = null;
+                    contactNumberError = null;
+                    passwordError = null;
                   });
-                  isValid = false;
-                }
 
-                if (username.length < 3) {
-                  setState(() {
-                    usernameError = 'Username must be at least 3 characters long';
-                  });
-                  isValid = false;
-                }
+                  final fullname = nameController.text.trim();
+                  final username = usernameController.text.trim();
+                  final email = emailController.text.trim();
+                  final contactNumber = contactNumberController.text;
+                  final password = passwordController.text.trim();
 
-                if (email.isEmpty || !email.contains('@')) {
-                  setState(() {
-                    emailError = 'Valid email is required';
-                  });
-                  isValid = false;
-                }
+                  bool isValid = true;
 
-                if (contactNumber.isEmpty || contactNumber.length < 10) {
-                  setState(() {
-                    contactNumberError = 'Valid contact number is required';
-                  });
-                  isValid = false;
-                }
+                  if (fullname.length < 3) {
+                    setState(() {
+                      nameError = 'Fullname must be at least 3 characters long';
+                    });
+                    isValid = false;
+                  }
 
-                if (password.isEmpty || password.length < 6) {
-                  setState(() {
-                    passwordError = 'Password must be at least 6 characters';
-                  });
-                  isValid = false;
-                }
+                  if (username.length < 3) {
+                    setState(() {
+                      usernameError =
+                          'Username must be at least 3 characters long';
+                    });
+                    isValid = false;
+                  }
 
-                if (!isValid) {
-                  return;
-                }
+                  if (email.isEmpty || !email.contains('@')) {
+                    setState(() {
+                      emailError = 'Valid email is required';
+                    });
+                    isValid = false;
+                  }
 
-                final authBloc = BlocProvider.of<AuthBloc>(context);
+                  if (contactNumber.isEmpty || contactNumber.length < 10) {
+                    setState(() {
+                      contactNumberError = 'Valid contact number is required';
+                    });
+                    isValid = false;
+                  }
 
-                final profilePictureBase64 = _profilePicture != null
-                    ? await _convertFileToBase64(_profilePicture!)
-                    : null;
+                  if (password.isEmpty || password.length < 6) {
+                    setState(() {
+                      passwordError = 'Password must be at least 6 characters';
+                    });
+                    isValid = false;
+                  }
 
-                final user = User(
-                  id: '',
-                  profilePicture: profilePictureBase64,
-                  fullname: fullname,
-                  username: username,
-                  email: email,
-                  contactNumber: contactNumber,
-                  password: password,
-                );
+                  if (!isValid) {
+                    return;
+                  }
 
-                if (mounted) {
-                  authBloc.add(UserRegistration(user, _profilePicture));
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6E88A1),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  final authBloc = BlocProvider.of<AuthBloc>(context);
+
+                  final profilePictureBase64 = _profilePicture != null
+                      ? await _convertFileToBase64(_profilePicture!)
+                      : null;
+
+                  final user = User(
+                    id: '',
+                    profilePicture: profilePictureBase64,
+                    fullname: fullname,
+                    username: username,
+                    email: email,
+                    contactNumber: contactNumber,
+                    password: password,
+                  );
+
+                  if (mounted) {
+                    authBloc.add(UserRegistration(user, _profilePicture));
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6E88A1),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              child: const Center(
-                child: Text(
-                  'Register',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                child: const Center(
+                  child: Text(
+                    'Register',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),

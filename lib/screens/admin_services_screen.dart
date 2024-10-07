@@ -48,13 +48,17 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
       final bookings =
           (bookingBloc.state as BookingPendingLoaded).pendingBookings;
       setState(() {
-        _filteredBookings = bookings.where((booking) {
-          final fullnameMatch =
-              booking.user?.fullname.toLowerCase().contains(query) ?? false;
-          final vehicleTypeMatch =
-              booking.vehicleType.toLowerCase().contains(query);
-          return fullnameMatch || vehicleTypeMatch;
-        }).toList();
+        _filteredBookings = bookings
+            .where((booking) {
+              final fullnameMatch =
+                  booking.user?.fullname.toLowerCase().contains(query) ?? false;
+              final vehicleTypeMatch =
+                  booking.vehicleType.toLowerCase().contains(query);
+              return fullnameMatch || vehicleTypeMatch;
+            })
+            .toList()
+            .reversed
+            .toList();
       });
     }
   }
@@ -90,8 +94,8 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) =>
-              BookingBloc(BookingRepositoryImpl())..add(GetAllAcceptedBooking()),
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetAllAcceptedBooking()),
               child: const AdminCompletedBookingsScreen(),
             ),
           ),
@@ -142,7 +146,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                       final vehicleTypeMatch =
                           booking.vehicleType.toLowerCase().contains(query);
                       return fullnameMatch || vehicleTypeMatch;
-                    }).toList();
+                    }).toList().reversed.toList();
 
                     if (_filteredBookings.isEmpty) {
                       return const Center(child: Text('No bookings found'));
@@ -151,7 +155,8 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                     return ListView.builder(
                       itemCount: _filteredBookings.length,
                       itemBuilder: (context, index) {
-                        final booking = _filteredBookings[index];
+                        final booking =
+                            _filteredBookings.reversed.toList()[index];
 
                         return GestureDetector(
                           onTap: () {

@@ -1,5 +1,3 @@
-// lib/widgets/booking_detail_row.dart
-
 import 'package:flutter/material.dart';
 import '../utils/color_extensions.dart';
 import '../utils/constants.dart';
