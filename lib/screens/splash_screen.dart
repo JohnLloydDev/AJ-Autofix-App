@@ -1,6 +1,8 @@
 import 'package:aj_autofix/screens/login_screen.dart';
+import 'package:aj_autofix/screens/onboaring_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,12 +17,21 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    _checkOnboardingStatus(); // Check onboarding status on initialization
+  }
 
+  Future<void> _checkOnboardingStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+
+    // Delay for 2 seconds before navigating
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          MaterialPageRoute(
+            builder: (context) => hasSeenOnboarding ? const LoginScreen() : const OnBoardingScreen(),
+          ),
         );
       }
     });
@@ -52,9 +63,9 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         child: Center(
           child: Image.asset(
-            'assets/logo.png', 
-            width: 300, 
-            height: 300, 
+            'assets/logo.png',
+            width: 300,
+            height: 300,
           ),
         ),
       ),

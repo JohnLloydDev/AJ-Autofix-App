@@ -45,6 +45,8 @@ dependencies:
   intl: ^0.18.0
   onesignal_flutter: ^5.1.2
   timelines: ^0.1.0
+  smooth_page_indicator: ^1.0.0
+  shared_preferences: ^2.0.17 
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -88,7 +90,11 @@ flutter:
     - assets/a&j_logo.png
     - assets/logo.png
     - assets/home_logo.png
-
+    - assets/repairman.png
+    - assets/intropage2.png
+    - assets/intropage3.png
+    - assets/intropage4.png
+    - assets/intropage5.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -30,6 +30,18 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFDCDCDC),
+                Color(0xFF6E88A1),
+              ],
+            ),
+          ),
+        ),
         title: const Text('Pending Requests'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -132,7 +144,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                   ),
                   const SizedBox(height: 16),
                   RatingBar(
-                    initialRating: 1,
+                    initialRating: 0,
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
