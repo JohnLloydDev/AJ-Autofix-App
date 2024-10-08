@@ -60,9 +60,7 @@ class ShopMapState extends State<ShopMap> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Home(
-              selectedServices: widget.selectedServices,
-              selectedServiceCount: widget.selectedServiceCount,
+            builder: (context) => const Home(
             ),
           ),
         );
@@ -72,8 +70,6 @@ class ShopMapState extends State<ShopMap> {
           context,
           MaterialPageRoute(
             builder: (context) => const BookingScreen(
-              selectedServices: [],
-              selectedServiceCount: 0,
             ),
           ),
         );

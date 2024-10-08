@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
+import 'package:aj_autofix/bloc/service/selected_services_event.dart';
+import 'package:aj_autofix/bloc/service/selected_services_state.dart';
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -9,22 +14,14 @@ import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:aj_autofix/screens/show_reviews_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/widgets/service_card.dart';
-import 'package:flutter/material.dart';
 import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/pending_screen.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Home extends StatefulWidget {
-  final List<String> selectedServices;
-  final int selectedServiceCount;
-
-  const Home({
-    super.key,
-    required this.selectedServices,
-    required this.selectedServiceCount,
-  });
+  const Home({super.key});
+  
 
   @override
   State<Home> createState() => _HomeState();
@@ -33,13 +30,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'A & J Autofix',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
+    return BlocProvider<SelectedServicesBloc>(
+      create: (context) => SelectedServicesBloc(),
+      child: MaterialApp(
+        title: 'A & J Autofix',
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const HomeScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
     );
   }
 }
@@ -56,8 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   final Set<String> _selectedCategories = {};
-  final Set<String> _selectedServices = {};
-  int _selectedServiceCount = 0;
 
   List<Map<String, String>> services = [
     {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
@@ -104,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'price': 'PHP 1,000',
       'category': 'electrical'
     }
+    // ... (your services list)
   ];
 
   List<Map<String, String>> _filteredServices = [];
@@ -144,9 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookingScreen(
-              selectedServices: _selectedServices.toList().cast<String>(),
-              selectedServiceCount: _selectedServiceCount,
+            builder: (context) => BlocProvider.value(
+              value: context.read<SelectedServicesBloc>(),
+              child: const BookingScreen(),
             ),
           ),
         );
@@ -156,8 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => ShopMap(
-              selectedServices: _selectedServices.toList(),
-              selectedServiceCount: _selectedServiceCount,
+              selectedServices:
+                  context.read<SelectedServicesBloc>().state.selectedServices,
+              selectedServiceCount:
+                  context.read<SelectedServicesBloc>().state.selectedServiceCount,
             ),
           ),
         );
@@ -167,11 +168,13 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) =>
-                  BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetUserBooking()),
               child: NotificationScreen(
-                selectedServices: const [],
-                selectedServiceCount: _selectedServiceCount,
+                selectedServices:
+                    context.read<SelectedServicesBloc>().state.selectedServices,
+                selectedServiceCount:
+                    context.read<SelectedServicesBloc>().state.selectedServiceCount,
               ),
             ),
           ),
@@ -196,15 +199,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _toggleServiceSelection(String serviceName) {
-    setState(() {
-      if (_selectedServices.contains(serviceName)) {
-        _selectedServices.remove(serviceName);
-        _selectedServiceCount--;
-      } else {
-        _selectedServices.add(serviceName);
-        _selectedServiceCount++;
-      }
-    });
+    final bloc = context.read<SelectedServicesBloc>();
+    final isSelected = bloc.state.selectedServices.contains(serviceName);
+
+    if (isSelected) {
+      bloc.add(RemoveSelectedService(serviceName));
+    } else {
+      bloc.add(AddSelectedService(serviceName));
+    }
   }
 
   @override
@@ -289,8 +291,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
-                      create: (context) => BookingBloc(BookingRepositoryImpl())
-                        ..add(GetUserBooking()),
+                      create: (context) =>
+                          BookingBloc(BookingRepositoryImpl())
+                            ..add(GetUserBooking()),
                       child: const UserPendingRequest(),
                     ),
                   ),
@@ -366,6 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Image Container
             Container(
               width: double.infinity,
               height: 100,
@@ -390,6 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Search Field
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -401,6 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Category Buttons
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -415,102 +421,109 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            // Services Grid
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 0.9,
-                ),
-                itemCount: _filteredServices.length,
-                itemBuilder: (context, index) {
-                  final service = _filteredServices[index];
-                  final serviceName = service['name']!;
-                  final isSelected = _selectedServices.contains(serviceName);
-                  String? imagePath;
+              child: BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
+                builder: (context, state) {
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 0.9,
+                    ),
+                    itemCount: _filteredServices.length,
+                    itemBuilder: (context, index) {
+                      final service = _filteredServices[index];
+                      final serviceName = service['name']!;
+                      final isSelected =
+                          state.selectedServices.contains(serviceName);
+                      String? imagePath;
 
-                  switch (serviceName) {
-                    case 'Power Window Motor':
-                      imagePath = 'assets/motor.png';
-                      break;
-                    case 'Power Window Cable':
-                      imagePath = 'assets/cable.png';
-                      break;
-                    case 'Powerlock 1pc':
-                      imagePath = 'assets/power_lock_1pc.jpg';
-                      break;
-                    case 'Powerlock Set':
-                      imagePath = 'assets/power_lock_set.png';
-                      break;
-                    case 'Door Lock':
-                      imagePath = 'assets/door_lock.png';
-                      break;
-                    case 'Handle Replacement':
-                    case 'Handle Repair':
-                      imagePath = 'assets/door_handle.png';
-                      break;
-                    case 'Door Lock Repair':
-                      imagePath = 'assets/door_lock.png';
-                      break;
-                    case 'Coolant Flush':
-                      imagePath = 'assets/coolant_flush.png';
-                      break;
-                    case 'Engine Change Oil':
-                      imagePath = 'assets/change_oil.png';
-                      break;
-                    case 'Spark Plug':
-                      imagePath = 'assets/spark_plug.png';
-                      break;
-                    case 'Air Filter':
-                      imagePath = 'assets/air_flilter.png';
-                      break;
-                    case 'Fuel Injector Cleaning':
-                      imagePath = 'assets/fuel_injector.png';
-                      break;
-                    case 'Timing Belt':
-                      imagePath = 'assets/timing_belt.png';
-                      break;
-                    case 'Tire Replacement':
-                      imagePath = 'assets/tire.png';
-                      break;
-                    case 'Wheel Alignment':
-                      imagePath = 'assets/wheel_alignment.png';
-                      break;
-                    case 'Brake Pad Set':
-                      imagePath = 'assets/brake_pads.png';
-                      break;
-                    case 'Brake Fluid':
-                      imagePath = 'assets/brake_fluid.png';
-                      break;
-                    case 'Alternator Repair':
-                      imagePath = 'assets/alternator.png';
-                      break;
-                    case 'Fuse Replacement':
-                      imagePath = 'assets/fuse.png';
-                      break;
-                    case 'Car Alarm':
-                      imagePath = 'assets/car_alarm.png';
-                      break;
-                    case 'Battery Replacement':
-                      imagePath = 'assets/car_battery.png';
-                      break;
-                    case 'HeadLight Bulb':
-                      imagePath = 'assets/headlight_bulb.png';
-                      break;
-                    case 'Power Window Switch':
-                      imagePath = 'assets/power_window_switch.png';
-                      break;
-                    default:
-                      imagePath = null;
-                  }
+                      switch (serviceName) {
+                        case 'Power Window Motor':
+                          imagePath = 'assets/motor.png';
+                          break;
+                        case 'Power Window Cable':
+                          imagePath = 'assets/cable.png';
+                          break;
+                        case 'Powerlock 1pc':
+                          imagePath = 'assets/power_lock_1pc.jpg';
+                          break;
+                        case 'Powerlock Set':
+                          imagePath = 'assets/power_lock_set.png';
+                          break;
+                        case 'Door Lock':
+                          imagePath = 'assets/door_lock.png';
+                          break;
+                        case 'Handle Replacement':
+                        case 'Handle Repair':
+                          imagePath = 'assets/door_handle.png';
+                          break;
+                        case 'Door Lock Repair':
+                          imagePath = 'assets/door_lock.png';
+                          break;
+                        case 'Coolant Flush':
+                          imagePath = 'assets/coolant_flush.png';
+                          break;
+                        case 'Engine Change Oil':
+                          imagePath = 'assets/change_oil.png';
+                          break;
+                        case 'Spark Plug':
+                          imagePath = 'assets/spark_plug.png';
+                          break;
+                        case 'Air Filter':
+                          imagePath = 'assets/air_flilter.png';
+                          break;
+                        case 'Fuel Injector Cleaning':
+                          imagePath = 'assets/fuel_injector.png';
+                          break;
+                        case 'Timing Belt':
+                          imagePath = 'assets/timing_belt.png';
+                          break;
+                        case 'Tire Replacement':
+                          imagePath = 'assets/tire.png';
+                          break;
+                        case 'Wheel Alignment':
+                          imagePath = 'assets/wheel_alignment.png';
+                          break;
+                        case 'Brake Pad Set':
+                          imagePath = 'assets/brake_pads.png';
+                          break;
+                        case 'Brake Fluid':
+                          imagePath = 'assets/brake_fluid.png';
+                          break;
+                        case 'Alternator Repair':
+                          imagePath = 'assets/alternator.png';
+                          break;
+                        case 'Fuse Replacement':
+                          imagePath = 'assets/fuse.png';
+                          break;
+                        case 'Car Alarm':
+                          imagePath = 'assets/car_alarm.png';
+                          break;
+                        case 'Battery Replacement':
+                          imagePath = 'assets/car_battery.png';
+                          break;
+                        case 'HeadLight Bulb':
+                          imagePath = 'assets/headlight_bulb.png';
+                          break;
+                        case 'Power Window Switch':
+                          imagePath = 'assets/power_window_switch.png';
+                          break;
+                        default:
+                          imagePath = null;
+                      }
 
-                  return ServiceCard(
-                    serviceName: serviceName,
-                    servicePrice: service['price']!,
-                    imagePath: imagePath,
-                    isSelected: isSelected,
-                    onAddPressed: () => _toggleServiceSelection(serviceName),
+                      return ServiceCard(
+                        serviceName: serviceName,
+                        servicePrice: service['price']!,
+                        imagePath: imagePath,
+                        isSelected: isSelected,
+                        onAddPressed: () => _toggleServiceSelection(serviceName),
+                      );
+                    },
                   );
                 },
               ),
@@ -518,61 +531,66 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF6E88A1),
-        unselectedItemColor: Colors.grey,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(Icons.receipt),
-                if (_selectedServiceCount > 0)
-                  Positioned(
-                    right: 0,
-                    top: -1,
-                    child: Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 15,
-                        minHeight: 15,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$_selectedServiceCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+      bottomNavigationBar:
+          BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
+        builder: (context, state) {
+          return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _selectedIndex,
+            selectedItemColor: const Color(0xFF6E88A1),
+            unselectedItemColor: Colors.grey,
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Stack(
+                  children: [
+                    const Icon(Icons.receipt),
+                    if (state.selectedServiceCount > 0)
+                      Positioned(
+                        right: 0,
+                        top: -1,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
                           ),
-                          textAlign: TextAlign.center,
+                          constraints: const BoxConstraints(
+                            minWidth: 15,
+                            minHeight: 15,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${state.selectedServiceCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-              ],
-            ),
-            label: 'Booking',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notification',
-          ),
-        ],
-        onTap: _onItemTapped,
+                  ],
+                ),
+                label: 'Booking',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                label: 'Map',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'Notification',
+              ),
+            ],
+            onTap: _onItemTapped,
+          );
+        },
       ),
     );
   }

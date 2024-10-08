@@ -1,29 +1,27 @@
-// // selected_services_event.dart
-// import 'package:equatable/equatable.dart';
+// selected_services_event.dart
+import 'package:equatable/equatable.dart';
 
-// abstract class SelectedServicesEvent extends Equatable {
-//   const SelectedServicesEvent();
+abstract class SelectedServicesEvent extends Equatable {
+  const SelectedServicesEvent();
 
-//   @override
-//   List<Object> get props => [];
-// }
+  @override
+  List<Object> get props => [];
+}
 
-// class AddService extends SelectedServicesEvent {
-//   final String serviceName;
+class AddSelectedService extends SelectedServicesEvent {
+  final String service;
 
-//   const AddService(this.serviceName);
+  const AddSelectedService(this.service);
 
-//   @override
-//   List<Object> get props => [serviceName];
-// }
+  @override
+  List<Object> get props => [service];
+}
 
-// class RemoveService extends SelectedServicesEvent {
-//   final String serviceName;
+class RemoveSelectedService extends SelectedServicesEvent {
+  final String service;
 
-//   const RemoveService(this.serviceName);
+  const RemoveSelectedService(this.service);
 
-//   @override
-//   List<Object> get props => [serviceName];
-// }
-
-// class ClearServices extends SelectedServicesEvent {}
+  @override
+  List<Object> get props => [service];
+}

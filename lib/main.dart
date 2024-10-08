@@ -4,6 +4,7 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
+import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/repositories/admin_repository_impl.dart';
@@ -57,6 +58,9 @@ void main() {
         BlocProvider(
           create: (context) =>
               ContactBloc(ContactRepositoryImpl()),
+        ),
+        BlocProvider(
+          create: (context) => SelectedServicesBloc(), // Add your SelectedServicesBloc here
         ),
       ],
       child: const MyApp(),

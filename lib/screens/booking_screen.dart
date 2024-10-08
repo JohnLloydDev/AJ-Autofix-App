@@ -1,3 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
+import 'package:aj_autofix/bloc/service/selected_services_event.dart';
+import 'package:aj_autofix/bloc/service/selected_services_state.dart';
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -9,23 +15,13 @@ import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/home.dart';
 import 'package:aj_autofix/screens/notification_screen.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:aj_autofix/screens/booking_confirmation_screen.dart';
-import '../utils/constants.dart';
-import '../widgets/date_picker_field.dart';
-import 'login_screen.dart';
+import 'package:aj_autofix/screens/login_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/widgets/date_picker_field.dart';
 
 class BookingScreen extends StatefulWidget {
-  final List<String> selectedServices;
-  final int selectedServiceCount;
-
-  const BookingScreen({
-    super.key,
-    required this.selectedServices,
-    required this.selectedServiceCount,
-  });
+  const BookingScreen({super.key});
 
   @override
   BookingScreenState createState() => BookingScreenState();
@@ -36,30 +32,34 @@ class BookingScreenState extends State<BookingScreen> {
   DateTime selectedDate = DateTime.now();
   String? selectedTimeSlot;
   User? user;
-  late List<String> services;
-  late int serviceCount;
   String? errorMessage;
 
-  final TextEditingController carTypeController = TextEditingController(); //ako
+  final TextEditingController carTypeController = TextEditingController();
 
   final List<String> timeSlots = [
-    "8:00am-10:00am",
-    "10:00am-12:00pm",
-    "1:00pm-3:00pm",
-    "3:00pm-5:00pm",
+    "8:00AM-10:00AM",
+    "10:00AM-12:00AM",
+    "1:00PM-3:00PM",
+    "3:00PM-5:00PM",
   ];
 
   @override
-  void initState() {
-    super.initState();
-    services = List.from(widget.selectedServices);
-    serviceCount = widget.selectedServiceCount;
+  void dispose() {
+    carTypeController.dispose();
+    super.dispose();
   }
 
-  @override
-  void dispose() {
-    carTypeController.dispose(); // ako
-    super.dispose();
+  void _removeService(String serviceName) {
+    context.read<SelectedServicesBloc>().add(RemoveSelectedService(serviceName));
+    Fluttertoast.showToast(
+      msg: "Removed $serviceName from booking",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   @override
@@ -86,8 +86,10 @@ class BookingScreenState extends State<BookingScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BookingConfirmationScreen(
-                      selectedServices: widget.selectedServices,
-                      selectedServiceCount: widget.selectedServices.length,
+                      selectedServices:
+                          context.read<SelectedServicesBloc>().state.selectedServices,
+                      selectedServiceCount:
+                          context.read<SelectedServicesBloc>().state.selectedServiceCount,
                       selectedTimeSlot: selectedTimeSlot!,
                       bookingDate: selectedDate,
                       vehicleType: carType,
@@ -146,6 +148,7 @@ class BookingScreenState extends State<BookingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Selected Services
                   const Text(
                     'Selected Services:',
                     style: TextStyle(
@@ -154,80 +157,69 @@ class BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  widget.selectedServices.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: widget.selectedServices.length,
-                          itemBuilder: (context, index) {
-                            final serviceName = widget.selectedServices[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: SizedBox(
-                                width: 350,
-                                height: 50,
-                                child: Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            serviceName,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
+                  BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
+                    builder: (context, selectedServicesState) {
+                      return selectedServicesState.selectedServices.isNotEmpty
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: selectedServicesState.selectedServices.length,
+                              itemBuilder: (context, index) {
+                                final serviceName =
+                                    selectedServicesState.selectedServices[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: SizedBox(
+                                    width: 350,
+                                    height: 50,
+                                    child: Card(
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                serviceName,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                _removeService(serviceName);
+                                              },
+                                              tooltip: 'Remove Service',
+                                            ),
+                                          ],
                                         ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.red,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              widget.selectedServices
-                                                  .removeAt(index);
-                                              serviceCount = widget
-                                                  .selectedServices.length;
-                                            });
-
-                                            Fluttertoast.showToast(
-                                              msg:
-                                                  "Removed $serviceName from booking",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.black54,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0,
-                                            );
-                                          },
-                                          tooltip: 'Remove Service',
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
+                            )
+                          : const Text(
+                              'No services selected.',
+                              style: TextStyle(color: Colors.grey),
                             );
-                          },
-                        )
-                      : const Text(
-                          'No services selected.',
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                    },
+                  ),
                   const SizedBox(height: kSpacing),
                   TextFormField(
-                    controller: carTypeController, //ako
+                    controller: carTypeController,
                     decoration: const InputDecoration(
                       labelText: 'Type of Car & Year Model',
                       hintText: 'e.g., Toyota Corolla 2020',
@@ -317,7 +309,6 @@ class BookingScreenState extends State<BookingScreen> {
                   const SizedBox(height: kSpacing),
                   ElevatedButton(
                     onPressed: () {
-                      // ako
                       if (carTypeController.text.isEmpty) {
                         setState(() {
                           errorMessage = 'Please enter the type of car.';
@@ -332,7 +323,10 @@ class BookingScreenState extends State<BookingScreen> {
                         return;
                       }
 
-                      if (widget.selectedServices.isEmpty) {
+                      final selectedServicesState =
+                          context.read<SelectedServicesBloc>().state;
+
+                      if (selectedServicesState.selectedServices.isEmpty) {
                         setState(() {
                           errorMessage = 'Please select at least one service.';
                         });
@@ -364,8 +358,8 @@ class BookingScreenState extends State<BookingScreen> {
 
                       final booking = Booking(
                         userId: user!.id,
-                        serviceType: widget.selectedServices,
-                        vehicleType: carTypeController.text, //ako
+                        serviceType: selectedServicesState.selectedServices,
+                        vehicleType: carTypeController.text,
                         time: selectedTimeSlot!,
                         date: selectedDate,
                         status: 'Pending',
@@ -391,101 +385,112 @@ class BookingScreenState extends State<BookingScreen> {
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 1,
-        selectedItemColor: const Color(0xFF6E88A1),
-        unselectedItemColor: Colors.grey,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(Icons.receipt),
-                if (serviceCount > 0)
-                  Positioned(
-                    right: 0,
-                    top: -1,
-                    child: Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 15,
-                        minHeight: 15,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$serviceCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+      bottomNavigationBar:
+          BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
+        builder: (context, state) {
+          return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: 1,
+            selectedItemColor: const Color(0xFF6E88A1),
+            unselectedItemColor: Colors.grey,
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Stack(
+                  children: [
+                    const Icon(Icons.receipt),
+                    if (state.selectedServiceCount > 0)
+                      Positioned(
+                        right: 0,
+                        top: -1,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
                           ),
-                          textAlign: TextAlign.center,
+                          constraints: const BoxConstraints(
+                            minWidth: 15,
+                            minHeight: 15,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${state.selectedServiceCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                label: 'Booking',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                label: 'Map',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'Notification',
+              ),
+            ],
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider.value(
+                        value: context.read<SelectedServicesBloc>(),
+                        child: const Home(
+                          
                         ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            label: 'Booking',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'NOtification',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Home(
-                    selectedServices: widget.selectedServices,
-                    selectedServiceCount: widget.selectedServices.length,
-                  ),
-                ),
-              );
-              break;
-            case 1:
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ShopMap(
-                    selectedServices: widget.selectedServices,
-                    selectedServiceCount: widget.selectedServiceCount,
-                  ),
-                ),
-              );
-              break;
-            case 3:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => BookingBloc(BookingRepositoryImpl())
-                      ..add(GetUserBooking()),
-                    child: NotificationScreen(
-                      selectedServices: widget.selectedServices,
-                      selectedServiceCount: widget.selectedServiceCount,
+                  );
+                  break;
+                case 1:
+                  break;
+                case 2:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShopMap(
+                        selectedServices:
+                            context.read<SelectedServicesBloc>().state.selectedServices,
+                        selectedServiceCount:
+                            context.read<SelectedServicesBloc>().state.selectedServiceCount,
+                      ),
                     ),
-                  ),
-                ),
-              );
-          }
+                  );
+                  break;
+                case 3:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => BookingBloc(BookingRepositoryImpl())
+                          ..add(GetUserBooking()),
+                        child: NotificationScreen(
+                          selectedServices:
+                              context.read<SelectedServicesBloc>().state.selectedServices,
+                          selectedServiceCount:
+                              context.read<SelectedServicesBloc>().state.selectedServiceCount,
+                        ),
+                      ),
+                    ),
+                  );
+              }
+            },
+          );
         },
       ),
     );

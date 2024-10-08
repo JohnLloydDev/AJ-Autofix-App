@@ -1,4 +1,3 @@
-// lib/screens/booking_confirmation_screen.dart
 
 import 'package:aj_autofix/screens/home.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/color_extensions.dart';
 import 'package:aj_autofix/widgets/booking_detail_row.dart';
+
 
 class BookingConfirmationScreen extends StatelessWidget {
   final List<String> selectedServices;
@@ -154,10 +154,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Home(
-                          selectedServices: selectedServices,
-                          selectedServiceCount: selectedServiceCount,
-                        ),
+                        builder: (context) => const Home(), 
                       ),
                       (route) => false,
                     );

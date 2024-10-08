@@ -1,3 +1,4 @@
+import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
@@ -45,9 +46,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Home(
-              selectedServices: widget.selectedServices,
-              selectedServiceCount: widget.selectedServiceCount,
+            builder: (context) => const Home(
+              // selectedServices: widget.selectedServices,
+              // selectedServiceCount: widget.selectedServiceCount,
             ),
           ),
         );
@@ -57,22 +58,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => const BookingScreen(
-              selectedServices: [],
-              selectedServiceCount: 0,
+              // selectedServices: [],
+              // selectedServiceCount: 0,
             ),
           ),
         );
         break;
       case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ShopMap(
-              selectedServices: [],
-              selectedServiceCount: 0,
-            ),
-          ),
-        );
+        Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShopMap(
+                        selectedServices:
+                            context.read<SelectedServicesBloc>().state.selectedServices,
+                        selectedServiceCount:
+                            context.read<SelectedServicesBloc>().state.selectedServiceCount,
+                      ),
+                    ),
+                  );
         break;
       default:
         break;
