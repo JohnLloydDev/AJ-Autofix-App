@@ -2,6 +2,7 @@ import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,8 +25,10 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: kAppBarGradient,
+        ),
         title: const Text('OTP Verification'),
-        backgroundColor: Colors.deepPurple,
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -52,11 +55,11 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                  color: kPrimaryColor,
                 ),
               ),
               const SizedBox(height: 10),
-              const Icon(Icons.lock_reset, size: 120, color: Colors.deepPurple),
+              const Icon(Icons.lock_reset, size: 120, color: kPrimaryColor),
               const SizedBox(height: 20),
               Text(
                 'Enter the OTP sent to ${widget.email}, and your new password:',
@@ -152,11 +155,9 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: kMainColor,
           padding: const EdgeInsets.symmetric(vertical: 12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+          shape: kButtonShape,
         ),
         child: const Text('Reset Password',
             style: TextStyle(fontSize: 16.0, color: Colors.white)),
