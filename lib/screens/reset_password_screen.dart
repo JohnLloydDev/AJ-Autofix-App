@@ -46,45 +46,47 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
               });
             }
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Reset Your Password',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: kPrimaryColor,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  'Reset Your Password',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Icon(Icons.lock_reset, size: 120, color: kPrimaryColor),
-              const SizedBox(height: 20),
-              Text(
-                'Enter the OTP sent to ${widget.email}, and your new password:',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: otpControllers
-                    .map((controller) => _otpTextField(controller))
-                    .toList(),
-              ),
-              const SizedBox(height: 20),
-              _passwordTextField(),
-              if (errorText != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
+                const Icon(Icons.lock_reset, size: 120, color: kPrimaryColor),
+                const SizedBox(height: 20),
                 Text(
-                  errorText!,
-                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                  'Enter the OTP sent to ${widget.email}, and your new password:',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: otpControllers
+                      .map((controller) => _otpTextField(controller))
+                      .toList(),
+                ),
+                const SizedBox(height: 20),
+                _passwordTextField(),
+                if (errorText != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    errorText!,
+                    style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                  ),
+                ],
+                const SizedBox(height: 20),
+                _resetButton(),
               ],
-              const SizedBox(height: 20),
-              _resetButton(),
-            ],
+            ),
           ),
         ),
       ),
