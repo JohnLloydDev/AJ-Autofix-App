@@ -3,15 +3,16 @@ import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/contact_form.dart';
+import 'package:aj_autofix/screens/contact_us_screen.dart';
 import 'package:aj_autofix/screens/notification_screen.dart';
 import 'package:aj_autofix/screens/profile_screen.dart';
 import 'package:aj_autofix/screens/show_reviews_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/widgets/service_card.dart';
 import 'package:flutter/material.dart';
-import 'package:aj_autofix/screens/booking.dart';
+import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
-import 'package:aj_autofix/screens/pendingrequest.dart';
+import 'package:aj_autofix/screens/pending_screen.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -213,16 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
-          ),
+          decoration: kAppBarGradient,
         ),
         title: Row(
           children: [
@@ -252,16 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 100,
               child: DrawerHeader(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFFDCDCDC),
-                      Color(0xFF6E88A1),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
+                decoration: kAppBarGradient,
                 child: Center(
                   child: Text(
                     'Menu',
@@ -276,11 +259,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: const Icon(
                 Icons.person,
-                color: Color(0xFF6E88A1),
+                color: kMainColor,
               ),
               title: const Text(
                 'My Profile',
-                style: TextStyle(color: Color(0xFF6E88A1)),
+                style: TextStyle(color: kMainColor),
               ),
               onTap: () {
                 Navigator.push(
@@ -295,11 +278,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: const Icon(
                 Icons.pending,
-                color: Color(0xFF6E88A1),
+                color: kMainColor,
               ),
               title: const Text(
                 'Pending',
-                style: TextStyle(color: Color(0xFF6E88A1)),
+                style: TextStyle(color: kMainColor),
               ),
               onTap: () {
                 Navigator.push(
@@ -318,26 +301,26 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: const Icon(
                 Icons.contact_mail,
-                color: Color(0xFF6E88A1),
+                color: kMainColor,
               ),
               title: const Text(
                 'Contact Us',
-                style: TextStyle(color: Color(0xFF6E88A1)),
+                style: TextStyle(color: kMainColor),
               ),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ContactFormPage()));
+                    MaterialPageRoute(builder: (context) => ContactUsScreen()));
               },
             ),
             const Divider(),
             ListTile(
               leading: const Icon(
                 Icons.star,
-                color: Color(0xFF6E88A1),
+                color: kMainColor,
               ),
               title: const Text(
                 'Reviews',
-                style: TextStyle(color: Color(0xFF6E88A1)),
+                style: TextStyle(color: kMainColor),
               ),
               onTap: () {
                 Navigator.push(
@@ -350,11 +333,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
                 leading: const Icon(
                   Icons.logout,
-                  color: Color(0xFF6E88A1),
+                  color: kMainColor,
                 ),
                 title: const Text(
                   'Logout',
-                  style: TextStyle(color: Color(0xFF6E88A1)),
+                  style: TextStyle(color: kMainColor),
                 ),
                 onTap: () async {
                   try {

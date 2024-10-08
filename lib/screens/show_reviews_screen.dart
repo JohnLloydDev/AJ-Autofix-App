@@ -2,6 +2,7 @@ import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/review/review_state.dart';
 import 'package:aj_autofix/screens/review.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +24,9 @@ class _ShowReviewsScreenState extends State<ShowReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: kAppBarGradient,
+        ),
         title: const Text('Reviews'),
       ),
       body: BlocListener<ReviewBloc, ReviewState>(

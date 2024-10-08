@@ -40,6 +40,8 @@ class BookingScreenState extends State<BookingScreen> {
   late int serviceCount;
   String? errorMessage;
 
+  final TextEditingController carTypeController = TextEditingController(); //ako
+
   final List<String> timeSlots = [
     "8:00am-10:00am",
     "10:00am-12:00pm",
@@ -55,24 +57,20 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   @override
+  void dispose() {
+    carTypeController.dispose(); // ako
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
-          ),
+          decoration: kAppBarGradient,
         ),
         title: const Text('Booking'),
-        backgroundColor: kPrimaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(kPadding),
@@ -229,6 +227,7 @@ class BookingScreenState extends State<BookingScreen> {
                         ),
                   const SizedBox(height: kSpacing),
                   TextFormField(
+                    controller: carTypeController, //ako
                     decoration: const InputDecoration(
                       labelText: 'Type of Car & Year Model',
                       hintText: 'e.g., Toyota Corolla 2020',
@@ -289,14 +288,13 @@ class BookingScreenState extends State<BookingScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              isSelected ? kPrimaryColor : Colors.grey[200],
+                              isSelected ? kMainColor : Colors.grey[200],
                           foregroundColor:
                               isSelected ? Colors.white : Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             side: isSelected
-                                ? const BorderSide(
-                                    color: kPrimaryColor, width: 2)
+                                ? const BorderSide(color: kMainColor, width: 2)
                                 : const BorderSide(
                                     color: Colors.grey, width: 1),
                           ),
@@ -319,7 +317,8 @@ class BookingScreenState extends State<BookingScreen> {
                   const SizedBox(height: kSpacing),
                   ElevatedButton(
                     onPressed: () {
-                      if (carType.isEmpty) {
+                      // ako
+                      if (carTypeController.text.isEmpty) {
                         setState(() {
                           errorMessage = 'Please enter the type of car.';
                         });
@@ -366,7 +365,7 @@ class BookingScreenState extends State<BookingScreen> {
                       final booking = Booking(
                         userId: user!.id,
                         serviceType: widget.selectedServices,
-                        vehicleType: carType,
+                        vehicleType: carTypeController.text, //ako
                         time: selectedTimeSlot!,
                         date: selectedDate,
                         status: 'Pending',
@@ -375,11 +374,12 @@ class BookingScreenState extends State<BookingScreen> {
                       context.read<BookingBloc>().add(CreateBooking(booking));
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: kPrimaryColor,
-                      side: const BorderSide(color: kPrimaryColor),
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
+                        foregroundColor: Colors.white,
+                        backgroundColor: kMainColor,
+                        side: const BorderSide(color: kMainColor),
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12))),
                     child: const Text(
                       'BOOK NOW',
                       semanticsLabel: 'Book your selected services now',
@@ -440,7 +440,7 @@ class BookingScreenState extends State<BookingScreen> {
             icon: Icon(Icons.map),
             label: 'Map',
           ),
-           const BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'NOtification',
           ),

@@ -2,15 +2,16 @@ import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
 import 'package:aj_autofix/bloc/contact/contact_event.dart';
 import 'package:aj_autofix/bloc/contact/contact_state.dart';
 import 'package:aj_autofix/repositories/contact_repository_impl.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactFormPage extends StatelessWidget {
+class ContactUsScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
 
-  ContactFormPage({super.key});
+  ContactUsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +19,7 @@ class ContactFormPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
-          ),
+          decoration: kAppBarGradient,
         ),
         title: const Text('Contact Us'),
         leading: IconButton(
@@ -88,7 +80,7 @@ class ContactInfoContainer extends StatelessWidget {
             children: [
               Icon(Icons.phone),
               SizedBox(width: 8),
-              Text('123-456-789'),
+              Text('+639499729777'),
             ],
           ),
           SizedBox(height: 16),
@@ -104,7 +96,7 @@ class ContactInfoContainer extends StatelessWidget {
             children: [
               Icon(Icons.location_on),
               SizedBox(width: 8),
-              Text('Mangaldan, Pangasinan Road'),
+              Text('Bantayan, Mangaldan, Pangasinan Road'),
             ],
           ),
         ],
@@ -166,7 +158,6 @@ class ContactFormContainer extends StatelessWidget {
           ),
           child: Column(
             children: [
-             
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -183,8 +174,6 @@ class ContactFormContainer extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-
-              
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -203,7 +192,6 @@ class ContactFormContainer extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-
               TextFormField(
                 controller: messageController,
                 decoration: InputDecoration(
@@ -221,16 +209,15 @@ class ContactFormContainer extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-
               SizedBox(
-                width: 200, 
+                width: 200,
                 child: ElevatedButton(
                   onPressed: () {
-                 context.read<ContactBloc>().add(SendContactEvent(
-                      name: nameController.text,
-                      email: emailController.text,
-                      message: messageController.text,
-                    ));
+                    context.read<ContactBloc>().add(SendContactEvent(
+                          name: nameController.text,
+                          email: emailController.text,
+                          message: messageController.text,
+                        ));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6E88A1),

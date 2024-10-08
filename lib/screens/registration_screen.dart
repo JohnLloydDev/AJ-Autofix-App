@@ -241,16 +241,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget _buildRegisterButton() {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthSucceed) { 
+        if (state is AuthSucceed) {
           Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => AuthBloc(AuthRepositoryImpl()),
-                      child: const VerifyEmailScreen(),
-                    ),
-                  ),
-                );
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => AuthBloc(AuthRepositoryImpl()),
+                child: const VerifyEmailScreen(),
+              ),
+            ),
+          );
         } else if (state is AuthFailed) {
           setState(() {
             formErrorMessage = state.error;

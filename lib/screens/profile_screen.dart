@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aj_autofix/screens/profile_update_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
@@ -30,16 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
-          ),
+          decoration: kAppBarGradient,
         ),
         title: const Text('Profile'),
       
@@ -81,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     backgroundImage: _getProfileImage(user.profilePicture),
-                    radius: 80,
+                    radius: 50,
                     backgroundColor: Colors.grey[300],
                   ),
                   _buildProfileDetail('Full Name', user.fullname),

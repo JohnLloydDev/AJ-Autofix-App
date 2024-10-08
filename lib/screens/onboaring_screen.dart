@@ -79,7 +79,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         },
         child: const Text("Skip",
             style: TextStyle(
-              color: kmaincolor,
+              color: kMainColor,
               fontSize: 18.0,
             fontWeight: FontWeight.bold,
               shadows: [
@@ -110,7 +110,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         },
         child: Text(onLastPage ? "Done" : "Next",
             style: const TextStyle(
-              color: kmaincolor,
+              color: kMainColor,
               fontSize: 18.0,
             fontWeight: FontWeight.bold,
               shadows: [

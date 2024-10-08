@@ -2,6 +2,7 @@ import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/review_model.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
@@ -31,16 +32,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
-          ),
+          decoration: kAppBarGradient,
         ),
         title: const Text('Pending Requests'),
         leading: IconButton(

@@ -1,3 +1,4 @@
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class IntroPage5 extends StatefulWidget {
@@ -12,16 +13,7 @@ class _IntroPage5State extends State<IntroPage5> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 130, 173, 209),
-              Color.fromARGB(255, 255, 255, 255),
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-        ),
+        decoration: kGradientBoxDecoration,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

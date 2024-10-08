@@ -6,6 +6,7 @@ import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
 import 'package:aj_autofix/screens/registration_screen.dart';
 import 'package:aj_autofix/screens/request_otp_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,16 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFFDCDCDC),
-                  Color(0xFF6E88A1),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
+            decoration: kGradientBoxDecoration,
           ),
           SingleChildScrollView(
             child: SafeArea(
@@ -238,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               'Forgot Password?',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Color(0xFF6E88A1),
+                                                color: kMainColor,
                                               ),
                                             ),
                                           ),
@@ -302,16 +294,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   .add(UserLogin(user));
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color(0xFF6E88A1),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 10),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
+                                                backgroundColor:
+                                                    const Color(0xFF6E88A1),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10),
+                                                shape: kButtonShape),
                                             child: const Center(
                                               child: Text(
                                                 'Login',

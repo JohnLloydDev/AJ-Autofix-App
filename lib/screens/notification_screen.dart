@@ -1,8 +1,9 @@
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/booking.dart';
+import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
-import 'package:aj_autofix/screens/pendingrequest.dart';
+import 'package:aj_autofix/screens/pending_screen.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -82,6 +83,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: kAppBarGradient,
+        ),
         title: const Text('Notifications'),
         automaticallyImplyLeading: false,
       ),

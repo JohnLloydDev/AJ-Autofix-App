@@ -30,9 +30,11 @@ class BookingConfirmationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white, 
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: kAppBarGradient,
+        ),
         automaticallyImplyLeading: false,
         title: const Text('Booking Confirmed'),
-        backgroundColor: kPrimaryColor,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -161,10 +163,8 @@ class BookingConfirmationScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: kPrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
+                    backgroundColor: kMainColor,
+                    shape: kButtonShape,
                     elevation: 5,
                   ),
                   child: const Text(

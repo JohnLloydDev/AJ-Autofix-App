@@ -1,5 +1,6 @@
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/onboaring_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    _checkOnboardingStatus(); 
+    _checkOnboardingStatus();
   }
 
   Future<void> _checkOnboardingStatus() async {
@@ -29,7 +30,9 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => hasSeenOnboarding ? const LoginScreen() : const OnBoardingScreen(),
+            builder: (context) => hasSeenOnboarding
+                ? const LoginScreen()
+                : const OnBoardingScreen(),
           ),
         );
       }
@@ -50,16 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 130, 173, 209),
-              Color.fromARGB(255, 255, 255, 255),
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-        ),
+        decoration: kGradientBoxDecoration,
         child: Center(
           child: Image.asset(
             'assets/logo.png',

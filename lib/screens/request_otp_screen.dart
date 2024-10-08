@@ -1,7 +1,8 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
-import 'package:aj_autofix/bloc/auth/auth_state.dart'; 
+import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/screens/reset_password_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,9 +21,11 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: kAppBarGradient,
+        ),
         title: const Text(
           'Forgot Password',
-          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
       ),
@@ -52,7 +55,7 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                   const Icon(
                     Icons.lock_reset,
                     size: 120.0,
-                    color: Colors.deepPurple,
+                    color: kPrimaryColor,
                   ),
                   const SizedBox(height: 24.0),
                   const Text(
@@ -60,7 +63,7 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple,
+                      color: kPrimaryColor,
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -76,14 +79,13 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                       labelText: 'Enter your email',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: const BorderSide(color: Colors.deepPurple),
+                        borderSide: const BorderSide(color: kMainColor),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: const BorderSide(color: Colors.deepPurple),
+                        borderSide: const BorderSide(color: kMainColor),
                       ),
-                      prefixIcon:
-                          const Icon(Icons.email, color: Colors.deepPurple),
+                      prefixIcon: const Icon(Icons.email, color: kMainColor),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {
@@ -120,7 +122,7 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: kMainColor,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 127.0, vertical: 12.0),
                       shape: RoundedRectangleBorder(
