@@ -9,6 +9,10 @@ class User extends Equatable {
   final String contactNumber;
   final String password;
   final String role;
+  final bool isVerified;
+  final String? verificationToken;
+  final String? otp;
+  final DateTime? otpExpiration;
 
   const User({
     this.role = 'user',
@@ -19,6 +23,10 @@ class User extends Equatable {
     this.email = '',
     this.contactNumber = '',
     this.password = '',
+    this.isVerified = false,
+    this.verificationToken,
+    this.otp,
+    this.otpExpiration,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -31,6 +39,12 @@ class User extends Equatable {
       contactNumber: json['contactNumber'] as String? ?? '',
       password: json['password'] as String? ?? '',
       role: json['role'] as String? ?? 'user',
+      isVerified: json['isVerified'] as bool? ?? false,
+      verificationToken: json['verificationToken'] as String?,
+      otp: json['otp'] as String?,
+      otpExpiration: json['otpExpiration'] != null
+          ? DateTime.parse(json['otpExpiration'] as String)
+          : null,
     );
   }
 
@@ -44,6 +58,10 @@ class User extends Equatable {
       'contactNumber': contactNumber,
       'password': password,
       'role': role,
+      'isVerified': isVerified,
+      'verificationToken': verificationToken,
+      'otp': otp,
+      'otpExpiration': otpExpiration?.toIso8601String(),
     };
   }
 
@@ -56,6 +74,10 @@ class User extends Equatable {
         email,
         contactNumber,
         password,
-        role
+        role,
+        isVerified,
+        verificationToken,
+        otp,
+        otpExpiration,
       ];
 }

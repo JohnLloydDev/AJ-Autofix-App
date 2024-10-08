@@ -62,7 +62,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
 
             if (bookings.isEmpty) {
               return const Center(
-                child: Text('No pending bookings found.'),
+                child: Text(''),
               );
             }
 
@@ -190,7 +190,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                       onPressed: () {
                         if (formKey.currentState?.validate() ?? false) {
                           final newReview = Review(
-                            rating: rating!.toInt(),
+                            rating: rating!.toDouble().toInt(),
                             content: content!,
                           );
 

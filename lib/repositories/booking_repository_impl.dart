@@ -173,8 +173,10 @@ class BookingRepositoryImpl extends BookingRepository {
       return Booking.fromJson(jsonDecode(responseBody));
     } else if (response.statusCode == 400) {
       final errorBody = jsonDecode(responseBody);
-      if (errorBody['message'] == 'The selected time is already occupied. Please choose another time.') {
-        throw Exception('The selected time is already occupied. Please choose another time.');
+      if (errorBody['message'] ==
+          'The selected time is already occupied. Please choose another time.') {
+        throw Exception(
+            'The selected time is already occupied. Please choose another time.');
       } else {
         throw Exception(
             'Failed to create booking: ${response.statusCode} ${errorBody['message']}');
@@ -201,11 +203,20 @@ class BookingRepositoryImpl extends BookingRepository {
       },
     );
 
+    final responseBody = response.body;
+
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((json) => Booking.fromJson(json)).toList();
+    } else if (response.statusCode == 404) {
+      final errorBody = jsonDecode(responseBody);
+      if (errorBody['message'] == 'No bookings found for this user') {
+        return [];
+      } else {
+        throw Exception('Failed to load bookings');
+      }
     } else {
-      throw Exception('failed to load bookings');
+      throw Exception('Unexpected error occurred: ${response.statusCode}');
     }
   }
 }

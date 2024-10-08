@@ -17,14 +17,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    _checkOnboardingStatus(); // Check onboarding status on initialization
+    _checkOnboardingStatus(); 
   }
 
   Future<void> _checkOnboardingStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
 
-    // Delay for 2 seconds before navigating
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         Navigator.pushReplacement(

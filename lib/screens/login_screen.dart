@@ -5,6 +5,7 @@ import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
 import 'package:aj_autofix/screens/registration_screen.dart';
+import 'package:aj_autofix/screens/request_otp_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
   String? emailError;
   String? passwordError;
+  String? formErrorMessage;
 
   @override
   void dispose() {
@@ -70,14 +72,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     setState(() {
                       if (state.error.contains('email')) {
                         emailError = state.error;
+                        passwordError = null;
                       } else if (state.error.contains('password')) {
                         passwordError = state.error;
+                        emailError = null;
                       } else {
                         emailError = null;
                         passwordError = state.error;
                       }
+                      formErrorMessage =
+                          state.error.contains('Invalid email or password')
+                              ? 'Invalid email or password'
+                              : null;
                     });
-                    BlocProvider.of<AuthBloc>(context).add(AuthReset());
+                  } else if (state is AuthReset) {
+                    setState(() {
+                      emailError = null;
+                      passwordError = null;
+                    });
                   }
                 },
                 child: Column(
@@ -212,10 +224,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   fontSize: 12),
                                             ),
                                           ),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const RequestOtpScreen()));
+                                            },
+                                            child: const Text(
+                                              'Forgot Password?',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFF6E88A1),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
+                                  if (formErrorMessage != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        formErrorMessage!,
+                                        style: const TextStyle(
+                                            color: Colors.red, fontSize: 12),
+                                      ),
+                                    ),
                                   BlocBuilder<AuthBloc, AuthState>(
                                     builder: (context, state) {
                                       if (state is AuthIsProcessing) {

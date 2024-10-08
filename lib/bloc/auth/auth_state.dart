@@ -20,6 +20,15 @@ class AuthSucceed extends AuthState {
   List<Object> get props => [message];
 }
 
+class LogoutSucceed extends AuthState {
+  final String message;
+
+  const LogoutSucceed(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 class AuthFailed extends AuthState {
   final String error;
 
@@ -41,4 +50,58 @@ class AuthSuccessWithRole extends AuthState {
   List<Object> get props => [role, user];
 }
 
+class EmailVerificationSuccess extends AuthState {}
 
+class EmailVerificationFailed extends AuthState {
+  final String error;
+
+  const EmailVerificationFailed(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class OtpRequestSuccess extends AuthState {
+  final String message;
+
+  const OtpRequestSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class OtpRequestFailed extends AuthState {
+  final String error;
+
+  const OtpRequestFailed(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class PasswordResetSuccess extends AuthState {
+  final String message;
+
+  const PasswordResetSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class PasswordResetFailed extends AuthState {
+  final String error;
+
+  const PasswordResetFailed(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class InvalidOtpState extends AuthState {
+  final String error;
+
+  const InvalidOtpState(this.error);
+  
+  @override
+  List<Object?> get props => [error];
+}

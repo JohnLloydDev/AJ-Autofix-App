@@ -4,7 +4,9 @@ import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
+import 'package:aj_autofix/screens/verify_email_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -239,15 +241,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget _buildRegisterButton() {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthSucceed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()));
+        if (state is AuthSucceed) { 
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => AuthBloc(AuthRepositoryImpl()),
+                      child: const VerifyEmailScreen(),
+                    ),
+                  ),
+                );
         } else if (state is AuthFailed) {
           setState(() {
             formErrorMessage = state.error;
