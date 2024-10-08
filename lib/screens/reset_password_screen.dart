@@ -29,7 +29,7 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
           decoration: kAppBarGradient,
         ),
         title: const Text('OTP Verification'),
-        automaticallyImplyLeading: false,
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
