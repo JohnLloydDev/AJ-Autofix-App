@@ -7,6 +7,7 @@ import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/verify_email_screen.dart';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,16 +70,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFDCDCDC),
-              Color(0xFF6E88A1),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: kGradientBoxDecoration,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
