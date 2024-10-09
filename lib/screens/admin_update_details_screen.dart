@@ -73,6 +73,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('Update Info'),
         ),
         body: SingleChildScrollView(
@@ -293,7 +294,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                   contactNumber: contactNumber,
                                   password: '',
                                   role: dropdownValue,
-                                  profilePicture: profilePicture, 
+                                  profilePicture: profilePicture,
                                 );
 
                                 BlocProvider.of<UserBloc>(context).add(

@@ -242,12 +242,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSucceed) {
-          Navigator.push(
+        final email = state.user.email; 
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => AuthBloc(AuthRepositoryImpl()),
-                child: const VerifyEmailScreen(),
+                child:  VerifyEmailScreen(email: email),
               ),
             ),
           );
@@ -258,9 +259,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       },
       builder: (context, state) {
-        if (state is AuthIsProcessing) {
-          return const CircularProgressIndicator();
-        }
+        bool isLoading = state is AuthIsProcessing;
+
         return Column(
           children: [
             if (formErrorMessage != null)
@@ -275,84 +275,90 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             SizedBox(
               width: 270,
               child: ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    formErrorMessage = null;
-                    nameError = null;
-                    usernameError = null;
-                    emailError = null;
-                    contactNumberError = null;
-                    passwordError = null;
-                  });
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        setState(() {
+                          formErrorMessage = null;
+                          nameError = null;
+                          usernameError = null;
+                          emailError = null;
+                          contactNumberError = null;
+                          passwordError = null;
+                        });
 
-                  final fullname = nameController.text.trim();
-                  final username = usernameController.text.trim();
-                  final email = emailController.text.trim();
-                  final contactNumber = contactNumberController.text;
-                  final password = passwordController.text.trim();
+                        final fullname = nameController.text.trim();
+                        final username = usernameController.text.trim();
+                        final email = emailController.text.trim();
+                        final contactNumber = contactNumberController.text;
+                        final password = passwordController.text.trim();
 
-                  bool isValid = true;
+                        bool isValid = true;
 
-                  if (fullname.length < 3) {
-                    setState(() {
-                      nameError = 'Fullname must be at least 3 characters long';
-                    });
-                    isValid = false;
-                  }
+                        if (fullname.length < 3) {
+                          setState(() {
+                            nameError =
+                                'Fullname must be at least 3 characters long';
+                          });
+                          isValid = false;
+                        }
 
-                  if (username.length < 3) {
-                    setState(() {
-                      usernameError =
-                          'Username must be at least 3 characters long';
-                    });
-                    isValid = false;
-                  }
+                        if (username.length < 3) {
+                          setState(() {
+                            usernameError =
+                                'Username must be at least 3 characters long';
+                          });
+                          isValid = false;
+                        }
 
-                  if (email.isEmpty || !email.contains('@')) {
-                    setState(() {
-                      emailError = 'Valid email is required';
-                    });
-                    isValid = false;
-                  }
+                        if (email.isEmpty || !email.contains('@')) {
+                          setState(() {
+                            emailError = 'Valid email is required';
+                          });
+                          isValid = false;
+                        }
 
-                  if (contactNumber.isEmpty || contactNumber.length < 10) {
-                    setState(() {
-                      contactNumberError = 'Valid contact number is required';
-                    });
-                    isValid = false;
-                  }
+                        if (contactNumber.isEmpty ||
+                            contactNumber.length < 10) {
+                          setState(() {
+                            contactNumberError =
+                                'Valid contact number is required';
+                          });
+                          isValid = false;
+                        }
 
-                  if (password.isEmpty || password.length < 6) {
-                    setState(() {
-                      passwordError = 'Password must be at least 6 characters';
-                    });
-                    isValid = false;
-                  }
+                        if (password.isEmpty || password.length < 6) {
+                          setState(() {
+                            passwordError =
+                                'Password must be at least 6 characters';
+                          });
+                          isValid = false;
+                        }
 
-                  if (!isValid) {
-                    return;
-                  }
+                        if (!isValid) {
+                          return;
+                        }
 
-                  final authBloc = BlocProvider.of<AuthBloc>(context);
+                        final authBloc = BlocProvider.of<AuthBloc>(context);
 
-                  final profilePictureBase64 = _profilePicture != null
-                      ? await _convertFileToBase64(_profilePicture!)
-                      : null;
+                        final profilePictureBase64 = _profilePicture != null
+                            ? await _convertFileToBase64(_profilePicture!)
+                            : null;
 
-                  final user = User(
-                    id: '',
-                    profilePicture: profilePictureBase64,
-                    fullname: fullname,
-                    username: username,
-                    email: email,
-                    contactNumber: contactNumber,
-                    password: password,
-                  );
+                        final user = User(
+                          id: '',
+                          profilePicture: profilePictureBase64,
+                          fullname: fullname,
+                          username: username,
+                          email: email,
+                          contactNumber: contactNumber,
+                          password: password,
+                        );
 
-                  if (mounted) {
-                    authBloc.add(UserRegistration(user, _profilePicture));
-                  }
-                },
+                        if (mounted) {
+                          authBloc.add(UserRegistration(user, _profilePicture));
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6E88A1),
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -360,16 +366,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Center(
-                  child: Text(
-                    'Register',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : const Center(
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
               ),
             ),
           ],

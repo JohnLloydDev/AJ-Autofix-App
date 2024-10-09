@@ -13,7 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await _authRepositoryImpl.userRegistration(
             event.user, event.profilePicture);
-        emit(const AuthSucceed('Registration Success'));
+        emit(AuthSucceed('Registration Success', event.user));
       } catch (e) {
         if (e.toString().contains('Email already exists')) {
           emit(const AuthFailed('This email is already registered.'));
@@ -64,21 +64,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-on<RequestOtp>((event, emit) async {
-  emit(AuthIsProcessing());
-  try {
-    await _authRepositoryImpl.requestOtp(event.email);
-    emit(OtpRequestSuccess("OTP sent successfully to ${event.email}"));
-  } catch (e) {
-    if (e.toString().contains('The provided email address was not found')) {
-      emit(const OtpRequestFailed(
-          'The provided email address was not found. Please check and try again.'));
-    } else {
-      emit(OtpRequestFailed(e.toString()));  
-    }
-  }
-});
+    on<ResendVerification>((event, emit) async {
+      emit(AuthIsProcessing());
+      try {
+        final isSuccess =
+            await _authRepositoryImpl.resendVerificationEmail(event.email);
 
+        if (isSuccess) {
+          emit(const VerificationEmailSent(
+              "Verification email resent! Please check your inbox."));
+        } else {
+          emit(const EmailVerificationFailed(
+              'Verification failed, please try again.'));
+        }
+      } catch (e) {
+        emit(EmailVerificationFailed(
+            'Error occurred: ${e.toString()}')); // Catch any errors
+      }
+    });
+
+    on<RequestOtp>((event, emit) async {
+      emit(AuthIsProcessing());
+      try {
+        await _authRepositoryImpl.requestOtp(event.email);
+        emit(OtpRequestSuccess("OTP sent successfully to ${event.email}"));
+      } catch (e) {
+        if (e.toString().contains('The provided email address was not found')) {
+          emit(const OtpRequestFailed(
+              'The provided email address was not found. Please check and try again.'));
+        } else {
+          emit(OtpRequestFailed(e.toString()));
+        }
+      }
+    });
 
     on<ResetPassword>((event, emit) async {
       emit(AuthIsProcessing());

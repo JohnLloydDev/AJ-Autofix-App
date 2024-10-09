@@ -27,6 +27,14 @@ class VerifyEmail extends AuthEvent {
   List<Object> get props => [token];
 }
 
+class ResendVerification extends AuthEvent {
+  final String email;
+  const ResendVerification(this.email);
+
+  @override
+  List<Object> get props => [email];
+}
+
 class UserLogin extends AuthEvent {
   final User user;
 
@@ -55,11 +63,6 @@ class ResetPassword extends AuthEvent {
   @override
   List<Object> get props => [email, otp, newPassword];
 }
-
-
-
-
-
 
 class LogoutRequest extends AuthEvent {}
 

@@ -1,10 +1,7 @@
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
-import 'package:aj_autofix/bloc/user/user_bloc.dart';
-import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/models/booking_model.dart';
-import 'package:aj_autofix/repositories/admin_repository_impl.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
@@ -79,11 +76,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) =>
-                  UserBloc(AdminRepositoryImpl())..add(GetUsers()),
-              child: const AdminUsersScreen(),
-            ),
+            builder: (context) => const AdminUsersScreen(),
           ),
         );
         break;

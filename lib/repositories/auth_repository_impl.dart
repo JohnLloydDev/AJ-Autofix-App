@@ -2,17 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/auth_repository.dart';
-import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepositoryImpl implements AuthRepository {
+  static const String baseUrl = "https://aj-auto-fix.vercel.app/api";
 
   @override
   Future<User> userLogin(User user) async {
     final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/auth/login'),
+      Uri.parse('$baseUrl/auth/login'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({'email': user.email, 'password': user.password}),
     );
@@ -48,8 +48,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> userRegistration(User user, File? profilePicture) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${ApiConstants.baseUrl}/auth/registration'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$baseUrl/auth/registration'));
 
     request.fields['fullname'] = user.fullname;
     request.fields['username'] = user.username;
@@ -89,7 +89,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final accessToken = await SecureStorage.readToken('access_token');
 
     final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/auth/logout'),
+      Uri.parse('$baseUrl/auth/logout'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken',
@@ -108,7 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final encodedToken = Uri.encodeComponent(token);
 
     final response = await http
-        .get(Uri.parse('${ApiConstants.baseUrl}/auth/verify-email?token=$encodedToken'));
+        .get(Uri.parse('$baseUrl/auth/verify-email?token=$encodedToken'));
 
     try {
       if (response.statusCode == 200) {
@@ -126,10 +126,33 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<bool> resendVerificationEmail(String email) async {
+    const url = '$baseUrl/auth/resend-verification';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({'email': email}),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
   Future<void> requestOtp(String email) async {
     try {
       final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/auth/request-otp'),
+        Uri.parse('$baseUrl/auth/request-otp'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email}),
       );
@@ -160,7 +183,7 @@ class AuthRepositoryImpl implements AuthRepository {
       String email, String otp, String newPassword) async {
     try {
       final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/auth/reset-password-otp'),
+        Uri.parse('$baseUrl/auth/reset-password-otp'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,

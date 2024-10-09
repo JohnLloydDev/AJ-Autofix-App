@@ -1,13 +1,18 @@
+import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
+import 'package:aj_autofix/bloc/auth/auth_event.dart';
+import 'package:aj_autofix/bloc/auth/auth_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
-
 class VerifyEmailScreen extends StatelessWidget {
+  final String email;
   const VerifyEmailScreen({
-    super.key,
+    super.key, required this.email,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -66,6 +71,34 @@ class VerifyEmailScreen extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
+              ),
+              const SizedBox(height: 20),
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is VerificationEmailSent) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message)),
+                    );
+                  } else if (state is EmailVerificationFailed) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.error)),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return TextButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(ResendVerification(email));
+                    },
+                    child: const Text(
+                      'Resend Verification Email',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),

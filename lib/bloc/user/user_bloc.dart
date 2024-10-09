@@ -42,8 +42,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUser>((event, emit) async {
       try {
         await adminRepository.updateUser(event.id, event.user);
-        add(GetUsers());
         emit(const UserDataSuccess('User Updated Successfully'));
+        add(GetUsers());
       } catch (e) {
         emit(UserDataError(e.toString()));
       }
@@ -62,12 +62,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     );
 
     on<GetUserByAuthEvent>((event, emit) async {
-      emit(UserDataLoading()); 
+      emit(UserDataLoading());
       try {
         final user = await adminRepository.getUserByAuth();
-        emit(UserDataLoadedByAuth(user)); 
+        emit(UserDataLoadedByAuth(user));
       } catch (e) {
-        emit(UserDataError(e.toString())); 
+        emit(UserDataError(e.toString()));
       }
     });
 

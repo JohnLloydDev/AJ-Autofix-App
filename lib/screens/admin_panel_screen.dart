@@ -3,7 +3,6 @@ import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
-import 'package:aj_autofix/repositories/admin_repository_impl.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
 import 'package:aj_autofix/screens/admin_services_screen.dart';
@@ -28,7 +27,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   int totalApproved = 0;
   int totalPending = 0;
   int totalRejected = 0;
-  int totalUsers = 0; 
+  int totalUsers = 0;
 
   @override
   void initState() {
@@ -47,15 +46,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         break;
       case 1:
         Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) =>
-                  UserBloc(AdminRepositoryImpl())..add(GetUsers()),
-              child: const AdminUsersScreen(),
-            ),
-          ),
-        );
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AdminUsersScreen(),
+            ));
         break;
       case 2:
         Navigator.pushReplacement(
@@ -143,7 +137,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       if (userState is UserDataLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (userState is UserDataLoaded) {
-                        totalUsers = userState.userdata.length; 
+                        totalUsers = userState.userdata.length;
 
                         return GridView.count(
                           crossAxisCount: 2,

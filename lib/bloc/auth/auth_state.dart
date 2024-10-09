@@ -12,12 +12,13 @@ class AuthInitial extends AuthState {}
 class AuthIsProcessing extends AuthState {}
 
 class AuthSucceed extends AuthState {
+    final User user;
   final String message;
 
-  const AuthSucceed(this.message);
+  const AuthSucceed(this.message, this.user);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [message, user];
 }
 
 class LogoutSucceed extends AuthState {
@@ -56,6 +57,22 @@ class EmailVerificationFailed extends AuthState {
   final String error;
 
   const EmailVerificationFailed(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class VerificationEmailSent extends AuthState {
+  final String message;
+  const VerificationEmailSent(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class VerificationEmailError extends AuthState {
+  final String error;
+  const VerificationEmailError(this.error);
 
   @override
   List<Object?> get props => [error];
@@ -101,7 +118,7 @@ class InvalidOtpState extends AuthState {
   final String error;
 
   const InvalidOtpState(this.error);
-  
+
   @override
   List<Object?> get props => [error];
 }

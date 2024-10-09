@@ -6,7 +6,6 @@ import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
-import 'package:aj_autofix/repositories/admin_repository_impl.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
@@ -53,8 +52,8 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) =>
-              BookingBloc(BookingRepositoryImpl())..add(GetAllAcceptedBooking()),
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetAllAcceptedBooking()),
               child: const AdminCompletedBookingsScreen(),
             ),
           ),
@@ -68,6 +67,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     BlocProvider.of<UserBloc>(context).add(GetUsers());
+    
   }
 
   @override
@@ -168,12 +168,9 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => BlocProvider(
-                                          create: (context) =>
-                                              UserBloc(AdminRepositoryImpl()),
-                                          child: AdminUpdateDetailsScreen(
-                                              id: user.id),
-                                        ),
+                                        builder: (context) =>
+                                            AdminUpdateDetailsScreen(
+                                                id: user.id,),
                                       ),
                                     );
                                   },
