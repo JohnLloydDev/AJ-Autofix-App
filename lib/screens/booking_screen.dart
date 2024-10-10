@@ -148,7 +148,6 @@ class BookingScreenState extends State<BookingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Selected Services
                   const Text(
                     'Selected Services:',
                     style: TextStyle(
