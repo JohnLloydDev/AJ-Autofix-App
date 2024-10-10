@@ -2,7 +2,7 @@
 
 ## MEMBERS AND ROLE:
 * Ebuan, Jhon R-niel C. – Full Stack
-* * Raroque, Mark Tristan B. – Full Stack
+* Raroque, Mark Tristan B. – Full Stack
 * Romero, John Lloyd P. – Full Stack
 
 ## PROJECT DESCRIPTION:
