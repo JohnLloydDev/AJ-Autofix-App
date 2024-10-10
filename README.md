@@ -1,16 +1,37 @@
-# aj_autofix
+# A & J Autofix
 
-A new Flutter project.
+# MEMBERS AND ROLE:
+* Ebuan, Jhon R-niel C. – Full Stack
+* * Raroque, Mark Tristan B. – Full Stack
+* Romero, John Lloyd P. – Full Stack
 
-## Getting Started
+# PROJECT DESCRIPTION:
+A & J Autofix is a comprehensive online platform designed to streamline and enhance the vehicle repair and maintenance booking process. The platform aims to provide a seamless and efficient experience for both vehicle owners and service providers.
 
-This project is a starting point for a Flutter application.
+# TARGET USERS:
+* Car owners
+* Truck owners
 
-A few resources to get you started if this is your first Flutter project:
+# OBJECTIVES:
+* User-Friendly Interface: Develop an intuitive and user-friendly interface for both web and mobile platforms.
+* Enhanced User Experience: Implement additional features such as notifications,customer reviews and ratings, and geolocation services to provide a seamless and interactive user experience.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# FEATURES:
+## Core Features
+* User authentication
+* Admin panel
+* Shop services booking
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Additional Features
+* Notification
+* Customer review and ratings
+* Geolocation and map
+
+# TECHNOLOGIES AND TOOLS
+* Backend Tools:
+  Node.js with Express
+* Database:
+  MongoDB
+  
+# DESIGNING TOOLS:
+* Figma
