@@ -1,4 +1,3 @@
-// selected_services_event.dart
 import 'package:equatable/equatable.dart';
 
 abstract class SelectedServicesEvent extends Equatable {

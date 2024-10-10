@@ -1,4 +1,3 @@
-// selected_services_state.dart
 import 'package:equatable/equatable.dart';
 
 class SelectedServicesState extends Equatable {
