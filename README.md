@@ -17,17 +17,17 @@ A & J Autofix is a comprehensive online platform designed to streamline and enha
 * Enhanced User Experience: Implement additional features such as notifications,customer reviews and ratings, and geolocation services to provide a seamless and interactive user experience.
 
 ## FEATURES:
-### Core Features
+#### Core Features
 * User authentication
 * Admin panel
 * Shop services booking
 
-### Additional Features
+#### Additional Features
 * Notification
 * Customer review and ratings
 * Geolocation and map
 
-#3 TECHNOLOGIES AND TOOLS
+## TECHNOLOGIES AND TOOLS
 * Backend Tools:
   Node.js with Express
 * Database:
