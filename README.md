@@ -1,7 +1,7 @@
 # A & J Autofix
 
 ## MEMBERS AND ROLE:
-* Ebuan, Jhon R-niel C. – Full Stack
+* Ebuan, Jhon R-Neil C. – Full Stack
 * Raroque, Mark Tristan B. – Full Stack
 * Romero, John Lloyd P. – Full Stack
 
