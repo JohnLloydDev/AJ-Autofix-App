@@ -450,8 +450,7 @@ class BookingScreenState extends State<BookingScreen> {
                     MaterialPageRoute(
                       builder: (context) => BlocProvider.value(
                         value: context.read<SelectedServicesBloc>(),
-                        child: const Home(
-                          
+                        child: const HomeScreen(
                         ),
                       ),
                     ),

@@ -21,7 +21,6 @@ import 'package:aj_autofix/screens/shopmap.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-  
 
   @override
   State<Home> createState() => _HomeState();
@@ -32,13 +31,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return BlocProvider<SelectedServicesBloc>(
       create: (context) => SelectedServicesBloc(),
-      child: MaterialApp(
-        title: 'A & J Autofix',
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-        ),
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const HomeScreen(),
+        home: HomeScreen(),
       ),
     );
   }
@@ -157,8 +152,10 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) => ShopMap(
               selectedServices:
                   context.read<SelectedServicesBloc>().state.selectedServices,
-              selectedServiceCount:
-                  context.read<SelectedServicesBloc>().state.selectedServiceCount,
+              selectedServiceCount: context
+                  .read<SelectedServicesBloc>()
+                  .state
+                  .selectedServiceCount,
             ),
           ),
         );
@@ -168,13 +165,15 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) => BookingBloc(BookingRepositoryImpl())
-                ..add(GetUserBooking()),
+              create: (context) =>
+                  BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
               child: NotificationScreen(
                 selectedServices:
                     context.read<SelectedServicesBloc>().state.selectedServices,
-                selectedServiceCount:
-                    context.read<SelectedServicesBloc>().state.selectedServiceCount,
+                selectedServiceCount: context
+                    .read<SelectedServicesBloc>()
+                    .state
+                    .selectedServiceCount,
               ),
             ),
           ),
@@ -291,9 +290,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
-                      create: (context) =>
-                          BookingBloc(BookingRepositoryImpl())
-                            ..add(GetUserBooking()),
+                      create: (context) => BookingBloc(BookingRepositoryImpl())
+                        ..add(GetUserBooking()),
                       child: const UserPendingRequest(),
                     ),
                   ),
@@ -521,7 +519,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         servicePrice: service['price']!,
                         imagePath: imagePath,
                         isSelected: isSelected,
-                        onAddPressed: () => _toggleServiceSelection(serviceName),
+                        onAddPressed: () =>
+                            _toggleServiceSelection(serviceName),
                       );
                     },
                   );

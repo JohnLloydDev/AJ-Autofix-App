@@ -46,9 +46,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Home(
-              // selectedServices: widget.selectedServices,
-              // selectedServiceCount: widget.selectedServiceCount,
+            builder: (context) => const HomeScreen(
             ),
           ),
         );
@@ -58,8 +56,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => const BookingScreen(
-              // selectedServices: [],
-              // selectedServiceCount: 0,
             ),
           ),
         );

@@ -60,7 +60,7 @@ class ShopMapState extends State<ShopMap> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Home(
+            builder: (context) => const HomeScreen(
             ),
           ),
         );
