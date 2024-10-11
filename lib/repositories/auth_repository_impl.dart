@@ -6,6 +6,7 @@ import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
 
@@ -83,6 +84,7 @@ class AuthRepositoryImpl implements AuthRepository {
     throw Exception('Failed to register: ${response.reasonPhrase}');
   }
 
+
   @override
   Future<void> userLogout() async {
     final accessToken = await SecureStorage.readToken('access_token');
@@ -99,8 +101,15 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception('Failed to log out: ${response.reasonPhrase}');
     }
 
+    
     await SecureStorage.deleteToken('access_token');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');  
+
   }
+
+
 
   @override
   Future<bool> verifyUserEmail(String token) async {
@@ -216,4 +225,5 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   
+
 }
