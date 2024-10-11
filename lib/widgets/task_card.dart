@@ -37,7 +37,6 @@ class TaskCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
             Text(
               title,
               style: const TextStyle(
@@ -46,7 +45,6 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12.0),
-            // Vehicle Details
             Row(
               children: [
                 const Icon(Icons.directions_car, color: Colors.blue),
@@ -69,7 +67,6 @@ class TaskCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12.0),
-            // Date and Time Details
             Row(
               children: [
                 const Icon(Icons.calendar_today, color: Colors.blue),
@@ -114,7 +111,6 @@ class TaskCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12.0),
-            // Services (Header)
             const Row(
               children: [
                 Icon(Icons.build, color: Colors.blue),
@@ -130,7 +126,6 @@ class TaskCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8.0),
-            // Subtitle (List of services)
             Text(
               subtitle,
               style: TextStyle(
@@ -139,7 +134,6 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            // Status Badge
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
@@ -156,7 +150,6 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            // Review Button
             if (status == 'Completed')
               Align(
                 alignment: Alignment.centerLeft,
