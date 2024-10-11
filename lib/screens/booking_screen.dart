@@ -96,13 +96,7 @@ class BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                 );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Error: Time slot not selected.'),
-                  ),
-                );
-              }
+              } 
             } else if (state is RequestError) {
               setState(() {
                 errorMessage = state.error;
