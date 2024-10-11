@@ -12,6 +12,7 @@ import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_update_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,9 +44,15 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
         break;
       case 2:
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const AdminServicesScreen()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetAllAcceptedBooking()),
+              child: const AdminServicesScreen(),
+            ),
+          ),
+        );
         break;
       case 3:
         Navigator.pushReplacement(
@@ -67,7 +74,6 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     BlocProvider.of<UserBloc>(context).add(GetUsers());
-    
   }
 
   @override
@@ -145,10 +151,13 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12.0),
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                _getProfileImage(user.profilePicture),
-                            radius: 22,
+                          leading: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: _getProfileImage(
+                              user.profilePicture,
+                              user.fullname,
+                            ),
                           ),
                           title: Text(
                             user.fullname,
@@ -170,7 +179,8 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             AdminUpdateDetailsScreen(
-                                                id: user.id,),
+                                          id: user.id,
+                                        ),
                                       ),
                                     );
                                   },
@@ -241,28 +251,6 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     );
   }
 
-  ImageProvider _getProfileImage(String? profilePicture) {
-    if (profilePicture == null || profilePicture.isEmpty) {
-      return const AssetImage('assets/default_profile.png') as ImageProvider;
-    }
-
-    if (profilePicture.startsWith('http') ||
-        profilePicture.startsWith('https')) {
-      return NetworkImage(profilePicture);
-    }
-
-    try {
-      final file = File(profilePicture);
-      if (file.existsSync()) {
-        return FileImage(file);
-      } else {
-        return const AssetImage('assets/default_profile.png') as ImageProvider;
-      }
-    } catch (e) {
-      return const AssetImage('assets/default_profile.png') as ImageProvider;
-    }
-  }
-
   void showDeleteDialog(BuildContext context, String userId) {
     showDialog(
       context: context,
@@ -296,4 +284,57 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     _searchController.dispose();
     super.dispose();
   }
+}
+
+Widget _getProfileImage(String? profilePicture, String fullname) {
+  if (profilePicture == null || profilePicture.isEmpty) {
+    return CircleAvatar(
+      radius: 60,
+      backgroundColor: getRandomBackgroundColor(fullname),
+      child: Text(
+        fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
+        style: const TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  if (profilePicture.startsWith('http') || profilePicture.startsWith('https')) {
+    return CircleAvatar(
+      radius: 22,
+      backgroundColor: Colors.transparent,
+      backgroundImage: NetworkImage(profilePicture),
+      child: null,
+    );
+  }
+
+  try {
+    final file = File(profilePicture);
+    if (file.existsSync()) {
+      return CircleAvatar(
+        radius: 22,
+        backgroundColor: Colors.transparent,
+        backgroundImage: FileImage(file),
+        child: null,
+      );
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+
+  return CircleAvatar(
+    radius: 22,
+    backgroundColor: getRandomBackgroundColor(fullname),
+    child: Text(
+      fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
+      style: const TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    ),
+  );
 }

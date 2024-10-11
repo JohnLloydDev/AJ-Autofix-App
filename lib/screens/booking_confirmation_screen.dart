@@ -145,7 +145,6 @@ class BookingConfirmationScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-
               SizedBox(
                 width: screenWidth * 0.8,
                 height: 50,

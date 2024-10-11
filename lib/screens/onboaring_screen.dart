@@ -51,7 +51,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             controller: _controller,
             onPageChanged: (index) {
               setState(() {
-                onLastPage = (index == 4); // Check if on last page
+                onLastPage = (index == 4); 
               });
             },
             children: const [

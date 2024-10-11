@@ -1,7 +1,7 @@
-import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
+import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
+import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/pending_screen.dart';
 import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:aj_autofix/utils/constants.dart';
@@ -14,26 +14,32 @@ import 'package:aj_autofix/bloc/booking/booking_state.dart';
 class NotificationScreen extends StatefulWidget {
   final List<String> selectedServices;
   final int selectedServiceCount;
+
   const NotificationScreen(
       {super.key,
       required this.selectedServices,
       required this.selectedServiceCount});
 
   @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
+  NotificationScreenState createState() => NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class NotificationScreenState extends State<NotificationScreen> {
   int _selectedIndex = 3;
 
   @override
   void initState() {
     super.initState();
     _fetchUserBookings();
+    _fetchNotifications();
   }
 
-  Future<void> _fetchUserBookings() async {
-    BlocProvider.of<BookingBloc>(context).add(GetUserBooking());
+  void _fetchUserBookings() {
+    context.read<BookingBloc>().add(GetUserBooking());
+  }
+
+  void _fetchNotifications() {
+    context.read<NotificationBloc>().fetchNotificationCount();
   }
 
   void _onItemTapped(int index) {
@@ -45,33 +51,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(
-            ),
-          ),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
         break;
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const BookingScreen(
-            ),
-          ),
+          MaterialPageRoute(builder: (context) => const BookingScreen()),
         );
         break;
       case 2:
         Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShopMap(
-                        selectedServices:
-                            context.read<SelectedServicesBloc>().state.selectedServices,
-                        selectedServiceCount:
-                            context.read<SelectedServicesBloc>().state.selectedServiceCount,
-                      ),
-                    ),
-                  );
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
+              child: ShopMap(
+                selectedServices: widget.selectedServices,
+                selectedServiceCount: widget.selectedServiceCount,
+              ),
+            ),
+          ),
+        );
+        break;
+      case 3:
+        context.read<NotificationBloc>().resetNotificationCount();
         break;
       default:
         break;
@@ -89,13 +94,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
         automaticallyImplyLeading: false,
       ),
       body: BlocBuilder<BookingBloc, BookingState>(
-        builder: (context, state) {
-          if (state is BookingLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is BookingUserLoaded) {
-            final bookings = state.userBookings
+        builder: (context, bookingState) {
+          if (bookingState is BookingLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (bookingState is BookingUserLoaded) {
+            final bookings = bookingState.userBookings
                 .where((booking) =>
                     booking.status == 'Approved' ||
                     booking.status == 'Rejected' ||
@@ -104,12 +107,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
             if (bookings.isEmpty) {
               return const Center(
-                child: Text('No notifications found.'),
+                child: Text("Check back later for updates."),
               );
             }
 
             return RefreshIndicator(
-              onRefresh: _fetchUserBookings,
+              onRefresh: () async {
+                _fetchUserBookings();
+              },
               child: ListView.builder(
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
@@ -122,13 +127,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 },
               ),
             );
-          } else if (state is RequestError) {
+          } else if (bookingState is RequestError) {
             return Center(
-              child: Text('Error: ${state.error}'),
+              child: Text('Error: ${bookingState.error}'),
             );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: Container(
+                color: Colors.white,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             );
           }
         },

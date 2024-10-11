@@ -79,7 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       } catch (e) {
         emit(EmailVerificationFailed(
-            'Error occurred: ${e.toString()}')); // Catch any errors
+            'Error occurred: ${e.toString()}')); 
       }
     });
 

@@ -1,7 +1,10 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/auth/auth_state.dart';
+import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/home.dart';
 import 'package:aj_autofix/screens/registration_screen.dart';
@@ -56,9 +59,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     } else if (state.role == 'admin' ||
                         state.role == 'service manager') {
                       Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AdminPanelScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) =>
+                                BookingBloc(BookingRepositoryImpl())
+                                  ..add(GetAllAcceptedBooking()),
+                            child: const AdminPanelScreen(),
+                          ),
+                        ),
+                      );
                     }
                   } else if (state is AuthFailed) {
                     setState(() {

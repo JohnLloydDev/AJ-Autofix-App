@@ -8,7 +8,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="aj_autofix"
+        android:label="A&amp;J Autofix"
         tools:replace="android:name, android:label"
         android:icon="@mipmap/ic_launcher">
         

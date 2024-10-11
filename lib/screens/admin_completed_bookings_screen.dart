@@ -2,6 +2,7 @@ import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
+import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/admin_panel_screen.dart';
 import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_user_screen.dart';
@@ -78,9 +79,15 @@ class _AdminCompletedBookingsScreenState
         );
         break;
       case 2:
-        Navigator.pushReplacement(
+          Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AdminServicesScreen()),
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetAllAcceptedBooking()),
+              child: const AdminServicesScreen(),
+            ),
+          ),
         );
         break;
       case 3:

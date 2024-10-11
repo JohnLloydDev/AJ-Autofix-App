@@ -54,7 +54,13 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AdminServicesScreen()),
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => BookingBloc(BookingRepositoryImpl())
+                ..add(GetAllAcceptedBooking()),
+              child: const AdminServicesScreen(),
+            ),
+          ),
         );
         break;
       case 3:
@@ -72,7 +78,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     }
   }
 
-  Future<void> _handleLogout(BuildContext context) async {
+  Future<void> handleLogout(BuildContext context) async {
     try {
       BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
 
@@ -100,7 +106,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                _handleLogout(context);
+                handleLogout(context);
               },
               icon: const Icon(Icons.logout))
         ],
@@ -145,26 +151,26 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                           mainAxisSpacing: 16,
                           shrinkWrap: true,
                           children: [
-                            _buildDashboardItem('Total\nUsers', '$totalUsers',
+                            dashboardContainer('Total\nUsers', '$totalUsers',
                                 Colors.purple, Icons.people),
-                            _buildDashboardItem(
+                            dashboardContainer(
                                 'Total\nRejected',
                                 '$totalRejected',
                                 Colors.red,
                                 Icons.request_page),
-                            _buildDashboardItem('Total\nPending',
+                            dashboardContainer('Total\nPending',
                                 '$totalPending', Colors.orange, Icons.thumb_up),
-                            _buildDashboardItem('Total\nApproved',
+                            dashboardContainer('Total\nApproved',
                                 '$totalApproved', Colors.green, Icons.done_all),
                           ],
                         );
                       } else {
-                        return const Center(child: Text('No data available'));
+                        return const Center(child: CircularProgressIndicator());
                       }
                     },
                   );
                 } else {
-                  return const Center(child: Text('No data available'));
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             ),
@@ -223,7 +229,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       },
                     );
                   } else {
-                    return const Center(child: Text('No data available'));
+                    return const Center(child: CircularProgressIndicator());
                   }
                 },
               ),
@@ -289,7 +295,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     );
   }
 
-  Widget _buildDashboardItem(
+  Widget dashboardContainer(
       String title, String count, Color color, IconData icon) {
     return Container(
       decoration: BoxDecoration(

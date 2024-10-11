@@ -6,10 +6,8 @@ import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-
   @override
   Future<User> userLogin(User user) async {
     final response = await http.post(
@@ -23,7 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final token = data['token'] as String?;
       if (token == null) throw Exception('Access token is missing');
 
-      await SecureStorage.storeToken('access_token', token);  
+      await SecureStorage.storeToken('access_token', token);
       final userData = data['user'] as Map<String, dynamic>?;
       if (userData == null) throw Exception('User data is missing');
 
@@ -48,8 +46,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> userRegistration(User user, File? profilePicture) async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse('${ApiConstants.baseUrl}/auth/registration'));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${ApiConstants.baseUrl}/auth/registration'));
 
     request.fields['fullname'] = user.fullname;
     request.fields['username'] = user.username;
@@ -84,7 +82,6 @@ class AuthRepositoryImpl implements AuthRepository {
     throw Exception('Failed to register: ${response.reasonPhrase}');
   }
 
-
   @override
   Future<void> userLogout() async {
     final accessToken = await SecureStorage.readToken('access_token');
@@ -100,23 +97,14 @@ class AuthRepositoryImpl implements AuthRepository {
     if (response.statusCode != 200) {
       throw Exception('Failed to log out: ${response.reasonPhrase}');
     }
-
-    
-    await SecureStorage.deleteToken('access_token');
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');  
-
   }
-
-
 
   @override
   Future<bool> verifyUserEmail(String token) async {
     final encodedToken = Uri.encodeComponent(token);
 
-    final response = await http
-        .get(Uri.parse('${ApiConstants.baseUrl}/auth/verify-email?token=$encodedToken'));
+    final response = await http.get(Uri.parse(
+        '${ApiConstants.baseUrl}/auth/verify-email?token=$encodedToken'));
 
     try {
       if (response.statusCode == 200) {
@@ -223,7 +211,4 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception("Failed to reset password: $error");
     }
   }
-
-  
-
 }

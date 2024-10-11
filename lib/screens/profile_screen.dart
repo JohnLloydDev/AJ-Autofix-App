@@ -1,12 +1,12 @@
 import 'dart:io';
-
-import 'package:aj_autofix/screens/profile_update_screen.dart';
-import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
+import 'package:aj_autofix/screens/profile_update_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userId;
@@ -26,40 +26,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<UserBloc>().add(GetUserByAuthEvent());
-
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: kAppBarGradient,
-        ),
-        title: const Text('Profile'),
-      
-        actions: [
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              if (state is UserDataLoadedByAuth) {
-                final user = state.user;
-                return TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileUpdateScreen(userId: user.id),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'EDIT',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                );
-              }
-              return Container();
-            },
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
+            size: 25,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
@@ -67,20 +56,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is UserDataLoadedByAuth) {
             final user = state.user;
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: _getProfileImage(user.profilePicture),
-                    radius: 50,
-                    backgroundColor: Colors.grey[300],
-                  ),
-                  _buildProfileDetail('Full Name', user.fullname),
-                  _buildProfileDetail('Username', user.username),
-                  _buildProfileDetail('Email', user.email),
-                  _buildProfileDetail('Phone Number', user.contactNumber),
-                ],
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: _getProfileImage(
+                        user.profilePicture,
+                        user.fullname,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      user.fullname,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      user.email,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TextButton.icon(
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 12),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProfileUpdateScreen(userId: user.id),
+                                ),
+                              );
+                            },
+                            icon:
+                                const Icon(Icons.settings, color: Colors.white),
+                            label: const Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          child: Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    profileDetail(Icons.person, 'Full Name', user.fullname),
+                    const SizedBox(height: 20),
+                    profileDetail(
+                        Icons.person_outline, 'Username', user.username),
+                    const SizedBox(height: 20),
+                    profileDetail(Icons.email_outlined, 'Email', user.email),
+                    const SizedBox(height: 20),
+                    profileDetail(
+                        Icons.phone, 'Phone Number', user.contactNumber),
+                  ],
+                ),
               ),
             );
           } else if (state is UserDataError) {
@@ -92,25 +159,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileDetail(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget profileDetail(IconData icon, String label, String value) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(15),
+      child: Row(
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 5),
-          TextField(
-            readOnly: true,
-            decoration: InputDecoration(
-              hintText: value,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              filled: true,
-              fillColor: Colors.grey[200],
+          Icon(icon, color: Colors.grey[600], size: 30),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -119,23 +207,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-ImageProvider _getProfileImage(String? profilePicture) {
+Widget _getProfileImage(String? profilePicture, String fullname) {
   if (profilePicture == null || profilePicture.isEmpty) {
-    return const AssetImage('assets/default_profile.png') as ImageProvider;
+    return CircleAvatar(
+      radius: 60,
+      backgroundColor: getRandomBackgroundColor(fullname),
+      child: Text(
+        fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
+        style: const TextStyle(
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   if (profilePicture.startsWith('http') || profilePicture.startsWith('https')) {
-    return NetworkImage(profilePicture);
+    return CircleAvatar(
+      radius: 60,
+      backgroundColor: Colors.transparent,
+      backgroundImage: NetworkImage(profilePicture),
+      child: null,
+    );
   }
 
   try {
     final file = File(profilePicture);
     if (file.existsSync()) {
-      return FileImage(file);
-    } else {
-      return const AssetImage('assets/default_profile.png') as ImageProvider;
+      return CircleAvatar(
+        radius: 60,
+        backgroundColor: Colors.transparent,
+        backgroundImage: FileImage(file),
+        child: null,
+      );
     }
   } catch (e) {
-    return const AssetImage('assets/default_profile.png') as ImageProvider;
+    debugPrint(e.toString());
   }
+
+  return CircleAvatar(
+    radius: 30,
+    backgroundColor: getRandomBackgroundColor(fullname),
+    child: Text(
+      fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
+      style: const TextStyle(
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    ),
+  );
 }

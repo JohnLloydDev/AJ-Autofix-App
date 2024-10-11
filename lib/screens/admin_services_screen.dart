@@ -258,7 +258,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                   } else if (state is RequestError) {
                     return Center(child: Text(state.error));
                   } else {
-                    return const Center(child: Text('No bookings found'));
+                    return const Center(child: CircularProgressIndicator());
                   }
                 },
               ),

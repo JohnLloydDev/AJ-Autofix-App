@@ -1,9 +1,12 @@
+import 'dart:io';
+import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/review/review_state.dart';
 import 'package:aj_autofix/models/review_model.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
@@ -16,7 +19,6 @@ class ReviewScreenState extends State<ReviewScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch all reviews when the screen is first loaded
     context.read<ReviewBloc>().add(FetchReviews());
   }
 
@@ -36,13 +38,12 @@ class ReviewScreenState extends State<ReviewScreen> {
             ),
           ),
         ),
-
         title: const Text('Reviews'),
+        centerTitle: true,
       ),
       body: BlocListener<ReviewBloc, ReviewState>(
         listener: (context, state) {
           if (state is ReviewError) {
-
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Error: ${state.message}'),
@@ -64,6 +65,7 @@ class ReviewScreenState extends State<ReviewScreen> {
             } else if (state is ReviewLoaded) {
               return ListView.builder(
                 itemCount: state.reviews.length,
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 itemBuilder: (context, index) {
                   final review = state.reviews[index];
                   return ReviewCard(review: review);
@@ -78,7 +80,8 @@ class ReviewScreenState extends State<ReviewScreen> {
         onPressed: () {
           _showAddReviewDialog(context);
         },
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -97,7 +100,7 @@ class ReviewScreenState extends State<ReviewScreen> {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: Form(
               key: formKey,
               child: Column(
@@ -105,16 +108,21 @@ class ReviewScreenState extends State<ReviewScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Rate the service',
+                    'Submit a Review',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
+                  const Text(
+                    'Rate the service',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
                   DropdownButtonFormField<int>(
                     decoration: const InputDecoration(
-                      labelText: 'Put your rate',
+                      labelText: 'Rating',
                       border: OutlineInputBorder(),
                     ),
                     items: List.generate(5, (index) => index + 1)
@@ -135,9 +143,9 @@ class ReviewScreenState extends State<ReviewScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    maxLines: 3,
+                    maxLines: 4,
                     decoration: const InputDecoration(
-                      labelText: 'Write your review',
+                      labelText: 'Review',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -158,28 +166,27 @@ class ReviewScreenState extends State<ReviewScreen> {
                           horizontal: 50,
                           vertical: 15,
                         ),
+                        backgroundColor: Colors.blueAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       onPressed: () {
                         if (formKey.currentState?.validate() ?? false) {
-                          // Create the new review
                           final newReview = Review(
                             rating: rating!,
                             content: content!,
                           );
 
-                          // Add the review to the bloc
                           context
                               .read<ReviewBloc>()
                               .add(CreateReview(newReview));
 
-                          // Close the dialog
                           Navigator.of(context).pop();
                         }
                       },
-                      child: const Text('Submit'),
+                      child: const Text('Submit',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -189,8 +196,6 @@ class ReviewScreenState extends State<ReviewScreen> {
         );
       },
     ).then((_) {
-      // This will be executed after the dialog is closed
-      // Fetch reviews again to update the ReviewScreen
       context.read<ReviewBloc>().add(FetchReviews());
     });
   }
@@ -204,29 +209,119 @@ class ReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 3,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              review.user?.fullname ?? "Anonymous",
-              style: const TextStyle(fontSize: 14, color: Colors.black),
+            Row(
+              children: [
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: _getProfileImage(
+                    review.user?.profilePicture,
+                    review.user?.fullname ?? '',
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      review.user?.fullname ?? "Anonymous",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    RatingBar.builder(
+                      itemSize: 20,
+                      ignoreGestures: true,
+                      initialRating: review.rating.toDouble(),
+                      direction: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {},
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Rating: ${review.rating}',
-              style: const TextStyle(fontSize: 14, color: Colors.black),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
+            Divider(color: Colors.grey[300]),
+            const SizedBox(height: 12),
             Text(
               review.content,
-              style: const TextStyle(fontSize: 14),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+Widget _getProfileImage(String? profilePicture, String fullname) {
+  if (profilePicture == null || profilePicture.isEmpty) {
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: getRandomBackgroundColor(
+          fullname),
+      child: Text(
+        fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
+        style: const TextStyle(
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  if (profilePicture.startsWith('http') || profilePicture.startsWith('https')) {
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: Colors.transparent,
+      backgroundImage: NetworkImage(profilePicture),
+      child: null, 
+    );
+  }
+
+  try {
+    final file = File(profilePicture);
+    if (file.existsSync()) {
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.transparent,
+        backgroundImage: FileImage(file),
+        child: null, 
+      );
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    }
+
+  return CircleAvatar(
+    radius: 30,
+    backgroundColor: getRandomBackgroundColor(fullname),
+    child: Text(
+      fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
+      style: const TextStyle(
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    ),
+  );
 }

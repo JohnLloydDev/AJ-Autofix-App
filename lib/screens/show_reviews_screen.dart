@@ -54,12 +54,12 @@ class _ShowReviewsScreenState extends State<ShowReviewsScreen> {
               return ListView.builder(
                 itemCount: state.reviews.length,
                 itemBuilder: (context, index) {
-                  final review = state.reviews[index];
+                  final review = state.reviews.reversed.toList()[index];
                   return ReviewCard(review: review);
                 },
               );
             }
-            return const Center(child: Text('No reviews found.'));
+            return const Center(child: Text('No reviews yet.'));
           },
         ),
       ),

@@ -14,17 +14,16 @@ class Review extends Equatable {
     required this.content,
   });
 
- factory Review.fromJson(Map<String, dynamic> json) {
-  return Review(
-    id: json['_id'],
-    user: json['userId'] != null && json['userId'] is Map<String, dynamic>
-      ? User.fromJson(json['userId'])
-      : null, 
-    rating: json['rating'] ?? 0,
-    content: json['content'] ?? '',
-  );
-}
-
+  factory Review.fromJson(Map<String, dynamic> json) {
+    return Review(
+      id: json['_id'],
+      user: json['userId'] != null && json['userId'] is Map<String, dynamic>
+          ? User.fromJson(json['userId'])
+          : null,
+      rating: json['rating'] ?? 0,
+      content: json['content'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

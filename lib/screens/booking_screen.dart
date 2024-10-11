@@ -1,3 +1,5 @@
+import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
+import 'package:aj_autofix/bloc/notifications/notification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -44,13 +46,21 @@ class BookingScreenState extends State<BookingScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    context.read<NotificationBloc>().fetchNotificationCount();
+  }
+
+  @override
   void dispose() {
     carTypeController.dispose();
     super.dispose();
   }
 
   void _removeService(String serviceName) {
-    context.read<SelectedServicesBloc>().add(RemoveSelectedService(serviceName));
+    context
+        .read<SelectedServicesBloc>()
+        .add(RemoveSelectedService(serviceName));
     Fluttertoast.showToast(
       msg: "Removed $serviceName from booking",
       toastLength: Toast.LENGTH_SHORT,
@@ -77,8 +87,22 @@ class BookingScreenState extends State<BookingScreen> {
         child: BlocConsumer<BookingBloc, BookingState>(
           listener: (context, state) {
             if (state is BookingSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Booking Success'),
+                    content: Text(state.message),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); 
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                },
               );
 
               if (selectedTimeSlot != null) {
@@ -86,17 +110,21 @@ class BookingScreenState extends State<BookingScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BookingConfirmationScreen(
-                      selectedServices:
-                          context.read<SelectedServicesBloc>().state.selectedServices,
-                      selectedServiceCount:
-                          context.read<SelectedServicesBloc>().state.selectedServiceCount,
+                      selectedServices: context
+                          .read<SelectedServicesBloc>()
+                          .state
+                          .selectedServices,
+                      selectedServiceCount: context
+                          .read<SelectedServicesBloc>()
+                          .state
+                          .selectedServiceCount,
                       selectedTimeSlot: selectedTimeSlot!,
                       bookingDate: selectedDate,
                       vehicleType: carType,
                     ),
                   ),
                 );
-              } 
+              }
             } else if (state is RequestError) {
               setState(() {
                 errorMessage = state.error;
@@ -156,10 +184,11 @@ class BookingScreenState extends State<BookingScreen> {
                           ? ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: selectedServicesState.selectedServices.length,
+                              itemCount:
+                                  selectedServicesState.selectedServices.length,
                               itemBuilder: (context, index) {
-                                final serviceName =
-                                    selectedServicesState.selectedServices[index];
+                                final serviceName = selectedServicesState
+                                    .selectedServices[index];
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 8.0),
                                   child: SizedBox(
@@ -168,7 +197,8 @@ class BookingScreenState extends State<BookingScreen> {
                                     child: Card(
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -378,109 +408,153 @@ class BookingScreenState extends State<BookingScreen> {
           },
         ),
       ),
-      bottomNavigationBar:
-          BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
-        builder: (context, state) {
-          return BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: 1,
-            selectedItemColor: const Color(0xFF6E88A1),
-            unselectedItemColor: Colors.grey,
-            items: [
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Stack(
-                  children: [
-                    const Icon(Icons.receipt),
-                    if (state.selectedServiceCount > 0)
-                      Positioned(
-                        right: 0,
-                        top: -1,
-                        child: Container(
-                          padding: const EdgeInsets.all(1),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${state.selectedServiceCount}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+      bottomNavigationBar: BlocBuilder<NotificationBloc, NotificationState>(
+        builder: (context, notificationState) {
+          return BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
+            builder: (context, serviceState) {
+              return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: 1,
+                selectedItemColor: const Color(0xFF6E88A1),
+                unselectedItemColor: Colors.grey,
+                items: [
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Stack(
+                      children: [
+                        const Icon(Icons.receipt),
+                        if (serviceState.selectedServiceCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: -1,
+                            child: Container(
+                              padding: const EdgeInsets.all(1),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
                               ),
-                              textAlign: TextAlign.center,
+                              constraints: const BoxConstraints(
+                                minWidth: 15,
+                                minHeight: 15,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${serviceState.selectedServiceCount}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    label: 'Booking',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.map),
+                    label: 'Map',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Stack(
+                      children: [
+                        const Icon(Icons.notifications),
+                        if (notificationState is NotificationLoaded)
+                          Positioned(
+                            right: 0,
+                            top: -1,
+                            child: Container(
+                              padding: const EdgeInsets.all(1),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 15,
+                                minHeight: 15,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${notificationState.notificationCount}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    label: 'Notification',
+                  ),
+                ],
+                onTap: (index) {
+                  switch (index) {
+                    case 0:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider.value(
+                            value: context.read<SelectedServicesBloc>(),
+                            child: const HomeScreen(),
+                          ),
+                        ),
+                      );
+                      break;
+                    case 1:
+                      break;
+                    case 2:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShopMap(
+                            selectedServices: context
+                                .read<SelectedServicesBloc>()
+                                .state
+                                .selectedServices,
+                            selectedServiceCount: context
+                                .read<SelectedServicesBloc>()
+                                .state
+                                .selectedServiceCount,
+                          ),
+                        ),
+                      );
+                      break;
+                    case 3:
+                      context.read<NotificationBloc>().resetNotificationCount();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) =>
+                                BookingBloc(BookingRepositoryImpl())
+                                  ..add(GetUserBooking()),
+                            child: NotificationScreen(
+                              selectedServices: context
+                                  .read<SelectedServicesBloc>()
+                                  .state
+                                  .selectedServices,
+                              selectedServiceCount: context
+                                  .read<SelectedServicesBloc>()
+                                  .state
+                                  .selectedServiceCount,
                             ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-                label: 'Booking',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: 'Map',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Notification',
-              ),
-            ],
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider.value(
-                        value: context.read<SelectedServicesBloc>(),
-                        child: const HomeScreen(
-                        ),
-                      ),
-                    ),
-                  );
-                  break;
-                case 1:
-                  break;
-                case 2:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShopMap(
-                        selectedServices:
-                            context.read<SelectedServicesBloc>().state.selectedServices,
-                        selectedServiceCount:
-                            context.read<SelectedServicesBloc>().state.selectedServiceCount,
-                      ),
-                    ),
-                  );
-                  break;
-                case 3:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => BookingBloc(BookingRepositoryImpl())
-                          ..add(GetUserBooking()),
-                        child: NotificationScreen(
-                          selectedServices:
-                              context.read<SelectedServicesBloc>().state.selectedServices,
-                          selectedServiceCount:
-                              context.read<SelectedServicesBloc>().state.selectedServiceCount,
-                        ),
-                      ),
-                    ),
-                  );
-              }
+                      );
+                  }
+                },
+              );
             },
           );
         },

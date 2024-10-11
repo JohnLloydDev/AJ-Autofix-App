@@ -144,7 +144,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                     initialRating: 0,
                     minRating: 1,
                     direction: Axis.horizontal,
-                    allowHalfRating: true,
+                    allowHalfRating: false,
                     itemCount: 5,
                     ratingWidget: RatingWidget(
                       full: const Icon(Icons.star, color: Colors.amber),
@@ -188,7 +188,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                         if (formKey.currentState?.validate() ?? false) {
                           final newReview = Review(
                             rating: rating!.toDouble().toInt(),
-                            content: content!,
+                            content: content!, 
                           );
 
                           context

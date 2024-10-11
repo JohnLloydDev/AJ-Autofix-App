@@ -295,6 +295,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                   password: '',
                                   role: dropdownValue,
                                   profilePicture: profilePicture,
+                                  isVerified: true,
                                 );
 
                                 BlocProvider.of<UserBloc>(context).add(

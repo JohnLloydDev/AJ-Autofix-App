@@ -2,6 +2,7 @@ import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
+import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
@@ -27,6 +28,9 @@ void main() {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(AuthRepositoryImpl()),
+        ),
+        BlocProvider(
+          create: (context) => NotificationBloc(BookingRepositoryImpl()),
         ),
         BlocProvider(
           create: (context) => UserBloc(AdminRepositoryImpl())..add(GetUsers()),
@@ -56,11 +60,10 @@ void main() {
               ReviewBloc(ReviewRepositoryImpl())..add(FetchReviews()),
         ),
         BlocProvider(
-          create: (context) =>
-              ContactBloc(ContactRepositoryImpl()),
+          create: (context) => ContactBloc(ContactRepositoryImpl()),
         ),
         BlocProvider(
-          create: (context) => SelectedServicesBloc(), 
+          create: (context) => SelectedServicesBloc(),
         ),
       ],
       child: const MyApp(),
