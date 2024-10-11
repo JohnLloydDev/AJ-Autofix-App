@@ -3,11 +3,13 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/review_model.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/widgets/task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 
 class UserPendingRequest extends StatefulWidget {
   const UserPendingRequest({super.key});
@@ -68,10 +70,13 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                     title: booking.user?.fullname ?? 'Unknown User',
                     subtitle: booking.serviceType.join(', '),
                     status: booking.status,
+                    date: DateFormat('MM/dd/yyyy').format(booking.date),
+                    time: booking.time.toString(),
+                    carname: booking.vehicleType,
                     statusColor: _getStatusColor(booking.status),
                     onReviewPressed: () {
                       if (booking.status == 'Completed') {
-                        _showAddReviewDialog(context); 
+                        _showAddReviewDialog(context);
                       }
                     },
                   );
@@ -100,7 +105,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
         return Colors.green;
       case 'Rejected':
         return Colors.red;
-        case 'Completed':
+      case 'Completed':
         return Colors.blue;
       default:
         return Colors.grey;
@@ -186,7 +191,9 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                             content: content!,
                           );
 
-                          context.read<ReviewBloc>().add(CreateReview(newReview));
+                          context
+                              .read<ReviewBloc>()
+                              .add(CreateReview(newReview));
 
                           Navigator.of(context).pop();
                         }
@@ -200,86 +207,6 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           ),
         );
       },
-    );
-  }
-}
-
-class TaskCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String status;
-  final Color statusColor;
-  final VoidCallback? onReviewPressed;
-
-  const TaskCard({
-    super.key,
-    required this.title,
-    required this.status,
-    required this.statusColor,
-    required this.subtitle,
-    this.onReviewPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(),
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-              decoration: BoxDecoration(
-                color: statusColor,
-              ),
-              child: Text(
-                status,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            if (status == 'Completed')
-              ElevatedButton(
-                onPressed: onReviewPressed,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    side: const BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 28.0, vertical: 6.0),
-                ),
-                child: const Text('Review'),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
