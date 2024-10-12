@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';  // Import for launching URLs
 import 'home.dart';
 import 'booking_screen.dart';
 import 'notification_screen.dart';
@@ -42,10 +43,20 @@ class ShopMapState extends State<ShopMap> {
               title: 'A & J Autofix',
               snippet: 'Your trusted car shop',
             ),
+            onTap: _launchMapsUrl,  // Launch maps on marker tap
           ),
         );
       });
     });
+  }
+
+  Future<void> _launchMapsUrl() async {
+    final Uri url = Uri.parse('https://www.google.com/maps/search/?api=1&query=${shopLocation.latitude},${shopLocation.longitude}');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -77,7 +88,6 @@ class ShopMapState extends State<ShopMap> {
         break;
       case 3:
         context.read<NotificationBloc>().resetNotificationCount();
-
         context.read<NotificationBloc>().fetchNotificationCount();
 
         Navigator.push(
@@ -119,13 +129,15 @@ class ShopMapState extends State<ShopMap> {
         backgroundColor: Colors.lightBlue,
       ),
       body: GoogleMap(
-        onMapCreated: _onMapCreated,
+        
         initialCameraPosition: CameraPosition(
           target: shopLocation,
           zoom: 15,
         ),
+        myLocationButtonEnabled: false,
         markers: _markers,
         mapType: MapType.normal,
+        onMapCreated: _onMapCreated, 
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
