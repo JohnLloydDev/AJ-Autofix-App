@@ -59,6 +59,7 @@ void main() {
           create: (context) =>
               ReviewBloc(ReviewRepositoryImpl())..add(FetchReviews()),
         ),
+        
         BlocProvider(
           create: (context) => ContactBloc(ContactRepositoryImpl()),
         ),

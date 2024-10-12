@@ -39,10 +39,10 @@ class BookingScreenState extends State<BookingScreen> {
   final TextEditingController carTypeController = TextEditingController();
 
   final List<String> timeSlots = [
-    "8:00AM-10:00AM",
-    "10:00AM-12:00AM",
-    "1:00PM-3:00PM",
-    "3:00PM-5:00PM",
+    "8:00 AM - 10:00 AM",
+    "10:00 AM - 12:00 PM",
+    "1:00 PM - 3:00 PM",
+    "3:00 PM - 5:00 PM",
   ];
 
   @override
