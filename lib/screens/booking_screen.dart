@@ -87,24 +87,6 @@ class BookingScreenState extends State<BookingScreen> {
         child: BlocConsumer<BookingBloc, BookingState>(
           listener: (context, state) {
             if (state is BookingSuccess) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Booking Success'),
-                    content: Text(state.message),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); 
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  );
-                },
-              );
-
               if (selectedTimeSlot != null) {
                 Navigator.pushReplacement(
                   context,
