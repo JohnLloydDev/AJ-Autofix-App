@@ -108,13 +108,6 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                             backgroundImage: _getProfileImage(
                               profilePicture?.path ?? user.profilePicture,
                             ),
-                            child: (profilePicture == null ||
-                                    (profilePicture?.path.isEmpty ??
-                                        true && user.profilePicture!.isEmpty))
-                                ? const Icon(Icons.person,
-                                    size:
-                                        40) 
-                                : null,
                           ),
                         ),
                         Positioned(

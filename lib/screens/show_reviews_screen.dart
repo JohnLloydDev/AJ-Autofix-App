@@ -5,6 +5,7 @@ import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ShowReviewsScreen extends StatefulWidget {
   const ShowReviewsScreen({super.key});
@@ -28,6 +29,17 @@ class _ShowReviewsScreenState extends State<ShowReviewsScreen> {
           decoration: kAppBarGradient,
         ),
         title: const Text('Reviews'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
+            size: 25,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: BlocListener<ReviewBloc, ReviewState>(
         listener: (context, state) {

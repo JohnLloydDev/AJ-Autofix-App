@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class UserPendingRequest extends StatefulWidget {
@@ -37,8 +38,13 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           decoration: kAppBarGradient,
         ),
         title: const Text('Pending Requests'),
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const FaIcon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
+            size: 25,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -188,7 +194,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                         if (formKey.currentState?.validate() ?? false) {
                           final newReview = Review(
                             rating: rating!.toDouble().toInt(),
-                            content: content!, 
+                            content: content!,
                           );
 
                           context
