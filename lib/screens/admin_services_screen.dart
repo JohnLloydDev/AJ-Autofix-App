@@ -10,6 +10,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
 
 class AdminServicesScreen extends StatefulWidget {
   const AdminServicesScreen({super.key});
@@ -27,6 +30,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
   @override
   void initState() {
     super.initState();
+    tz.initializeTimeZones();
     context.read<BookingBloc>().add(GetAllPendingBooking());
     _searchController.addListener(_filterBookings);
   }
@@ -130,16 +134,20 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                   } else if (state is BookingPendingLoaded) {
                     final bookings = state.pendingBookings.reversed.toList();
 
-                    _filteredBookings = bookings.where((booking) {
-                      final query = _searchController.text.toLowerCase();
-                      final fullnameMatch = booking.user?.fullname
-                              .toLowerCase()
-                              .contains(query) ??
-                          false;
-                      final vehicleTypeMatch =
-                          booking.vehicleType.toLowerCase().contains(query);
-                      return fullnameMatch || vehicleTypeMatch;
-                    }).toList().reversed.toList();
+                    _filteredBookings = bookings
+                        .where((booking) {
+                          final query = _searchController.text.toLowerCase();
+                          final fullnameMatch = booking.user?.fullname
+                                  .toLowerCase()
+                                  .contains(query) ??
+                              false;
+                          final vehicleTypeMatch =
+                              booking.vehicleType.toLowerCase().contains(query);
+                          return fullnameMatch || vehicleTypeMatch;
+                        })
+                        .toList()
+                        .reversed
+                        .toList();
 
                     if (_filteredBookings.isEmpty) {
                       return const Center(child: Text('No bookings found'));
@@ -148,8 +156,16 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                     return ListView.builder(
                       itemCount: _filteredBookings.length,
                       itemBuilder: (context, index) {
-                        final booking =
-                            _filteredBookings.reversed.toList()[index];
+                        final booking = _filteredBookings[
+                            _filteredBookings.length - 1 - index];
+                        final utcDateTime =
+                            DateTime.parse(booking.createdAt).toUtc();
+                        final manila = tz.getLocation('Asia/Manila');
+                        final philippinesTime =
+                            tz.TZDateTime.from(utcDateTime, manila);
+                        final formattedDateTime =
+                            DateFormat('dd MMM yyyy hh:mm a')
+                                .format(philippinesTime);
 
                         return GestureDetector(
                           onTap: () {
@@ -197,6 +213,15 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700,
                                         color: Color.fromARGB(255, 94, 86, 86)),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  Text(
+                                    '   Booked At:$formattedDateTime',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                   const SizedBox(height: 8.0),
                                   Row(

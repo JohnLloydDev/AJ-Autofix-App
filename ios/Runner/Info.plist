@@ -28,6 +28,9 @@
 
     <!-- Permissions -->
     <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your message for location access.</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
     <string>We need your location to show your position on the map.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>We need your location to show your position on the map.</string>

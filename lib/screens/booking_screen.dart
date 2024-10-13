@@ -81,6 +81,7 @@ class BookingScreenState extends State<BookingScreen> {
           decoration: kAppBarGradient,
         ),
         title: const Text('Booking'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(kPadding),

@@ -161,8 +161,8 @@ class TaskCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 28.0,
-                      vertical: 12.0,
+                      horizontal: 24.0,
+                      vertical: 8.0,
                     ),
                   ),
                   child: const Text('Review',

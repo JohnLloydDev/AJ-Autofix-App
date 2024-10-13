@@ -91,6 +91,7 @@ class NotificationScreenState extends State<NotificationScreen> {
           decoration: kAppBarGradient,
         ),
         title: const Text('Notifications'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: BlocBuilder<BookingBloc, BookingState>(

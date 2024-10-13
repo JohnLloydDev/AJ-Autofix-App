@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'booking_model.dart'; // Import your Booking model
 
 class User extends Equatable {
   final String id;
@@ -13,6 +14,7 @@ class User extends Equatable {
   final String? verificationToken;
   final String? otp;
   final DateTime? otpExpiration;
+  final List<Booking>? bookings; 
 
   const User({
     this.role = 'user',
@@ -27,6 +29,7 @@ class User extends Equatable {
     this.verificationToken,
     this.otp,
     this.otpExpiration,
+    this.bookings, 
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -45,6 +48,7 @@ class User extends Equatable {
       otpExpiration: json['otpExpiration'] != null
           ? DateTime.parse(json['otpExpiration'] as String)
           : null,
+      bookings: (json['bookings'] as List<dynamic>?)?.map((bookingJson) => Booking.fromJson(bookingJson)).toList(),
     );
   }
 
@@ -62,6 +66,7 @@ class User extends Equatable {
       'verificationToken': verificationToken,
       'otp': otp,
       'otpExpiration': otpExpiration?.toIso8601String(),
+      'bookings': bookings?.map((booking) => booking.toJson()).toList(), 
     };
   }
 
@@ -79,5 +84,6 @@ class User extends Equatable {
         verificationToken,
         otp,
         otpExpiration,
+        bookings, 
       ];
 }

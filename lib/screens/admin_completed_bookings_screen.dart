@@ -218,7 +218,7 @@ class _AdminCompletedBookingsScreenState
                                         ),
                                         icon: const Icon(Icons.check,
                                             color: Colors.white),
-                                        label: const Text('Completed',
+                                        label: const Text('Service Finish!',
                                             style:
                                                 TextStyle(color: Colors.white)),
                                       ),

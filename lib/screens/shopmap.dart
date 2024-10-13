@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:aj_autofix/bloc/notifications/notification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'booking_screen.dart';
 import 'notification_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 class ShopMap extends StatefulWidget {
   final List<String> selectedServices;
@@ -33,6 +35,8 @@ class ShopMapState extends State<ShopMap> {
   Stream<Position>? _positionStream;
   final Set<Polyline> _polylines = {};
 
+  final String _googleMapsApiKey = 'AIzaSyAS0R3NQrhIfMVXvuBIraWdGVBa7ct96-k';
+
   @override
   void initState() {
     super.initState();
@@ -44,11 +48,13 @@ class ShopMapState extends State<ShopMap> {
   Future<void> _initLocationService() async {
     bool serviceEnabled;
     LocationPermission permission;
+
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await _showLocationServiceDialog();
       return;
     }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -266,22 +272,84 @@ class ShopMapState extends State<ShopMap> {
     }
   }
 
-  void _drawRouteToShop() {
+  Future<List<LatLng>> _fetchRoute() async {
+    if (_currentPosition == null) return [];
+
+    final origin =
+        '${_currentPosition!.latitude},${_currentPosition!.longitude}';
+    final destination = '${shopLocation.latitude},${shopLocation.longitude}';
+    final url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&key=$_googleMapsApiKey';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch directions');
+    }
+
+    final data = json.decode(response.body);
+    if ((data['routes'] as List).isEmpty) {
+      throw Exception('No routes found');
+    }
+
+    final points = data['routes'][0]['overview_polyline']['points'];
+    return _decodePolyline(points);
+  }
+
+  List<LatLng> _decodePolyline(String encoded) {
+    List<LatLng> polyline = [];
+    int index = 0;
+    int len = encoded.length;
+    int lat = 0;
+    int lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      polyline.add(LatLng(lat / 1E5, lng / 1E5));
+    }
+
+    return polyline;
+  }
+
+  void _drawRouteToShop() async {
     if (_currentPosition != null) {
-      const polylineId = PolylineId('routeToShop');
-      final newPolyline = Polyline(
-        polylineId: polylineId,
-        visible: true,
-        points: [
-          LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-          shopLocation,
-        ],
-        color: Colors.blue,
-        width: 5,
-      );
-      setState(() {
-        _polylines.add(newPolyline);
-      });
+      try {
+        List<LatLng> route = await _fetchRoute();
+        const polylineId = PolylineId('routeToShop');
+        final newPolyline = Polyline(
+          polylineId: polylineId,
+          visible: true,
+          points: route,
+          color: const Color.fromARGB(255, 0, 128, 255),
+          width: 5,
+        );
+        setState(() {
+          _polylines
+              .removeWhere((polyline) => polyline.polylineId == polylineId);
+          _polylines.add(newPolyline);
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error fetching route: $e')),
+        );
+      }
     }
   }
 
@@ -303,6 +371,7 @@ class ShopMapState extends State<ShopMap> {
           ),
         ),
         title: const Text('Shop Location'),
+        centerTitle: true,
         backgroundColor: Colors.lightBlue,
       ),
       body: Stack(
@@ -329,7 +398,7 @@ class ShopMapState extends State<ShopMap> {
                   _moveCamera(_currentPosition!);
                 }
               },
-              backgroundColor: Colors.blue,
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               child: const Icon(Icons.directions),
             ),
           ),
