@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-
 class AdminServicesScreen extends StatefulWidget {
   const AdminServicesScreen({super.key});
 
@@ -153,132 +152,140 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                       return const Center(child: Text('No bookings found'));
                     }
 
-                    return ListView.builder(
-                      itemCount: _filteredBookings.length,
-                      itemBuilder: (context, index) {
-                        final booking = _filteredBookings[
-                            _filteredBookings.length - 1 - index];
-                        final utcDateTime =
-                            DateTime.parse(booking.createdAt).toUtc();
-                        final manila = tz.getLocation('Asia/Manila');
-                        final philippinesTime =
-                            tz.TZDateTime.from(utcDateTime, manila);
-                        final formattedDateTime =
-                            DateFormat('dd MMM yyyy hh:mm a')
-                                .format(philippinesTime);
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<BookingBloc>().add(GetAllPendingBooking());
+                      },
+                      child: ListView.builder(
+                        itemCount: _filteredBookings.length,
+                        itemBuilder: (context, index) {
+                          final booking = _filteredBookings[
+                              _filteredBookings.length - 1 - index];
+                          final utcDateTime =
+                              DateTime.parse(booking.createdAt).toUtc();
+                          final manila = tz.getLocation('Asia/Manila');
+                          final philippinesTime =
+                              tz.TZDateTime.from(utcDateTime, manila);
+                          final formattedDateTime =
+                              DateFormat('dd MMM yyyy hh:mm a')
+                                  .format(philippinesTime);
 
-                        return GestureDetector(
-                          onTap: () {
-                            _showBookingDetailsBottomSheet(context, booking);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          '   Booked By: ${booking.user?.fullname}',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                      ),
-                                      _statusBadge(booking.status),
-                                    ],
+                          return GestureDetector(
+                            onTap: () {
+                              _showBookingDetailsBottomSheet(context, booking);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
                                   ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '   Vehicle Type: ${booking.vehicleType}',
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color.fromARGB(255, 94, 86, 86)),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '   Booked At:$formattedDateTime',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton.icon(
-                                        onPressed: () {
-                                          final bloc =
-                                              BlocProvider.of<BookingBloc>(
-                                                  context);
-                                          bloc.add(AcceptBooking(booking.id!));
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          minimumSize: const Size(140, 43),
-                                        ),
-                                        icon: const Icon(Icons.check,
-                                            color: Colors.white),
-                                        label: const Text('Approve',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                      const SizedBox(width: 8.0),
-                                      ElevatedButton.icon(
-                                        onPressed: () {
-                                          final bloc =
-                                              BlocProvider.of<BookingBloc>(
-                                                  context);
-                                          bloc.add(RejectBooking(booking.id!));
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          minimumSize: const Size(140, 43),
-                                        ),
-                                        icon: const Icon(Icons.close,
-                                            color: Colors.white),
-                                        label: const Text('Reject',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                    ],
-                                  )
                                 ],
                               ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '   Booked By: ${booking.user?.fullname}',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                        _statusBadge(booking.status),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Text(
+                                      '   Vehicle Type: ${booking.vehicleType}',
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color:
+                                              Color.fromARGB(255, 94, 86, 86)),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Text(
+                                      '   Booked At:$formattedDateTime',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton.icon(
+                                          onPressed: () {
+                                            final bloc =
+                                                BlocProvider.of<BookingBloc>(
+                                                    context);
+                                            bloc.add(
+                                                AcceptBooking(booking.id!));
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            minimumSize: const Size(140, 43),
+                                          ),
+                                          icon: const Icon(Icons.check,
+                                              color: Colors.white),
+                                          label: const Text('Approve',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                        ),
+                                        const SizedBox(width: 8.0),
+                                        ElevatedButton.icon(
+                                          onPressed: () {
+                                            final bloc =
+                                                BlocProvider.of<BookingBloc>(
+                                                    context);
+                                            bloc.add(
+                                                RejectBooking(booking.id!));
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            minimumSize: const Size(140, 43),
+                                          ),
+                                          icon: const Icon(Icons.close,
+                                              color: Colors.white),
+                                          label: const Text('Reject',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   } else if (state is RequestError) {
                     return Center(child: Text(state.error));

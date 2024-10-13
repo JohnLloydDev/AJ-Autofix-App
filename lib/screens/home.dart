@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            decoration:  kAppBarGradient,
+            decoration: kAppBarGradient,
           ),
           title: Row(
             children: [

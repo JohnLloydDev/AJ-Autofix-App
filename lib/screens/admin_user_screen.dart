@@ -364,14 +364,14 @@ void showUserBookingsBottomSheet(BuildContext context, User user) {
         builder: (BuildContext context, StateSetter setState) {
           return Container(
             padding: const EdgeInsets.all(16.0),
-            height: 500,
+            height: 550,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildHeaderButton(
+                    headerButton(
                       context,
                       'Information',
                       !showBookingHistory,
@@ -381,7 +381,7 @@ void showUserBookingsBottomSheet(BuildContext context, User user) {
                         });
                       },
                     ),
-                    _buildHeaderButton(
+                    headerButton(
                       context,
                       'Booking History',
                       showBookingHistory,
@@ -397,8 +397,8 @@ void showUserBookingsBottomSheet(BuildContext context, User user) {
                 Divider(thickness: 2, color: Colors.grey[300]),
                 Expanded(
                   child: showBookingHistory
-                      ? _buildBookingHistoryList(user.bookings)
-                      : _buildUserInfo(user),
+                      ? bookingHistoryList(user.bookings)
+                      : userInfo(user),
                 ),
               ],
             ),
@@ -409,7 +409,7 @@ void showUserBookingsBottomSheet(BuildContext context, User user) {
   );
 }
 
-Widget _buildHeaderButton(
+Widget headerButton(
     BuildContext context, String title, bool isActive, VoidCallback onPressed) {
   return ElevatedButton(
     onPressed: onPressed,
@@ -430,45 +430,127 @@ Widget _buildHeaderButton(
   );
 }
 
-Widget _buildUserInfo(User user) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'User Information',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+Widget userInfo(User user) {
+  return SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'User Information',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        _buildInfoTile(Icons.person, 'Full Name: ${user.fullname}'),
-        _buildInfoTile(Icons.account_circle, 'Username: ${user.username}'),
-        _buildInfoTile(Icons.email, 'Email: ${user.email}'),
-        _buildInfoTile(Icons.phone, 'Contact: ${user.contactNumber}'),
-        _buildInfoTile(Icons.verified,
-            'Verification Status: ${user.isVerified ? "Verified" : "Not Verified"}'),
-      ],
+          const SizedBox(height: 10),
+          profileDetail(Icons.person, 'Full Name', user.fullname),
+          profileDetail(Icons.account_circle, 'Username', user.username),
+          profileDetail(Icons.email, 'Email', user.email),
+          profileDetail(Icons.phone, 'Contact', user.contactNumber),
+          profileDetail(Icons.verified, 'Verification Status',
+              user.isVerified ? "Verified" : "Not Verified"),
+        ],
+      ),
     ),
   );
 }
 
-Widget _buildInfoTile(IconData icon, String info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
+Widget profileDetail(IconData icon, String label, String value) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 6,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    padding: const EdgeInsets.all(15),
+    margin: const EdgeInsets.symmetric(vertical: 4.0),
     child: Row(
       children: [
-        Icon(icon, color: Colors.blue, size: 20),
-        const SizedBox(width: 8),
-        Expanded(child: Text(info, style: const TextStyle(fontSize: 16))),
+        Icon(icon, color: Colors.grey[600], size: 30),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     ),
   );
 }
 
-Widget _buildBookingHistoryList(List<Booking>? bookings) {
+Widget _statusBadge(String status) {
+  Color badgeColor;
+
+  switch (status.toLowerCase()) {
+    case 'approved':
+      badgeColor = Colors.green;
+      break;
+    case 'rejected':
+      badgeColor = Colors.red;
+      break;
+    case 'completed':
+      badgeColor = Colors.blue;
+      break;
+    default:
+      badgeColor = Colors.orange;
+  }
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: badgeColor.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Row(
+      children: [
+        Icon(
+          status.toLowerCase() == 'approved'
+              ? Icons.check_circle_outline
+              : Icons.cancel_outlined,
+          color: badgeColor,
+          size: 16,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          status,
+          style: TextStyle(
+            color: badgeColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget bookingHistoryList(List<Booking>? bookings) {
   return ListView.builder(
     itemCount: bookings?.length ?? 0,
     itemBuilder: (context, index) {
@@ -477,49 +559,90 @@ Widget _buildBookingHistoryList(List<Booking>? bookings) {
       final manila = tz.getLocation('Asia/Manila');
       final philippinesTime = tz.TZDateTime.from(utcDateTime, manila);
       final formattedDateTime =
-          DateFormat('dd MMM yyyy hh:mm a').format(philippinesTime);
-          
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 5.0),
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          DateFormat('dd MMM yyyy, hh:mm a').format(philippinesTime);
+
+      return Card(
+        elevation: 3,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              booking.serviceType.join(', '),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      color: Colors.blue, 
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${index + 1}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  _statusBadge(booking.status),
+                ],
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Date: $formattedDateTime',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(Icons.build_outlined,
+                      size: 18, color: Colors.grey),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      booking.serviceType.join(', '),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Text(
-              'Status: ${booking.status}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(Icons.car_rental, size: 18, color: Colors.grey),
+                  const SizedBox(width: 10),
+                  Text(
+                    booking.vehicleType,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today_outlined,
+                      size: 18, color: Colors.grey),
+                  const SizedBox(width: 10),
+                  Text(
+                    formattedDateTime,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     },

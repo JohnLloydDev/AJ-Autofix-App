@@ -133,13 +133,7 @@ class NotificationScreenState extends State<NotificationScreen> {
               child: Text('Error: ${bookingState.error}'),
             );
           } else {
-            return Center(
-              child: Container(
-                color: Colors.white,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -230,25 +224,11 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            statusColor.withOpacity(0.2),
-            Colors.white,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+    return Card(
+      color: const Color.fromARGB(255, 227, 227, 227),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8.0,
-            offset: Offset(0, 4),
-          ),
-        ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16.0),
