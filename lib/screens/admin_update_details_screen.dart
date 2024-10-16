@@ -282,7 +282,6 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                 final email = emailController.text;
                                 final contactNumber =
                                     contactNumberController.text;
-
                                 final profilePicture =
                                     state.user.profilePicture;
 

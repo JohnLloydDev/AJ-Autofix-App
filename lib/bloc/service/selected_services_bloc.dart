@@ -22,5 +22,12 @@ class SelectedServicesBloc
         selectedServiceCount: updatedServices.length,
       ));
     });
+
+    on<ClearSelectedServices>((event, emit) {
+      emit(state.copyWith(
+        selectedServices: [],
+        selectedServiceCount: 0,
+      ));
+    });
   }
 }

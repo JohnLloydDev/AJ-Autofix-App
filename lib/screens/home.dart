@@ -219,8 +219,9 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            decoration: kAppBarGradient,
+            color: Colors.white,
           ),
+          elevation: 4,
           title: Row(
             children: [
               Padding(
@@ -349,6 +350,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   onTap: () async {
                     try {
+                      context
+                          .read<SelectedServicesBloc>()
+                          .add(ClearSelectedServices());
                       BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
                       await Future.delayed(const Duration(milliseconds: 300));
                       if (context.mounted) {
@@ -690,15 +694,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
           ),
           borderRadius: BorderRadius.circular(20.0),
-          boxShadow: isSelected
-              ? [
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 5,
-                    offset: Offset(0, 2),
-                  ),
-                ]
-              : [],
         ),
         child: TextButton(
           style: TextButton.styleFrom(

@@ -24,3 +24,5 @@ class RemoveSelectedService extends SelectedServicesEvent {
   @override
   List<Object> get props => [service];
 }
+
+class ClearSelectedServices extends SelectedServicesEvent {}
