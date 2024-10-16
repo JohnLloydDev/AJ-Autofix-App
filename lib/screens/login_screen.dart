@@ -1,17 +1,14 @@
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
 import 'package:aj_autofix/bloc/auth/auth_state.dart';
-import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
-import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/models/user_model.dart';
-import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/admin_panel_screen.dart';
-import 'package:aj_autofix/screens/home.dart';
 import 'package:aj_autofix/screens/registration_screen.dart';
 import 'package:aj_autofix/screens/request_otp_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -52,23 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 listener: (context, state) {
                   if (state is AuthSuccessWithRole) {
                     if (state.role == 'user') {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
+                      GoRouter.of(context).pushReplacement('/mainscreen');
                     } else if (state.role == 'admin' ||
                         state.role == 'service manager') {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (context) =>
-                                BookingBloc(BookingRepositoryImpl())
-                                  ..add(GetAllAcceptedBooking()),
-                            child: const AdminPanelScreen(),
-                          ),
-                        ),
-                      );
+                      GoRouter.of(context).pushReplacement('/adminScreen');
                     }
                   } else if (state is AuthFailed) {
                     setState(() {
@@ -260,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   BlocBuilder<AuthBloc, AuthState>(
                                     builder: (context, state) {
                                       if (state is AuthIsProcessing) {
-                                        return const CircularProgressIndicator();
+                                        return const CustomLoading();
                                       }
                                       return Center(
                                         child: Padding(

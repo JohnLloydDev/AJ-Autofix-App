@@ -8,6 +8,7 @@ import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/screens/verify_email_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -234,13 +235,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSucceed) {
-        final email = state.user.email; 
+          final email = state.user.email;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => AuthBloc(AuthRepositoryImpl()),
-                child:  VerifyEmailScreen(email: email),
+                child: VerifyEmailScreen(email: email),
               ),
             ),
           );
@@ -359,7 +360,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const CustomLoading()
                     : const Center(
                         child: Text(
                           'Register',

@@ -3,9 +3,9 @@ import 'package:aj_autofix/bloc/contact/contact_event.dart';
 import 'package:aj_autofix/bloc/contact/contact_state.dart';
 import 'package:aj_autofix/repositories/contact_repository_impl.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactUsScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -23,13 +23,8 @@ class ContactUsScreen extends StatelessWidget {
           decoration: kAppBarGradient,
         ),
         title: const Text('Contact Us'),
-        centerTitle: true,
         leading: IconButton(
-          icon: const FaIcon(
-            FontAwesomeIcons.angleLeft,
-            color: Colors.black,
-            size: 25,
-          ),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -144,7 +139,7 @@ class ContactFormContainer extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ContactSubmitting) {
-          return const Center(child: CircularProgressIndicator());
+          return const CustomLoading();
         }
 
         return Container(

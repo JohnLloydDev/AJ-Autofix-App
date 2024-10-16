@@ -1,25 +1,16 @@
 import 'dart:convert';
-import 'package:aj_autofix/bloc/notifications/notification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'home.dart';
-import 'booking_screen.dart';
-import 'notification_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
 class ShopMap extends StatefulWidget {
-  final List<String> selectedServices;
-  final int selectedServiceCount;
-
   const ShopMap({
     super.key,
-    required this.selectedServices,
-    required this.selectedServiceCount,
   });
 
   @override
@@ -27,8 +18,7 @@ class ShopMap extends StatefulWidget {
 }
 
 class ShopMapState extends State<ShopMap> {
-  int _selectedIndex = 2;
-  final LatLng shopLocation = const LatLng(16.0885986, 120.3918851);
+  final LatLng shopLocation = const LatLng(16.1117042, 120.4021166);
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
   Position? _currentPosition;
@@ -227,50 +217,7 @@ class ShopMapState extends State<ShopMap> {
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const BookingScreen(),
-          ),
-        );
-        break;
-      case 2:
-        break;
-      case 3:
-        context.read<NotificationBloc>().resetNotificationCount();
-        context.read<NotificationBloc>().fetchNotificationCount();
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider.value(
-              value: context.read<NotificationBloc>(),
-              child: NotificationScreen(
-                selectedServices: widget.selectedServices,
-                selectedServiceCount: widget.selectedServiceCount,
-              ),
-            ),
-          ),
-        );
-        break;
-      default:
-        break;
-    }
-  }
+  
 
   Future<List<LatLng>> _fetchRoute() async {
     if (_currentPosition == null) return [];
@@ -337,7 +284,7 @@ class ShopMapState extends State<ShopMap> {
           polylineId: polylineId,
           visible: true,
           points: route,
-          color: const Color.fromARGB(255, 0, 128, 255),
+          color: Colors.blue,
           width: 5,
         );
         setState(() {
@@ -371,7 +318,6 @@ class ShopMapState extends State<ShopMap> {
           ),
         ),
         title: const Text('Shop Location'),
-        centerTitle: true,
         backgroundColor: Colors.lightBlue,
       ),
       body: Stack(
@@ -398,135 +344,11 @@ class ShopMapState extends State<ShopMap> {
                   _moveCamera(_currentPosition!);
                 }
               },
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              backgroundColor: Colors.blue,
               child: const Icon(Icons.directions),
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF6E88A1),
-        unselectedItemColor: Colors.grey,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(Icons.receipt),
-                if (widget.selectedServiceCount > 0)
-                  Positioned(
-                    right: 0,
-                    top: -1,
-                    child: Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 15,
-                        minHeight: 15,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${widget.selectedServiceCount}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            label: 'Booking',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(Icons.notifications),
-                BlocBuilder<NotificationBloc, NotificationState>(
-                  builder: (context, state) {
-                    if (state is NotificationLoading) {
-                      return Positioned(
-                        right: 0,
-                        top: -1,
-                        child: Container(
-                          padding: const EdgeInsets.all(1),
-                          decoration: const BoxDecoration(
-                            color: Colors.grey,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                        ),
-                      );
-                    } else if (state is NotificationLoaded &&
-                        state.notificationCount > 0) {
-                      return Positioned(
-                        right: 0,
-                        top: -1,
-                        child: Container(
-                          padding: const EdgeInsets.all(1),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${state.notificationCount}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return Positioned(
-                      right: 0,
-                      top: -1,
-                      child: Container(
-                        padding: const EdgeInsets.all(1),
-                        decoration: const BoxDecoration(
-                          color: Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 15,
-                          minHeight: 15,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            label: 'Notification',
-          ),
-        ],
-        onTap: _onItemTapped,
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +62,7 @@ class ReviewScreenState extends State<ReviewScreen> {
         child: BlocBuilder<ReviewBloc, ReviewState>(
           builder: (context, state) {
             if (state is ReviewLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const CustomLoading();
             } else if (state is ReviewLoaded) {
               return ListView.builder(
                 itemCount: state.reviews.length,
@@ -276,8 +277,7 @@ Widget _getProfileImage(String? profilePicture, String fullname) {
   if (profilePicture == null || profilePicture.isEmpty) {
     return CircleAvatar(
       radius: 30,
-      backgroundColor: getRandomBackgroundColor(
-          fullname),
+      backgroundColor: getRandomBackgroundColor(fullname),
       child: Text(
         fullname.isNotEmpty ? fullname[0].toUpperCase() : 'U',
         style: const TextStyle(
@@ -294,7 +294,7 @@ Widget _getProfileImage(String? profilePicture, String fullname) {
       radius: 30,
       backgroundColor: Colors.transparent,
       backgroundImage: NetworkImage(profilePicture),
-      child: null, 
+      child: null,
     );
   }
 
@@ -305,12 +305,12 @@ Widget _getProfileImage(String? profilePicture, String fullname) {
         radius: 30,
         backgroundColor: Colors.transparent,
         backgroundImage: FileImage(file),
-        child: null, 
+        child: null,
       );
     }
   } catch (e) {
     debugPrint(e.toString());
-    }
+  }
 
   return CircleAvatar(
     radius: 30,

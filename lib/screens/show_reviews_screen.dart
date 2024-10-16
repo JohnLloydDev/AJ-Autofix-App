@@ -3,6 +3,7 @@ import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:aj_autofix/bloc/review/review_state.dart';
 import 'package:aj_autofix/screens/review.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,7 +62,7 @@ class _ShowReviewsScreenState extends State<ShowReviewsScreen> {
         child: BlocBuilder<ReviewBloc, ReviewState>(
           builder: (context, state) {
             if (state is ReviewLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const CustomLoading();
             } else if (state is ReviewLoaded) {
               return ListView.builder(
                 itemCount: state.reviews.length,

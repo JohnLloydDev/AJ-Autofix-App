@@ -3,8 +3,8 @@ import 'package:aj_autofix/screens/intro_screens/intro_page2.dart';
 import 'package:aj_autofix/screens/intro_screens/intro_page3.dart';
 import 'package:aj_autofix/screens/intro_screens/intro_page4.dart';
 import 'package:aj_autofix/screens/intro_screens/intro_page5.dart';
-import 'package:aj_autofix/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constants.dart';
@@ -35,10 +35,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     }
 
     if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SplashScreen()),
-      );
+      (context).push('/');
     }
   }
 
@@ -51,7 +48,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             controller: _controller,
             onPageChanged: (index) {
               setState(() {
-                onLastPage = (index == 4); 
+                onLastPage = (index == 4);
               });
             },
             children: const [
@@ -81,7 +78,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             style: TextStyle(
               color: kMainColor,
               fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.bold,
               shadows: [
                 Shadow(
                   color: Colors.white,
@@ -112,7 +109,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             style: const TextStyle(
               color: kMainColor,
               fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.bold,
               shadows: [
                 Shadow(
                   color: Colors.white,

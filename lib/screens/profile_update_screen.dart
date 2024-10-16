@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -83,7 +84,7 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           if (state is UserDataLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const CustomLoading();
           } else if (state is UserDataLoadedByAuth) {
             final user = state.user;
 

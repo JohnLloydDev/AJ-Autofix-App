@@ -3,6 +3,7 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/review_model.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:aj_autofix/widgets/task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,9 +55,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
       body: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, state) {
           if (state is BookingLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const CustomLoading();
           } else if (state is BookingUserLoaded) {
             final bookings = state.userBookings;
 
@@ -94,9 +93,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
               child: Text('Error: ${state.error}'),
             );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const CustomLoading();
           }
         },
       ),

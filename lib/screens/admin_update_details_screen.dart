@@ -4,8 +4,11 @@ import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminUpdateDetailsScreen extends StatefulWidget {
   final String id;
@@ -25,6 +28,8 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
   late TextEditingController usernameController;
   late TextEditingController emailController;
   late TextEditingController contactNumberController;
+  bool _isNavigating = false;
+
   String dropdownValue = 'user';
 
   ImageProvider? _getProfileImage(String? profilePicture) {
@@ -73,8 +78,23 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           title: const Text('Update Info'),
+          leading: IconButton(
+            icon: const FaIcon(
+              FontAwesomeIcons.angleLeft,
+              color: Colors.black,
+              size: 25,
+            ),
+            onPressed: () {
+              if (!_isNavigating && GoRouter.of(context).canPop()) {
+                _isNavigating = true;
+                context.pop();
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  _isNavigating = false;
+                });
+              }
+            },
+          ),
         ),
         body: SingleChildScrollView(
           child: SafeArea(
@@ -103,13 +123,14 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                     contactNumberController.text = state.user.contactNumber;
                     dropdownValue = state.user.role;
                   } else if (state is UserDataSuccess) {
-                    Navigator.pop(context);
+                    (context).push("/adminUsers");
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(state.message),
                         behavior: SnackBarBehavior.floating,
                       ),
                     );
+                    Navigator.pop(context);
                   } else if (state is UserDataError) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(state.message)),
@@ -118,9 +139,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                 },
                 builder: (context, state) {
                   if (state is UserDataLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return const CustomLoading();
                   } else if (state is UserDataLoadedById) {
                     return Column(
                       children: [
@@ -282,6 +301,7 @@ class _AdminUpdateDetailsScreenState extends State<AdminUpdateDetailsScreen> {
                                 final email = emailController.text;
                                 final contactNumber =
                                     contactNumberController.text;
+
                                 final profilePicture =
                                     state.user.profilePicture;
 

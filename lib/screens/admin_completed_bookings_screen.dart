@@ -2,10 +2,7 @@ import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
-import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/admin_panel_screen.dart';
-import 'package:aj_autofix/screens/admin_services_screen.dart';
-import 'package:aj_autofix/screens/admin_user_screen.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +18,6 @@ class AdminCompletedBookingsScreen extends StatefulWidget {
 
 class _AdminCompletedBookingsScreenState
     extends State<AdminCompletedBookingsScreen> {
-  int _selectedIndex = 3;
 
   final TextEditingController _searchController = TextEditingController();
   List<Booking> _filteredBookings = [];
@@ -58,42 +54,6 @@ class _AdminCompletedBookingsScreenState
     }
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AdminPanelScreen()),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AdminUsersScreen(),
-          ),
-        );
-        break;
-      case 2:
-          Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => BookingBloc(BookingRepositoryImpl())
-                ..add(GetAllAcceptedBooking()),
-              child: const AdminServicesScreen(),
-            ),
-          ),
-        );
-        break;
-      case 3:
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,7 +83,7 @@ class _AdminCompletedBookingsScreenState
               child: BlocBuilder<BookingBloc, BookingState>(
                 builder: (context, state) {
                   if (state is BookingLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const CustomLoading();
                   } else if (state is BookingAcceptedLoaded) {
                     final bookings = state.acceptedBookings;
 
@@ -218,7 +178,7 @@ class _AdminCompletedBookingsScreenState
                                         ),
                                         icon: const Icon(Icons.check,
                                             color: Colors.white),
-                                        label: const Text('Service Finish!',
+                                        label: const Text('Completed',
                                             style:
                                                 TextStyle(color: Colors.white)),
                                       ),
@@ -241,29 +201,6 @@ class _AdminCompletedBookingsScreenState
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.space_dashboard_outlined),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_2),
-            label: 'Users',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.calendar),
-            label: 'Bookings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.check_mark_circled),
-            label: 'Completed',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }

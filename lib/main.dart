@@ -1,3 +1,4 @@
+import 'package:aj_autofix/app_router.dart';
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
@@ -13,7 +14,6 @@ import 'package:aj_autofix/repositories/auth_repository_impl.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/repositories/contact_repository_impl.dart';
 import 'package:aj_autofix/repositories/review_repository_impl.dart';
-import 'package:aj_autofix/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -29,9 +29,9 @@ void main() {
         BlocProvider(
           create: (context) => AuthBloc(AuthRepositoryImpl()),
         ),
-        BlocProvider(
+         BlocProvider<NotificationBloc>(
           create: (context) => NotificationBloc(BookingRepositoryImpl()),
-        ),
+         ),
         BlocProvider(
           create: (context) => UserBloc(AdminRepositoryImpl())..add(GetUsers()),
         ),
@@ -59,7 +59,6 @@ void main() {
           create: (context) =>
               ReviewBloc(ReviewRepositoryImpl())..add(FetchReviews()),
         ),
-        
         BlocProvider(
           create: (context) => ContactBloc(ContactRepositoryImpl()),
         ),
@@ -77,9 +76,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      routerConfig: AppRouter().router, 
     );
   }
 }

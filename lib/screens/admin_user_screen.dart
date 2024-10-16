@@ -1,20 +1,16 @@
 import 'dart:io';
-import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
-import 'package:aj_autofix/bloc/booking/booking_event.dart';
+
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/user_model.dart';
-import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/admin_completed_bookings_screen.dart';
-import 'package:aj_autofix/screens/admin_panel_screen.dart';
-import 'package:aj_autofix/screens/admin_services_screen.dart';
 import 'package:aj_autofix/screens/admin_update_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -27,49 +23,19 @@ class AdminUsersScreen extends StatefulWidget {
 }
 
 class _AdminUsersScreenState extends State<AdminUsersScreen> {
-  int _selectedIndex = 1;
   String _searchQuery = '';
   late List<User> _filteredUsers;
   List<User> _allUsers = [];
   final TextEditingController _searchController = TextEditingController();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void refreshData() {
+    BlocProvider.of<UserBloc>(context).add(GetUsers());
+  }
 
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const AdminPanelScreen()));
-        break;
-      case 1:
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => BookingBloc(BookingRepositoryImpl())
-                ..add(GetAllAcceptedBooking()),
-              child: const AdminServicesScreen(),
-            ),
-          ),
-        );
-        break;
-      case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => BookingBloc(BookingRepositoryImpl())
-                ..add(GetAllAcceptedBooking()),
-              child: const AdminCompletedBookingsScreen(),
-            ),
-          ),
-        );
-        break;
-    }
+  void navigateToUpdateDetails(BuildContext context, String id) {
+    GoRouter.of(context).push('/admin/update/$id').then((_) {
+      refreshData();
+    });
   }
 
   @override
@@ -234,29 +200,6 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.space_dashboard_outlined),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_2),
-            label: 'Users',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.calendar),
-            label: 'Bookings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.check_mark_circled),
-            label: 'Completed',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }
@@ -579,7 +522,7 @@ Widget bookingHistoryList(List<Booking>? bookings) {
                     width: 30,
                     height: 30,
                     decoration: const BoxDecoration(
-                      color: Colors.blue, 
+                      color: Colors.blue,
                       shape: BoxShape.circle,
                     ),
                     alignment: Alignment.center,

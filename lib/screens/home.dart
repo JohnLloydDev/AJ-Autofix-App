@@ -1,5 +1,4 @@
 import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
-import 'package:aj_autofix/bloc/notifications/notification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
@@ -7,19 +6,10 @@ import 'package:aj_autofix/bloc/service/selected_services_event.dart';
 import 'package:aj_autofix/bloc/service/selected_services_state.dart';
 import 'package:aj_autofix/bloc/auth/auth_bloc.dart';
 import 'package:aj_autofix/bloc/auth/auth_event.dart';
-import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
-import 'package:aj_autofix/bloc/booking/booking_event.dart';
-import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/contact_us_screen.dart';
-import 'package:aj_autofix/screens/notification_screen.dart';
 import 'package:aj_autofix/screens/profile_screen.dart';
-import 'package:aj_autofix/screens/show_reviews_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/widgets/service_card.dart';
-import 'package:aj_autofix/screens/booking_screen.dart';
-import 'package:aj_autofix/screens/login_screen.dart';
-import 'package:aj_autofix/screens/pending_screen.dart';
-import 'package:aj_autofix/screens/shopmap.dart';
+import 'package:go_router/go_router.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -50,7 +40,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   final Set<String> _selectedCategories = {};
 
@@ -130,64 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider.value(
-              value: context.read<SelectedServicesBloc>(),
-              child: const BookingScreen(),
-            ),
-          ),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ShopMap(
-              selectedServices:
-                  context.read<SelectedServicesBloc>().state.selectedServices,
-              selectedServiceCount: context
-                  .read<SelectedServicesBloc>()
-                  .state
-                  .selectedServiceCount,
-            ),
-          ),
-        );
-        break;
-      case 3:
-        context.read<NotificationBloc>().resetNotificationCount();
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => NotificationBloc(BookingRepositoryImpl())
-                ..fetchNotificationCount(),
-              child: NotificationScreen(
-                selectedServices:
-                    context.read<SelectedServicesBloc>().state.selectedServices,
-                selectedServiceCount: context
-                    .read<SelectedServicesBloc>()
-                    .state
-                    .selectedServiceCount,
-              ),
-            ),
-          ),
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
   void _onCategorySelected(String category) {
     setState(() {
       if (category == 'all') {
@@ -219,9 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            color: Colors.white,
+            decoration: kAppBarGradient,
           ),
-          elevation: 4,
           title: Row(
             children: [
               Padding(
@@ -291,17 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: kMainColor),
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) =>
-                            BookingBloc(BookingRepositoryImpl())
-                              ..add(GetUserBooking()),
-                        child: const UserPendingRequest(),
-                      ),
-                    ),
-                  );
+                  (context).push("/pendingRequest");
                 },
               ),
               const Divider(),
@@ -315,10 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: kMainColor),
                 ),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ContactUsScreen()));
+                  (context).push("/contact");
                 },
               ),
               const Divider(),
@@ -332,10 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: kMainColor),
                 ),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ShowReviewsScreen()));
+                  (context).push("/reviews");
                 },
               ),
               const Divider(),
@@ -350,17 +264,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   onTap: () async {
                     try {
-                      context
-                          .read<SelectedServicesBloc>()
-                          .add(ClearSelectedServices());
+                      BlocProvider.of<SelectedServicesBloc>(context).add(ClearSelectedServices());
+
                       BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
                       await Future.delayed(const Duration(milliseconds: 300));
                       if (context.mounted) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                        );
+                        (context).push("/login");
                       }
                     } catch (e) {
                       if (context.mounted) {
@@ -536,135 +445,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-        ),
-        bottomNavigationBar:
-            BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
-          builder: (context, state) {
-            return BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              selectedItemColor: const Color(0xFF6E88A1),
-              unselectedItemColor: Colors.grey,
-              items: [
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Stack(
-                    children: [
-                      const Icon(Icons.receipt),
-                      if (state.selectedServiceCount > 0)
-                        Positioned(
-                          right: 0,
-                          top: -1,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 15,
-                              minHeight: 15,
-                            ),
-                            child: Center(
-                              child: Text(
-                                '${state.selectedServiceCount}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  label: 'Booking',
-                ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.map),
-                  label: 'Map',
-                ),
-                BottomNavigationBarItem(
-                  icon: Stack(
-                    children: [
-                      const Icon(Icons.notifications),
-                      BlocBuilder<NotificationBloc, NotificationState>(
-                        builder: (context, state) {
-                          if (state is NotificationLoading) {
-                            return Positioned(
-                              right: 0,
-                              top: -1,
-                              child: Container(
-                                padding: const EdgeInsets.all(1),
-                                decoration: const BoxDecoration(
-                                  color: Colors.grey,
-                                  shape: BoxShape.circle,
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 15,
-                                  minHeight: 15,
-                                ),
-                              ),
-                            );
-                          } else if (state is NotificationLoaded &&
-                              state.notificationCount > 0) {
-                            return Positioned(
-                              right: 0,
-                              top: -1,
-                              child: Container(
-                                padding: const EdgeInsets.all(1),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 15,
-                                  minHeight: 15,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '${state.notificationCount}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          return Positioned(
-                            right: 0,
-                            top: -1,
-                            child: Container(
-                              padding: const EdgeInsets.all(1),
-                              decoration: const BoxDecoration(
-                                color: Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: 15,
-                                minHeight: 15,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  label: 'Notification',
-                ),
-              ],
-              onTap: _onItemTapped,
-            );
-          },
         ));
   }
 
@@ -694,6 +474,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
           ),
           borderRadius: BorderRadius.circular(20.0),
+          boxShadow: isSelected
+              ? [
+                  const BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 5,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : [],
         ),
         child: TextButton(
           style: TextButton.styleFrom(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           if (state is UserDataLoading) {
-            return const Center(child: CircularProgressIndicator());
+          return const CustomLoading();
           } else if (state is UserDataLoadedByAuth) {
             final user = state.user;
             return SingleChildScrollView(

@@ -1,11 +1,12 @@
-
-import 'package:aj_autofix/screens/home.dart';
+import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
+import 'package:aj_autofix/bloc/service/selected_services_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/color_extensions.dart';
 import 'package:aj_autofix/widgets/booking_detail_row.dart';
-
 
 class BookingConfirmationScreen extends StatelessWidget {
   final List<String> selectedServices;
@@ -28,7 +29,7 @@ class BookingConfirmationScreen extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white, 
+      backgroundColor: Colors.white,
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: kAppBarGradient,
@@ -64,18 +65,16 @@ class BookingConfirmationScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-
               Text(
                 'Your booking has been successfully placed!',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: kPrimaryColor.darken(0.2), 
+                  color: kPrimaryColor.darken(0.2),
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
-
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
@@ -150,13 +149,10 @@ class BookingConfirmationScreen extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Home(), 
-                      ),
-                      (route) => false,
-                    );
+                    BlocProvider.of<SelectedServicesBloc>(context)
+                        .add(ClearSelectedServices());
+
+                    (context).push('/mainscreen');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kMainColor,

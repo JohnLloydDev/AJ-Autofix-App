@@ -1,10 +1,8 @@
 import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
-import 'package:aj_autofix/screens/home.dart';
-import 'package:aj_autofix/screens/booking_screen.dart';
 import 'package:aj_autofix/screens/pending_screen.dart';
-import 'package:aj_autofix/screens/shopmap.dart';
 import 'package:aj_autofix/utils/constants.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
@@ -12,21 +10,13 @@ import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 
 class NotificationScreen extends StatefulWidget {
-  final List<String> selectedServices;
-  final int selectedServiceCount;
-
-  const NotificationScreen(
-      {super.key,
-      required this.selectedServices,
-      required this.selectedServiceCount});
+  const NotificationScreen({super.key});
 
   @override
   NotificationScreenState createState() => NotificationScreenState();
 }
 
 class NotificationScreenState extends State<NotificationScreen> {
-  int _selectedIndex = 3;
-
   @override
   void initState() {
     super.initState();
@@ -42,47 +32,6 @@ class NotificationScreenState extends State<NotificationScreen> {
     context.read<NotificationBloc>().fetchNotificationCount();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const BookingScreen()),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) =>
-                  BookingBloc(BookingRepositoryImpl())..add(GetUserBooking()),
-              child: ShopMap(
-                selectedServices: widget.selectedServices,
-                selectedServiceCount: widget.selectedServiceCount,
-              ),
-            ),
-          ),
-        );
-        break;
-      case 3:
-        context.read<NotificationBloc>().resetNotificationCount();
-        break;
-      default:
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,13 +40,12 @@ class NotificationScreenState extends State<NotificationScreen> {
           decoration: kAppBarGradient,
         ),
         title: const Text('Notifications'),
-        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, bookingState) {
           if (bookingState is BookingLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const CustomLoading();
           } else if (bookingState is BookingUserLoaded) {
             final bookings = bookingState.userBookings
                 .where((booking) =>
@@ -133,65 +81,15 @@ class NotificationScreenState extends State<NotificationScreen> {
               child: Text('Error: ${bookingState.error}'),
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: Container(
+                color: Colors.white,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            );
           }
         },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF6E88A1),
-        unselectedItemColor: Colors.grey,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(Icons.receipt),
-                if (widget.selectedServiceCount > 0)
-                  Positioned(
-                    right: 0,
-                    top: -1,
-                    child: Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 15,
-                        minHeight: 15,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${widget.selectedServiceCount}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            label: 'Booking',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notification',
-          ),
-        ],
-        onTap: _onItemTapped,
       ),
     );
   }
@@ -224,11 +122,25 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: const Color.fromARGB(255, 227, 227, 227),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-      shape: RoundedRectangleBorder(
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            statusColor.withOpacity(0.2),
+            Colors.white,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(12.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 8.0,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16.0),
