@@ -4,6 +4,7 @@ import 'package:aj_autofix/models/user_model.dart';
 import 'package:aj_autofix/repositories/auth_repository.dart';
 import 'package:aj_autofix/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utils/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -84,6 +85,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> userLogout() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
     final accessToken = await SecureStorage.readToken('access_token');
 
     final response = await http.post(
@@ -94,7 +97,9 @@ class AuthRepositoryImpl implements AuthRepository {
       },
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      await secureStorage.delete(key: 'access_token');
+    } else {
       throw Exception('Failed to log out: ${response.reasonPhrase}');
     }
   }
