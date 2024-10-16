@@ -12,6 +12,7 @@ const double kSpacing = 16.0;
 const Color kPrimaryColor = Colors.lightBlue;
 const Color kAccentColor = Colors.white;
 const Color kMainColor = Color(0xFF6E88A1);
+const Color kColor = Color.fromARGB(255, 110, 136, 161);
 
 // Border Radius
 const BorderRadius kBorderRadius = BorderRadius.all(Radius.circular(8.0));
@@ -37,6 +38,13 @@ const BoxDecoration kAppBarGradient = BoxDecoration(
       Color(0xFFDCDCDC), // Light grey
       Color(0xFF6E88A1), // Main color
     ],
+  ),
+);
+
+const BoxDecoration kAppBar = BoxDecoration(
+  color: Color.fromARGB(255, 146, 176, 204),
+  borderRadius: BorderRadius.vertical(
+    bottom: Radius.circular(23),
   ),
 );
 

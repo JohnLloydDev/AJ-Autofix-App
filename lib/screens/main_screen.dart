@@ -40,13 +40,13 @@ class MainScreenState extends State<MainScreen> {
             unselectedItemColor: Colors.grey,
             items: [
               const BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.garage_outlined),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Stack(
                   children: [
-                    const Icon(Icons.receipt),
+                    const Icon(Icons.post_add_outlined),
                     if (state.selectedServiceCount > 0)
                       Positioned(
                         right: 0,
@@ -79,12 +79,12 @@ class MainScreenState extends State<MainScreen> {
                 label: 'Booking',
               ),
               const BottomNavigationBarItem(
-                icon: Icon(Icons.map),
+                icon: Icon(Icons.fmd_good_outlined),
                 label: 'Map',
               ),
               const BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Map',
+                icon: Icon(Icons.notifications_on_outlined),
+                label: 'Notifications',
               ),
             ],
             onTap: (index) {

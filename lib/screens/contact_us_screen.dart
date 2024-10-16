@@ -6,6 +6,7 @@ import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactUsScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -20,11 +21,23 @@ class ContactUsScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: kAppBarGradient,
+          decoration: kAppBar,
         ),
-        title: const Text('Contact Us'),
+        title: const Text(
+          'Contact Us',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const FaIcon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
+            size: 25,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },

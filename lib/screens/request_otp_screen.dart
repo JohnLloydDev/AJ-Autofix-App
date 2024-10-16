@@ -5,6 +5,7 @@ import 'package:aj_autofix/screens/reset_password_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RequestOtpScreen extends StatefulWidget {
   const RequestOtpScreen({super.key});
@@ -26,8 +27,23 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
         ),
         title: const Text(
           'Forgot Password',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: Colors.deepPurple,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
+            size: 25,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -73,26 +89,28 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                     style: TextStyle(color: Colors.grey, fontSize: 16.0),
                   ),
                   const SizedBox(height: 24.0),
-                  TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: const BorderSide(color: kMainColor),
+                  SizedBox(width: 330,height: 50,
+                    child: TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: const BorderSide(color: kMainColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: const BorderSide(color: kMainColor),
+                        ),
+                        prefixIcon: const Icon(Icons.email, color: kMainColor),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide: const BorderSide(color: kMainColor),
-                      ),
-                      prefixIcon: const Icon(Icons.email, color: kMainColor),
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        setState(() {
+                          errorMessage = null;
+                        });
+                      },
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {
-                      setState(() {
-                        errorMessage = null;
-                      });
-                    },
                   ),
                   if (errorMessage != null)
                     Padding(
@@ -129,9 +147,15 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
-                    child: const Text(
+
+                    child: Text(
                       'Request OTP',
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width *
+                            0.03, 
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],

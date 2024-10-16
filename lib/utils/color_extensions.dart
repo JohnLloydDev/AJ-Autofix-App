@@ -1,5 +1,3 @@
-// lib/utils/color_extensions.dart
-
 import 'package:flutter/material.dart';
 
 extension ColorExtension on Color {

@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            decoration: kAppBarGradient,
+            decoration: kAppBar,
           ),
           title: Row(
             children: [
@@ -177,16 +177,17 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              const SizedBox(
+              SizedBox(
                 height: 100,
-                child: DrawerHeader(
-                  decoration: kAppBarGradient,
-                  child: Center(
+                child: Container(
+                  decoration: kAppBar,
+                  child: const Center(
                     child: Text(
                       'Menu',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -264,7 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   onTap: () async {
                     try {
-                      BlocProvider.of<SelectedServicesBloc>(context).add(ClearSelectedServices());
+                      BlocProvider.of<SelectedServicesBloc>(context)
+                          .add(ClearSelectedServices());
 
                       BlocProvider.of<AuthBloc>(context).add(LogoutRequest());
                       await Future.delayed(const Duration(milliseconds: 300));
@@ -465,7 +467,7 @@ class _HomeScreenState extends State<HomeScreen> {
             end: Alignment.bottomCenter,
             colors: isSelected
                 ? [
-                    const Color.fromARGB(255, 221, 221, 221),
+                    const Color.fromARGB(255, 147, 191, 198),
                     const Color.fromARGB(255, 110, 136, 161),
                   ]
                 : [
@@ -473,16 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Colors.grey[300]!,
                   ],
           ),
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: isSelected
-              ? [
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 5,
-                    offset: Offset(0, 2),
-                  ),
-                ]
-              : [],
+          borderRadius: BorderRadius.circular(10.0),
         ),
         child: TextButton(
           style: TextButton.styleFrom(

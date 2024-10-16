@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/material.dart';
@@ -28,16 +29,7 @@ class ReviewScreenState extends State<ReviewScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
-          ),
+          decoration: kAppBar,
         ),
         title: const Text('Reviews'),
         centerTitle: true,

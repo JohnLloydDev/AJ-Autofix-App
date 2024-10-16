@@ -27,9 +27,16 @@ class _ShowReviewsScreenState extends State<ShowReviewsScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: kAppBarGradient,
+          decoration: kAppBar,
         ),
-        title: const Text('Reviews'),
+        title: const Text(
+          'Reviews',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const FaIcon(

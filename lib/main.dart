@@ -29,9 +29,9 @@ void main() {
         BlocProvider(
           create: (context) => AuthBloc(AuthRepositoryImpl()),
         ),
-         BlocProvider<NotificationBloc>(
+        BlocProvider<NotificationBloc>(
           create: (context) => NotificationBloc(BookingRepositoryImpl()),
-         ),
+        ),
         BlocProvider(
           create: (context) => UserBloc(AdminRepositoryImpl())..add(GetUsers()),
         ),
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter().router, 
+      routerConfig: AppRouter().router,
     );
   }
 }

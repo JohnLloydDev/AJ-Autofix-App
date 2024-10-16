@@ -32,11 +32,17 @@ class BookingConfirmationScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: kAppBarGradient,
+          decoration: kAppBar,
         ),
         automaticallyImplyLeading: false,
-        title: const Text('Booking Confirmed'),
+        title: const Text('Booking Confirmed',style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         elevation: 0,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(

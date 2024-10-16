@@ -77,9 +77,17 @@ class BookingScreenState extends State<BookingScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            decoration: kAppBarGradient,
+            decoration: kAppBar,
           ),
-          title: const Text('Booking'),
+          title: const Text(
+            'Booking',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(kPadding),

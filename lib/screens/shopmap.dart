@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,7 +19,7 @@ class ShopMap extends StatefulWidget {
 }
 
 class ShopMapState extends State<ShopMap> {
-  final LatLng shopLocation = const LatLng(16.1117042, 120.4021166);
+  final LatLng shopLocation = const LatLng(16.0885986, 120.3918851);
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
   Position? _currentPosition;
@@ -306,19 +307,17 @@ class ShopMapState extends State<ShopMap> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFDCDCDC),
-                Color(0xFF6E88A1),
-              ],
-            ),
+          decoration: kAppBar,
+        ),
+        title: const Text(
+          'Shop Location',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        title: const Text('Shop Location'),
-        backgroundColor: Colors.lightBlue,
+        centerTitle: true,
       ),
       body: Stack(
         children: [
@@ -344,7 +343,7 @@ class ShopMapState extends State<ShopMap> {
                   _moveCamera(_currentPosition!);
                 }
               },
-              backgroundColor: Colors.blue,
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               child: const Icon(Icons.directions),
             ),
           ),

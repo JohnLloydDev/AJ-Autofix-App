@@ -36,9 +36,16 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: kAppBarGradient,
+          decoration: kAppBar,
         ),
-        title: const Text('Pending Requests'),
+        title: const Text(
+          'Pending Requests',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const FaIcon(

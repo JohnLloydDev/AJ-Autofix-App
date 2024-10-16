@@ -36,11 +36,19 @@ class NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: kAppBarGradient,
-        ),
-        title: const Text('Notifications'),
         automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: kAppBar,
+        ),
+        title: const Text(
+          'Notifications',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, bookingState) {
