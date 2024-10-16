@@ -133,14 +133,7 @@ class NotificationCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            statusColor.withOpacity(0.2),
-            Colors.white,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.grey[200], // Changed to light gray color
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: const [
           BoxShadow(
@@ -151,13 +144,13 @@ class NotificationCard extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // Reduced height
         leading: Container(
           decoration: BoxDecoration(
             color: statusColor,
             borderRadius: BorderRadius.circular(8.0),
           ),
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(8.0), // Reduced icon padding
           child: Icon(
             status == 'Approved'
                 ? Icons.check_circle
@@ -165,26 +158,27 @@ class NotificationCard extends StatelessWidget {
                     ? Icons.cancel
                     : Icons.assignment_turned_in,
             color: Colors.white,
-            size: 30.0,
+            size: 24.0, // Adjusted icon size
           ),
         ),
         title: Text(
           title,
           style: const TextStyle(
-            fontSize: 18.0,
+            fontSize: 16.0, // Reduced font size
             fontWeight: FontWeight.bold,
           ),
         ),
         subtitle: Text(
           'Your booking has been ${status.toLowerCase()}.',
           style: const TextStyle(
-            fontSize: 16.0,
+            fontSize: 14.0, // Reduced subtitle size
             color: Colors.black54,
           ),
         ),
         trailing: const Icon(
           Icons.arrow_forward_ios,
           color: Colors.grey,
+          size: 16.0, // Reduced arrow icon size
         ),
         onTap: () {
           Navigator.push(
