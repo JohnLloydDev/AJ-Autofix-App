@@ -23,11 +23,10 @@ class ServiceCard extends StatelessWidget {
       builder: (context, constraints) {
         double width = constraints.maxWidth;
 
-        // Responsive sizes based on width of the container
-        double imageHeight = width * 0.4; // 40% of container width for image height
-        double imageWidth = width * 0.55; // 55% of container width for image width
-        double fontSize = width * 0.07; // 5% of container width for font size
-        double buttonSize = width * 0.12; // 12% of container width for button size
+        double imageHeight = width * 0.4;
+        double imageWidth = width * 0.55;
+        double fontSize = width * 0.07;
+        double buttonSize = width * 0.12;
 
         return Card(
           elevation: 3,
@@ -38,7 +37,7 @@ class ServiceCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Take up only the minimum space
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (imagePath != null)
@@ -57,7 +56,7 @@ class ServiceCard extends StatelessWidget {
                     serviceName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: fontSize, // Adjust font size based on container width
+                      fontSize: fontSize,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -69,7 +68,7 @@ class ServiceCard extends StatelessWidget {
                     servicePrice,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: fontSize * 0.9, // Slightly smaller for price
+                      fontSize: fontSize * 0.9,
                       color: Colors.grey,
                     ),
                   ),
@@ -95,7 +94,7 @@ class ServiceCard extends StatelessWidget {
                     icon: Icon(
                       isSelected ? Icons.check_circle : Icons.add_circle,
                       color: isSelected ? Colors.green : Colors.black,
-                      size: buttonSize, // Adjust button size based on container width
+                      size: buttonSize,
                     ),
                   ),
                 ),

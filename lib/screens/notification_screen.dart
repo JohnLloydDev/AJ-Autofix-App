@@ -133,7 +133,7 @@ class NotificationCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        color: Colors.grey[200], // Changed to light gray color
+        color: Colors.grey[200],
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: const [
           BoxShadow(
@@ -144,13 +144,13 @@ class NotificationCard extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // Reduced height
+        contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         leading: Container(
           decoration: BoxDecoration(
             color: statusColor,
             borderRadius: BorderRadius.circular(8.0),
           ),
-          padding: const EdgeInsets.all(8.0), // Reduced icon padding
+          padding: const EdgeInsets.all(8.0),
           child: Icon(
             status == 'Approved'
                 ? Icons.check_circle
@@ -158,27 +158,27 @@ class NotificationCard extends StatelessWidget {
                     ? Icons.cancel
                     : Icons.assignment_turned_in,
             color: Colors.white,
-            size: 24.0, // Adjusted icon size
+            size: 24.0,
           ),
         ),
         title: Text(
           title,
           style: const TextStyle(
-            fontSize: 16.0, // Reduced font size
+            fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),
         subtitle: Text(
           'Your booking has been ${status.toLowerCase()}.',
           style: const TextStyle(
-            fontSize: 14.0, // Reduced subtitle size
+            fontSize: 14.0,
             color: Colors.black54,
           ),
         ),
         trailing: const Icon(
           Icons.arrow_forward_ios,
           color: Colors.grey,
-          size: 16.0, // Reduced arrow icon size
+          size: 16.0,
         ),
         onTap: () {
           Navigator.push(
