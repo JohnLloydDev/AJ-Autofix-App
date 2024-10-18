@@ -55,15 +55,16 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {
-                handleLogout(context);
-              },
-              icon: const Icon(Icons.logout))
+            onPressed: () {
+              handleLogout(context);
+            },
+            icon: const Icon(Icons.logout),
+          ),
         ],
         automaticallyImplyLeading: false,
         title: const Text('Admin Panel'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -95,23 +96,85 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       } else if (userState is UserDataLoaded) {
                         totalUsers = userState.userdata.length;
 
-                        return GridView.count(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          shrinkWrap: true,
+                        return Column(
                           children: [
-                            dashboardContainer('Total\nUsers', '$totalUsers',
-                                Colors.purple, Icons.people),
-                            dashboardContainer(
-                                'Total\nRejected',
-                                '$totalRejected',
-                                Colors.red,
-                                Icons.request_page),
-                            dashboardContainer('Total\nPending',
-                                '$totalPending', Colors.orange, Icons.thumb_up),
-                            dashboardContainer('Total\nApproved',
-                                '$totalApproved', Colors.green, Icons.done_all),
+                            GridView.count(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                dashboardContainer('Total\nUsers',
+                                    '$totalUsers', Colors.purple, Icons.people),
+                                dashboardContainer(
+                                    'Total\nRejected',
+                                    '$totalRejected',
+                                    Colors.red,
+                                    Icons.request_page),
+                                dashboardContainer(
+                                    'Total\nPending',
+                                    '$totalPending',
+                                    Colors.orange,
+                                    Icons.thumb_up),
+                                dashboardContainer(
+                                    'Total\nApproved',
+                                    '$totalApproved',
+                                    Colors.green,
+                                    Icons.done_all),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            const Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Recent Activity",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            ListView.builder(
+                              itemCount: bookings.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final reverseIndex =
+                                    bookings.length - 1 - index;
+                                final booking = bookings[reverseIndex];
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      booking.user?.fullname ?? 'Unknown',
+                                      style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    subtitle: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        _statusBadge(booking.status),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         );
                       } else {
@@ -123,66 +186,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                   return const CustomLoading();
                 }
               },
-            ),
-            const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Recent Activity",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            Expanded(
-              child: BlocBuilder<BookingBloc, BookingState>(
-                builder: (context, state) {
-                  if (state is BookingLoading) {
-                    return const CustomLoading();
-                  } else if (state is RequestError) {
-                    return Center(child: Text(state.error));
-                  } else if (state is BookingLoaded) {
-                    final bookings = state.bookings;
-                    return ListView.builder(
-                      itemCount: bookings.length,
-                      itemBuilder: (context, index) {
-                        final reverseIndex = bookings.length - 1 - index;
-                        final booking = bookings[reverseIndex];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ]),
-                          child: ListTile(
-                            title: Text(
-                              booking.user?.fullname ?? 'Unknown',
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                _statusBadge(booking.status),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return const CustomLoading();
-                  }
-                },
-              ),
             ),
           ],
         ),
