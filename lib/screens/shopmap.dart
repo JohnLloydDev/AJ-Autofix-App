@@ -301,54 +301,58 @@ class ShopMapState extends State<ShopMap> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: kAppBar,
-        ),
-        title: const Text(
-          'Shop Location',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    extendBodyBehindAppBar: true,  
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,  
+      automaticallyImplyLeading: false,
+      elevation: 0,  
+      flexibleSpace: Container(
+        decoration: kAppBar,
       ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: shopLocation,
-              zoom: 15,
-            ),
-            myLocationButtonEnabled: false,
-            myLocationEnabled: true,
-            markers: _markers,
-            polylines: _polylines,
-            mapType: MapType.normal,
-            onMapCreated: _onMapCreated,
-          ),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: () {
-                if (_currentPosition != null) {
-                  _drawRouteToShop();
-                  _moveCamera(_currentPosition!);
-                }
-              },
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              child: const Icon(Icons.directions),
-            ),
-          ),
-        ],
+      title: const Text(
+        'Shop Location',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-    );
-  }
+      centerTitle: true,
+    ),
+    body: Stack(
+      children: [
+        GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: shopLocation,
+            zoom: 15,
+          ),
+          myLocationButtonEnabled: false,
+          myLocationEnabled: true,
+          markers: _markers,
+          polylines: _polylines,
+          mapType: MapType.normal,
+          onMapCreated: _onMapCreated,
+        ),
+        Positioned(
+          top: 20,
+          right: 20,
+          child: FloatingActionButton(
+            onPressed: () {
+              if (_currentPosition != null) {
+                _drawRouteToShop();
+                _moveCamera(_currentPosition!);
+              }
+            },
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            child: const Icon(Icons.directions),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }
