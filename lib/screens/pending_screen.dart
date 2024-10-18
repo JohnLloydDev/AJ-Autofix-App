@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_bloc.dart';
 import 'package:aj_autofix/bloc/review/review_event.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -132,7 +133,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
       builder: (context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -186,15 +187,26 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6E88A1),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 50,
-                          vertical: 15,
+                          vertical: 13,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       onPressed: () {
+                        Fluttertoast.showToast(
+                          msg: "Your review has been posted!",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: const Color.fromARGB(100, 0, 0, 0),
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+
                         if (formKey.currentState?.validate() ?? false) {
                           final newReview = Review(
                             rating: rating!.toDouble().toInt(),
@@ -208,7 +220,14 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: const Text('Submit'),
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ),
                 ],

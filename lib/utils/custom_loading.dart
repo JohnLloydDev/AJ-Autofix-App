@@ -8,7 +8,7 @@ class CustomLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: SpinKitFadingCube(
-        color: Colors.orange,
+        color: Color.fromARGB(255, 146, 176, 204),
         size: 50.0,
       ),
     );

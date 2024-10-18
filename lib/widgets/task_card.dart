@@ -25,13 +25,14 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color.fromARGB(255, 227, 227, 227),
+      color: Colors.grey[200],
       margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
+      
       elevation: 4,
-      shadowColor: Colors.black.withOpacity(0.1),
+      shadowColor: Colors.black.withOpacity(1.0),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -134,41 +135,54 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-              decoration: BoxDecoration(
-                color: statusColor,
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Text(
-                status,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            if (status == 'Completed')
-              Align(
-                alignment: Alignment.centerLeft,
-                child: ElevatedButton(
-                  onPressed: onReviewPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 145, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 8.0,
+         
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    borderRadius: BorderRadius.circular(12.0),
+                    boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 8.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+
+                  ),
+                  child: Text(
+                    status,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  child: const Text('Review',
-                      style: TextStyle(color: Colors.white)),
                 ),
-              ),
+                if (status == 'Completed')
+                  ElevatedButton(
+                    onPressed: onReviewPressed,
+                   style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color.fromARGB(255, 146, 176, 204)), 
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        vertical: 8.0,
+                      ),
+                    ),
+                    child: const Text(
+                      'Review',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 146, 176, 204), 
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
