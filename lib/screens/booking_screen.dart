@@ -207,11 +207,41 @@ class BookingScreenState extends State<BookingScreen> {
                     const SizedBox(height: kSpacing),
                     TextFormField(
                       controller: carTypeController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Type of Car & Year Model',
+                        labelStyle: const TextStyle(
+                          color: Color.fromARGB(255, 107, 105, 105),
+                        ),
                         hintText: 'e.g., Toyota Corolla 2020',
-                        border: OutlineInputBorder(),
+                        hintStyle: TextStyle(
+                          color: const Color.fromARGB(255, 107, 105, 105)
+                              .withOpacity(0.7),
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(
+                                255, 146, 176, 204),
+                          ),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 146, 176,
+                                204),
+                            width: 2.0, 
+                          ),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 146, 176,
+                                204),
+                          ),
+                        ),
                       ),
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      cursorColor: const Color.fromARGB(
+                          255, 146, 176, 204),
                       onChanged: (value) {
                         setState(() {
                           carType = value;

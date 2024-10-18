@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class ShopMap extends StatefulWidget {
   const ShopMap({
@@ -24,6 +25,7 @@ class ShopMapState extends State<ShopMap> {
   final Set<Marker> _markers = {};
   Position? _currentPosition;
   Stream<Position>? _positionStream;
+  StreamSubscription<Position>? _positionStreamSubscription;
   final Set<Polyline> _polylines = {};
 
   final String _googleMapsApiKey = 'AIzaSyAS0R3NQrhIfMVXvuBIraWdGVBa7ct96-k';
@@ -34,6 +36,13 @@ class ShopMapState extends State<ShopMap> {
     context.read<NotificationBloc>().fetchNotificationCount();
     _initLocationService();
     _addShopMarker();
+  }
+
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    _positionStreamSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> _initLocationService() async {
@@ -63,17 +72,21 @@ class ShopMapState extends State<ShopMap> {
     _currentPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-    _updateUserMarker(_currentPosition!);
+    if (mounted) {
+      _updateUserMarker(_currentPosition!);
+    }
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high, distanceFilter: 10),
     );
-    _positionStream?.listen((Position position) {
-      setState(() {
-        _currentPosition = position;
-        _updateUserMarker(position);
-        _moveCamera(position);
-      });
+    _positionStreamSubscription = _positionStream?.listen((Position position) {
+      if (mounted) {
+        setState(() {
+          _currentPosition = position;
+          _updateUserMarker(position);
+          _moveCamera(position);
+        });
+      }
     });
   }
 
@@ -176,10 +189,13 @@ class ShopMapState extends State<ShopMap> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
     );
 
-    setState(() {
-      _markers.removeWhere((marker) => marker.markerId.value == 'userLocation');
-      _markers.add(userMarker);
-    });
+    if (mounted) {
+      setState(() {
+        _markers
+            .removeWhere((marker) => marker.markerId.value == 'userLocation');
+        _markers.add(userMarker);
+      });
+    }
   }
 
   Future<void> _launchMapsUrl() async {
@@ -217,8 +233,6 @@ class ShopMapState extends State<ShopMap> {
       ),
     );
   }
-
-  
 
   Future<List<LatLng>> _fetchRoute() async {
     if (_currentPosition == null) return [];
@@ -288,71 +302,65 @@ class ShopMapState extends State<ShopMap> {
           color: Colors.blue,
           width: 5,
         );
-        setState(() {
-          _polylines
-              .removeWhere((polyline) => polyline.polylineId == polylineId);
-          _polylines.add(newPolyline);
-        });
+        if (mounted) {
+          setState(() {
+            _polylines.add(newPolyline);
+          });
+        }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error fetching route: $e')),
-        );
+        // Handle error or show a message to the user
       }
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    extendBodyBehindAppBar: true,  
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,  
-      automaticallyImplyLeading: false,
-      elevation: 0,  
-      flexibleSpace: Container(
-        decoration: kAppBar,
-      ),
-      title: const Text(
-        'Shop Location',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: kAppBar,
         ),
-      ),
-      centerTitle: true,
-    ),
-    body: Stack(
-      children: [
-        GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: shopLocation,
-            zoom: 15,
-          ),
-          myLocationButtonEnabled: false,
-          myLocationEnabled: true,
-          markers: _markers,
-          polylines: _polylines,
-          mapType: MapType.normal,
-          onMapCreated: _onMapCreated,
-        ),
-        Positioned(
-          top: 20,
-          right: 20,
-          child: FloatingActionButton(
-            onPressed: () {
-              if (_currentPosition != null) {
-                _drawRouteToShop();
-                _moveCamera(_currentPosition!);
-              }
-            },
-            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-            child: const Icon(Icons.directions),
+        title: const Text(
+          'Shop Location',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ],
-    ),
-  );
-}
-
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: shopLocation,
+              zoom: 15,
+            ),
+            markers: _markers,
+            polylines: _polylines,
+            onMapCreated: _onMapCreated,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+          ),
+          Positioned(
+            top: 120,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: _drawRouteToShop,
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Set the button color to black
+              child: const Icon(
+                Icons.directions,
+                color: Color.fromARGB(255, 0, 0, 0), // Set the icon color to white
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

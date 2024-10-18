@@ -10,6 +10,7 @@ class DatePickerField extends StatefulWidget {
     required this.selectedDate,
     required this.onDateSelected,
   });
+
   @override
   DatePickerFieldState createState() => DatePickerFieldState();
 }
@@ -67,6 +68,7 @@ class DatePickerFieldState extends State<DatePickerField> {
   @override
   Widget build(BuildContext context) {
     List<DateTime> weekDays = _getWeekDays(_startOfWeek);
+    DateTime today = DateTime.now();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +97,8 @@ class DatePickerFieldState extends State<DatePickerField> {
               ],
             ),
             IconButton(
-              icon: const Icon(Icons.calendar_today, color: Color.fromARGB(255, 110, 136, 161)),
+              icon: const Icon(Icons.calendar_today,
+                  color: Color.fromARGB(255, 110, 136, 161)),
               onPressed: () {
                 _showFullCalendar(context);
               },
@@ -116,33 +119,54 @@ class DatePickerFieldState extends State<DatePickerField> {
               bool isSelected = date.day == widget.selectedDate.day &&
                   date.month == widget.selectedDate.month &&
                   date.year == widget.selectedDate.year;
+
+              // Check if the date is in the past
+              bool isPast = date.isBefore(today);
+
               return GestureDetector(
-                onTap: () {
-                  widget.onDateSelected(date);
-                  setState(() {
-                    _startOfWeek = _getStartOfWeek(date);
-                  });
-                },
+                onTap: isPast
+                    ? null // Disable interaction for past dates
+                    : () {
+                        widget.onDateSelected(date);
+                        setState(() {
+                          _startOfWeek = _getStartOfWeek(date);
+                        });
+                      },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color.fromARGB(255, 110, 136, 161) : Colors.transparent,
+                    color: isSelected
+                        ? const Color.fromARGB(255, 110, 136, 161)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Column(
                     children: [
                       Text(
-                        DateFormat.E().format(date), 
+                        DateFormat.E().format(date),
                         style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
+                          color: isPast
+                              ? Colors.grey // Gray color for past days
+                              : (isSelected ? Colors.white : Colors.black),
                         ),
                       ),
                       const SizedBox(height: 4.0),
-                      Text(
-                        date.day.toString(), 
-                        style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.bold,
+                      Container(
+                        decoration: isPast
+                            ? const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey, // Gray circle for past days
+                              )
+                            : null,
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          date.day.toString(),
+                          style: TextStyle(
+                            color: isPast
+                                ? Colors.white // White text for past days
+                                : (isSelected ? Colors.white : Colors.black),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],

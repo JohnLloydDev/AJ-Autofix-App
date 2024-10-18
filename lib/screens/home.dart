@@ -482,7 +482,7 @@ class _HomeScreenState extends State<HomeScreen> {
             foregroundColor: isSelected ? Colors.white : Colors.black,
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(10.0),
             ),
           ),
           onPressed: () {
