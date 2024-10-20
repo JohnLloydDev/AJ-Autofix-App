@@ -313,17 +313,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: 'Search for a car service',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              Container(
+                margin: const EdgeInsets.symmetric(
+                    horizontal: 5.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(12.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 8.0,
+                      offset: const Offset(
+                          0, 4),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, color: Colors.grey),
+                            onPressed: () {
+                              _searchController.clear();
+                            },
+                          )
+                        : null,
+                    hintText: 'Search for a car service...',
+                    hintStyle: const TextStyle(
+                        color: Colors.grey, fontSize: 16),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0),
                   ),
+                  style: const TextStyle(
+                      fontSize: 16.0, color: Colors.black),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(
+                  height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(

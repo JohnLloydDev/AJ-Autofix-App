@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'booking_model.dart'; // Import your Booking model
+import 'booking_model.dart'; 
 
 class User extends Equatable {
   final String id;

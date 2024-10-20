@@ -16,21 +16,21 @@ class DatePickerField extends StatefulWidget {
 }
 
 class DatePickerFieldState extends State<DatePickerField> {
-  late DateTime _startOfWeek;
+  late DateTime _startOfMonth;
 
   @override
   void initState() {
     super.initState();
-    _startOfWeek = _getStartOfWeek(widget.selectedDate);
+    _startOfMonth = _getStartOfMonth(widget.selectedDate);
   }
 
-  DateTime _getStartOfWeek(DateTime date) {
-    int daysFromMonday = date.weekday - 1;
-    return date.subtract(Duration(days: daysFromMonday));
+  DateTime _getStartOfMonth(DateTime date) {
+    return DateTime(date.year, date.month, 1);
   }
 
-  List<DateTime> _getWeekDays(DateTime startOfWeek) {
-    return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+  List<DateTime> _getMonthDays(DateTime startOfMonth) {
+    int daysInMonth = DateUtils.getDaysInMonth(startOfMonth.year, startOfMonth.month);
+    return List.generate(daysInMonth, (index) => startOfMonth.add(Duration(days: index)));
   }
 
   Future<void> _showFullCalendar(BuildContext context) async {
@@ -60,14 +60,14 @@ class DatePickerFieldState extends State<DatePickerField> {
     if (picked != null && picked != widget.selectedDate) {
       widget.onDateSelected(picked);
       setState(() {
-        _startOfWeek = _getStartOfWeek(picked);
+        _startOfMonth = _getStartOfMonth(picked);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime> weekDays = _getWeekDays(_startOfWeek);
+    List<DateTime> monthDays = _getMonthDays(_startOfMonth);
     DateTime today = DateTime.now();
 
     return Column(
@@ -113,26 +113,30 @@ class DatePickerFieldState extends State<DatePickerField> {
             border: Border.all(color: Colors.grey.shade300),
             color: Colors.grey.shade200,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: weekDays.map((date) {
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: monthDays.length,
+            itemBuilder: (context, index) {
+              DateTime date = monthDays[index];
               bool isSelected = date.day == widget.selectedDate.day &&
                   date.month == widget.selectedDate.month &&
                   date.year == widget.selectedDate.year;
 
-              // Check if the date is in the past
               bool isPast = date.isBefore(today);
 
               return GestureDetector(
                 onTap: isPast
-                    ? null // Disable interaction for past dates
+                    ? null
                     : () {
                         widget.onDateSelected(date);
                         setState(() {
-                          _startOfWeek = _getStartOfWeek(date);
+                          _startOfMonth = _getStartOfMonth(date);
                         });
                       },
                 child: Container(
+                  width: 60,
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     color: isSelected
@@ -141,12 +145,13 @@ class DatePickerFieldState extends State<DatePickerField> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         DateFormat.E().format(date),
                         style: TextStyle(
                           color: isPast
-                              ? Colors.grey // Gray color for past days
+                              ? Colors.grey
                               : (isSelected ? Colors.white : Colors.black),
                         ),
                       ),
@@ -155,7 +160,7 @@ class DatePickerFieldState extends State<DatePickerField> {
                         decoration: isPast
                             ? const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.grey, // Gray circle for past days
+                                color: Colors.grey,
                               )
                             : null,
                         padding: const EdgeInsets.all(4.0),
@@ -163,7 +168,7 @@ class DatePickerFieldState extends State<DatePickerField> {
                           date.day.toString(),
                           style: TextStyle(
                             color: isPast
-                                ? Colors.white // White text for past days
+                                ? Colors.white
                                 : (isSelected ? Colors.white : Colors.black),
                             fontWeight: FontWeight.bold,
                           ),
@@ -173,7 +178,7 @@ class DatePickerFieldState extends State<DatePickerField> {
                   ),
                 ),
               );
-            }).toList(),
+            },
           ),
         ),
       ],

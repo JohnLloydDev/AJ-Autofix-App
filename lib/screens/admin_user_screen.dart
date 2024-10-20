@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/user_model.dart';
-import 'package:aj_autofix/screens/admin_update_details_screen.dart';
+import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:aj_autofix/utils/profile_picture_color.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,16 +26,6 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   late List<User> _filteredUsers;
   List<User> _allUsers = [];
   final TextEditingController _searchController = TextEditingController();
-
-  void refreshData() {
-    BlocProvider.of<UserBloc>(context).add(GetUsers());
-  }
-
-  void navigateToUpdateDetails(BuildContext context, String id) {
-    GoRouter.of(context).push('/admin/update/$id').then((_) {
-      refreshData();
-    });
-  }
 
   @override
   void initState() {
@@ -69,12 +58,22 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     }).toList();
   }
 
+  void refreshData() {
+    BlocProvider.of<UserBloc>(context).add(GetUsers());
+  }
+
+  void navigateToUpdateDetails(BuildContext context, String id) {
+    GoRouter.of(context).push('/admin/update/$id').then((_) {
+      refreshData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Users'),
         automaticallyImplyLeading: false,
+        title: const Text('Admin Users'),
       ),
       backgroundColor: Colors.white,
       body: Column(
@@ -94,9 +93,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             child: BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserDataLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const CustomLoading();
                 } else if (state is UserDataLoaded) {
                   _allUsers = state.userdata;
                   _filterUsers();
@@ -149,15 +146,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                                   margin: const EdgeInsets.only(right: 8.0),
                                   child: IconButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AdminUpdateDetailsScreen(
-                                            id: user.id,
-                                          ),
-                                        ),
-                                      );
+                                      navigateToUpdateDetails(context, user.id);
                                     },
                                     icon: const Icon(Icons.edit),
                                     style: ElevatedButton.styleFrom(
