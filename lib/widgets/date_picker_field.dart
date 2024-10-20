@@ -17,11 +17,35 @@ class DatePickerField extends StatefulWidget {
 
 class DatePickerFieldState extends State<DatePickerField> {
   late DateTime _startOfMonth;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _startOfMonth = _getStartOfMonth(widget.selectedDate);
+    _scrollController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToToday();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  // Function to scroll to today's date at the start of the scrollable view
+  void _scrollToToday() {
+    DateTime today = DateTime.now();
+    int daysDifference = today.difference(_startOfMonth).inDays;
+    double scrollPosition = daysDifference * 68.0; // Approximate width of each date tile
+    _scrollController.animateTo(
+      scrollPosition,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   DateTime _getStartOfMonth(DateTime date) {
@@ -62,6 +86,7 @@ class DatePickerFieldState extends State<DatePickerField> {
       setState(() {
         _startOfMonth = _getStartOfMonth(picked);
       });
+      _scrollToToday();  // Ensure that the list scrolls to today or the selected date
     }
   }
 
@@ -115,6 +140,7 @@ class DatePickerFieldState extends State<DatePickerField> {
           ),
           height: 100,
           child: ListView.builder(
+            controller: _scrollController,
             scrollDirection: Axis.horizontal,
             itemCount: monthDays.length,
             itemBuilder: (context, index) {
