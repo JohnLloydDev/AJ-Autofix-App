@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _searchController = TextEditingController();
   final Set<String> _selectedCategories = {};
+  late PageController _pageController;
+  int _currentPage = 0;
+  late Timer _timer;
 
   List<Map<String, String>> services = [
     {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
@@ -98,12 +103,29 @@ class _HomeScreenState extends State<HomeScreen> {
     _filteredServices = services;
     _searchController.addListener(_filterServices);
     context.read<NotificationBloc>().fetchNotificationCount();
+
+    _pageController = PageController();
+
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < 3) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_filterServices);
     _searchController.dispose();
+    _pageController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -291,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Container(
                 width: double.infinity,
-                height: 100,
+                height: 120,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16.0),
                   boxShadow: [
@@ -304,28 +326,54 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.0),
-                  child: Image.asset(
-                    'assets/repair.png',
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
+                  child: PageView(
+                    controller: _pageController,
+                    children: [
+                      Image.asset(
+                        'assets/slide_one.png',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      Image.asset(
+                        'assets/slide_two.png',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      Image.asset(
+                        'assets/slide_three.png',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      Image.asset(
+                        'assets/slide_four.png',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      Image.asset(
+                        'assets/slide_five.png',
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 16),
               Container(
-                margin: const EdgeInsets.symmetric(
-                    horizontal: 5.0),
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(12.0),
+                  borderRadius: BorderRadius.circular(12.0),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.3),
                       blurRadius: 8.0,
-                      offset: const Offset(
-                          0, 4),
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -345,18 +393,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         : null,
                     hintText: 'Search for a car service...',
-                    hintStyle: const TextStyle(
-                        color: Colors.grey, fontSize: 16),
+                    hintStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 16),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
                   ),
-                  style: const TextStyle(
-                      fontSize: 16.0, color: Colors.black),
+                  style: const TextStyle(fontSize: 16.0, color: Colors.black),
                 ),
               ),
-              const SizedBox(
-                  height: 16),
+              const SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
