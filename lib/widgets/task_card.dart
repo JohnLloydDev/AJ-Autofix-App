@@ -147,7 +147,6 @@ class TaskCard extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
 
-            // Only show the status stepper if the status is not 'Rejected'
             if (status != 'Rejected') ...[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,29 +194,32 @@ class TaskCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 6.0),
-                  decoration: BoxDecoration(
-                    color: statusColor,
-                    borderRadius: BorderRadius.circular(12.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8.0,
-                        offset: Offset(0, 4),
+                if (status ==
+                    'Rejected')
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 6.0),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8.0,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      status,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    status,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-                if (status == 'Completed')
+                if (status ==
+                    'Completed')
                   ElevatedButton(
                     onPressed: onReviewPressed,
                     style: OutlinedButton.styleFrom(
