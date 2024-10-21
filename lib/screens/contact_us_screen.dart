@@ -1,9 +1,7 @@
 import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
-import 'package:aj_autofix/bloc/contact/contact_event.dart';
-import 'package:aj_autofix/bloc/contact/contact_state.dart';
 import 'package:aj_autofix/repositories/contact_repository_impl.dart';
 import 'package:aj_autofix/utils/constants.dart';
-import 'package:aj_autofix/utils/custom_loading.dart';
+import 'package:aj_autofix/widgets/contact_us.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,6 +17,7 @@ class ContactUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: kAppBar,
@@ -27,7 +26,7 @@ class ContactUsScreen extends StatelessWidget {
           'Contact Us',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -36,21 +35,23 @@ class ContactUsScreen extends StatelessWidget {
           icon: const FaIcon(
             FontAwesomeIcons.angleLeft,
             color: Colors.black,
-            size: 25,
+            size: 24,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: BlocProvider(
         create: (context) => ContactBloc(ContactRepositoryImpl()),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: SingleChildScrollView(
             child: Column(
               children: [
+                const SizedBox(height: 24),
                 const ContactInfoContainer(),
                 const SizedBox(height: 24),
                 ContactFormContainer(
@@ -66,196 +67,64 @@ class ContactUsScreen extends StatelessWidget {
     );
   }
 }
-
 class ContactInfoContainer extends StatelessWidget {
   const ContactInfoContainer({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.phone),
-              SizedBox(width: 8),
-              Text('+639499729777'),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Icon(Icons.email),
-              SizedBox(width: 8),
-              Text('ajautofix123@gmail.com'),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Icon(Icons.location_on),
-              SizedBox(width: 8),
-              Text('Bantayan, Mangaldan, Pangasinan Road'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ContactFormContainer extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController messageController;
-
-  const ContactFormContainer({
-    required this.nameController,
-    required this.emailController,
-    required this.messageController,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<ContactBloc, ContactState>(
-      listener: (context, state) {
-        if (state is ContactSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Contact message sent successfully!'),
-            backgroundColor: Colors.green,
-          ));
-          nameController.clear();
-          emailController.clear();
-          messageController.clear();
-        } else if (state is ContactFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Failed to send message: ${state.errorMessage}'),
-            backgroundColor: Colors.red,
-          ));
-        }
-      },
-      builder: (context, state) {
-        if (state is ContactSubmitting) {
-          return const CustomLoading();
-        }
-
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade300),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.email, color: Colors.red, size: 30),
+            SizedBox(width: 8),
+            Text(
+              'ajautofix123@gmail.com',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
               ),
-            ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const Row(
+          children: [
+            Icon(Icons.phone_android, color: Colors.red, size: 30),
+            SizedBox(width: 8),
+            Text(
+              '+639499729777',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const Row(
+          children: [
+            Icon(Icons.location_on, color: Colors.red, size: 30),
+            SizedBox(width: 8),
+            Text(
+              'Bantayan, Mangaldan, Pangasinan Road',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Center(
+          child: Image.asset(
+            'assets/email.png', 
+            width: 100, 
+            height: 100,
           ),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: messageController,
-                decoration: InputDecoration(
-                  labelText: 'Message',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                maxLines: 5,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a message';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<ContactBloc>().add(SendContactEvent(
-                          name: nameController.text,
-                          email: emailController.text,
-                          message: messageController.text,
-                        ));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6E88A1),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Send message',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
+        ),
+        const SizedBox(height: 15),
+      ],
     );
   }
 }
