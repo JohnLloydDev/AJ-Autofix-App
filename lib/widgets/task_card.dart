@@ -146,56 +146,66 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-
             if (status != 'Rejected') ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  for (int i = 0; i < statusSteps.length; i++) ...[
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: i <= currentStep
-                              ? Colors.green
-                              : Colors.grey.shade400,
-                          child: i <= currentStep
-                              ? const Icon(Icons.check,
-                                  color: Colors.white, size: 12)
-                              : null,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (int i = 0; i < statusSteps.length; i++) ...[
+                        Column(
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: i <= currentStep
+                                    ? Colors.green
+                                    : Colors.grey.shade400,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: i <= currentStep
+                                  ? const Icon(Icons.check,
+                                      color: Colors.white, size: 12)
+                                  : null,
+                            ),
+                            const SizedBox(height: 4.0),
+                            Text(
+                              statusSteps[i],
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: i <= currentStep
+                                    ? Colors.black
+                                    : Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4.0),
-                        Text(
-                          statusSteps[i],
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: i <= currentStep
-                                ? Colors.black
-                                : Colors.grey.shade500,
+                        if (i != statusSteps.length - 1)
+                          Expanded(
+                            child: Container(
+                              height: 2.0,
+                              color: i < currentStep
+                                  ? Colors.green
+                                  : Colors.grey.shade400,
+                            ),
                           ),
-                        ),
                       ],
-                    ),
-                    if (i != statusSteps.length - 1)
-                      Expanded(
-                        child: Container(
-                          height: 2.0,
-                          color: i < currentStep
-                              ? Colors.green
-                              : Colors.grey.shade400,
-                        ),
-                      ),
-                  ]
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
                 ],
               ),
-              const SizedBox(height: 16.0),
             ],
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (status ==
-                    'Rejected')
+                if (status == 'Rejected')
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12.0, vertical: 6.0),
@@ -218,8 +228,7 @@ class TaskCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (status ==
-                    'Completed')
+                if (status == 'Completed')
                   ElevatedButton(
                     onPressed: onReviewPressed,
                     style: OutlinedButton.styleFrom(
