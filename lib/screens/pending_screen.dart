@@ -133,10 +133,10 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
       builder: (context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: Form(
               key: formKey,
               child: Column(
@@ -144,9 +144,9 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Rate the service',
+                    'Rate the Service',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -166,12 +166,29 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                       rating = value;
                     },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    'Write your review',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
                   TextFormField(
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'Write your review',
-                      border: OutlineInputBorder(),
+                    maxLines: 5,
+                    maxLength: 300,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: 'Share your experience...',
+                      hintStyle: TextStyle(color: Colors.grey[400]),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -184,29 +201,21 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                     },
                   ),
                   const SizedBox(height: 24),
+
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6E88A1),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 50,
-                          vertical: 13,
+                          vertical: 12,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius:
+                              BorderRadius.circular(30.0),
                         ),
                       ),
                       onPressed: () {
-                        Fluttertoast.showToast(
-                          msg: "Your review has been posted!",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: const Color.fromARGB(100, 0, 0, 0),
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-
                         if (formKey.currentState?.validate() ?? false) {
                           final newReview = Review(
                             rating: rating!.toDouble().toInt(),
@@ -217,6 +226,16 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                               .read<ReviewBloc>()
                               .add(CreateReview(newReview));
 
+                          Fluttertoast.showToast(
+                            msg: "Your review has been posted!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: const Color.fromARGB(100, 0, 0, 0),
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+
                           Navigator.of(context).pop();
                         }
                       },
@@ -225,7 +244,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 16,
                         ),
                       ),
                     ),
