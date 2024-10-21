@@ -143,12 +143,36 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Rate the Service',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Rate the Service',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        width: 30.0, 
+                        height: 30.0, 
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(color: Colors.black),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          iconSize:
+                              12.0,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   RatingBar(
@@ -202,6 +226,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                   ),
                   const SizedBox(height: 24),
 
+                  // Submit Button
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -211,8 +236,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                           vertical: 12,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(30.0),
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
                       onPressed: () {
