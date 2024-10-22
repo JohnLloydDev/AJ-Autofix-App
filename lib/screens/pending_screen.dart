@@ -135,147 +135,176 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Rate the Service',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          width: 30.0,
-                          height: 30.0,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            size: 18,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Background color
+              borderRadius: BorderRadius.circular(30.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15), // Shadow color
+                  spreadRadius: 2,
+                  blurRadius: 12,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Rate the Service',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Center(
-                    child: RatingBar(
-                      initialRating: 0,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: false,
-                      itemCount: 5,
-                      ratingWidget: RatingWidget(
-                        full: const Icon(Icons.star, color: Colors.amber),
-                        half: const Icon(Icons.star_half, color: Colors.amber),
-                        empty:
-                            const Icon(Icons.star_border, color: Colors.amber),
-                      ),
-                      onRatingUpdate: (value) {
-                        rating = value;
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  const Text(
-                    'Write your review',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    maxLines: 5,
-                    maxLength: 300,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 227, 224, 224),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: 'Share your experience...',
-                      hintStyle: const TextStyle(
-                          color: Color.fromARGB(255, 136, 134, 134)),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter review content';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      content = value;
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6E88A1),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 60,
-                          vertical: 16,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 30.0,
+                            height: 30.0,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              size: 18,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Center(
+                      child: RatingBar(
+                        initialRating: 0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        itemCount: 5,
+                        ratingWidget: RatingWidget(
+                          full: const Icon(Icons.star, color: Colors.amber),
+                          half:
+                              const Icon(Icons.star_half, color: Colors.amber),
+                          empty: const Icon(Icons.star_border,
+                              color: Colors.amber),
                         ),
-                        elevation: 0,
+                        onRatingUpdate: (value) {
+                          rating = value;
+                        },
                       ),
-                      onPressed: () {
-                        if (formKey.currentState?.validate() ?? false) {
-                          final newReview = Review(
-                            rating: rating!.toDouble().toInt(),
-                            content: content!,
-                          );
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      'Write your review',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 2,
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        maxLines: 5,
+                        maxLength: 300,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 255, 255, 255),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: 'Share your experience...',
+                          hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 136, 134, 134),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter review content';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          content = value;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6E88A1),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 60,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          elevation: 0,
+                        ),
+                        onPressed: () {
+                          if (formKey.currentState?.validate() ?? false) {
+                            final newReview = Review(
+                              rating: rating!.toDouble().toInt(),
+                              content: content!,
+                            );
 
-                          context
-                              .read<ReviewBloc>()
-                              .add(CreateReview(newReview));
+                            context
+                                .read<ReviewBloc>()
+                                .add(CreateReview(newReview));
 
-                          Fluttertoast.showToast(
-                            msg: "Your review has been posted!",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 2,
-                            backgroundColor: const Color.fromARGB(100, 0, 0, 0),
-                            textColor: Colors.white,
-                            fontSize: 16.0,
-                          );
+                            Fluttertoast.showToast(
+                              msg: "Your review has been posted!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor:
+                                  const Color.fromARGB(100, 0, 0, 0),
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
 
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: const Text(
-                        'Submit',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: const Text(
+                          'Submit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
