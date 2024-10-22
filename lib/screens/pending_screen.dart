@@ -137,11 +137,11 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           ),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white, // Background color
+              color: Colors.white,
               borderRadius: BorderRadius.circular(30.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15), // Shadow color
+                  color: Colors.black.withOpacity(0.15),
                   spreadRadius: 2,
                   blurRadius: 12,
                   offset: const Offset(0, 5),
