@@ -67,59 +67,76 @@ class ContactUsScreen extends StatelessWidget {
     );
   }
 }
+
 class ContactInfoContainer extends StatelessWidget {
   const ContactInfoContainer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Row(
-          children: [
-            Icon(Icons.email, color: Colors.red, size: 30),
-            SizedBox(width: 8),
-            Text(
-              'ajautofix123@gmail.com',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ),
+        const Padding(
+          padding: EdgeInsets.only(right: 155.0),
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.phone_android, color: Colors.red, size: 30),
+                SizedBox(width: 8),
+                Text(
+                  '+639499729777',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-        const SizedBox(height: 20),
-        const Row(
-          children: [
-            Icon(Icons.phone_android, color: Colors.red, size: 30),
-            SizedBox(width: 8),
-            Text(
-              '+639499729777',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ),
+        const SizedBox(height: 15),
+        const Padding(
+          padding: EdgeInsets.only(right: 100.0),
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.email, color: Colors.red, size: 30),
+                SizedBox(width: 8),
+                Text(
+                  'ajautofix123@gmail.com',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-        const SizedBox(height: 20),
-        const Row(
-          children: [
-            Icon(Icons.location_on, color: Colors.red, size: 30),
-            SizedBox(width: 8),
-            Text(
-              'Bantayan, Mangaldan, Pangasinan Road',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
+        const SizedBox(height: 15),
+        const Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.location_on, color: Colors.red, size: 30),
+              SizedBox(width: 8),
+              Text(
+                'Bantayan, Mangaldan, Pangasinan Road',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         Center(
           child: Image.asset(
-            'assets/email.png', 
-            width: 100, 
+            'assets/email.png',
+            width: 100,
             height: 100,
           ),
         ),
