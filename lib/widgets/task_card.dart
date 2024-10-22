@@ -36,14 +36,20 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final int currentStep = _getStatusIndex(status);
 
-    return Card(
-      color: Colors.grey[200],
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 15,
+            spreadRadius: 5,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      elevation: 4,
-      shadowColor: Colors.black.withOpacity(1.0),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
