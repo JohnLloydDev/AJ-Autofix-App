@@ -7,8 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactUsScreen extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
 
   ContactUsScreen({super.key});
@@ -55,9 +53,8 @@ class ContactUsScreen extends StatelessWidget {
                 const ContactInfoContainer(),
                 const SizedBox(height: 24),
                 ContactFormContainer(
-                  nameController: nameController,
-                  emailController: emailController,
-                  messageController: messageController,
+                  messageController:
+                      messageController,
                 ),
               ],
             ),
@@ -76,63 +73,54 @@ class ContactInfoContainer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(right: 155.0),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.phone_android, color: Colors.red, size: 30),
-                SizedBox(width: 8),
-                Text(
-                  '+639499729777',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 15),
-        const Padding(
-          padding: EdgeInsets.only(right: 100.0),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.email, color: Colors.red, size: 30),
-                SizedBox(width: 8),
-                Text(
-                  'ajautofix123@gmail.com',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 15),
-        const Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.location_on, color: Colors.red, size: 30),
-              SizedBox(width: 8),
-              Text(
-                'Bantayan, Mangaldan, Pangasinan Road',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.phone_android, color: Colors.red, size: 30),
+            SizedBox(width: 8),
+            Text(
+              '+639499729777',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         const SizedBox(height: 15),
+
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.email, color: Colors.red, size: 30),
+            SizedBox(width: 8),
+            Text(
+              'ajautofix123@gmail.com',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.location_on, color: Colors.red, size: 30),
+            SizedBox(width: 8),
+            Text(
+              'Bantayan, Mangaldan, Pangasinan Road',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+
         Center(
           child: Image.asset(
             'assets/email.png',
