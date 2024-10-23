@@ -536,36 +536,50 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(
+          horizontal: 10.0),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: isSelected
                 ? [
-                    const Color.fromARGB(255, 147, 191, 198),
-                    const Color.fromARGB(255, 110, 136, 161),
+                    const Color.fromARGB(255, 125, 151, 181),
+                    const Color(0xFF84C6E4),
                   ]
                 : [
-                    Colors.grey[300]!,
-                    Colors.grey[300]!,
+                    const Color(0xFFF5F5F5),
+                    const Color(0xFFE0E0E0),
                   ],
           ),
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius:
+              BorderRadius.circular(20.0),
         ),
         child: TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: isSelected ? Colors.white : Colors.black,
-            backgroundColor: Colors.transparent,
+            foregroundColor: isSelected ? Colors.white : Colors.black87,
+            padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 15.0),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(
+                  20.0),
             ),
           ),
           onPressed: () {
             _onCategorySelected(category.toLowerCase());
           },
-          child: Text(category.capitalize()),
+          child: Text(
+            category.capitalize(),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: isSelected
+                  ? Colors.white
+                  : Colors.black54,
+            ),
+          ),
         ),
       ),
     );
