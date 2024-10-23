@@ -1,6 +1,7 @@
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
 import 'package:aj_autofix/repositories/booking_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookingBloc extends Bloc<BookingEvent, BookingState> {
@@ -96,8 +97,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         await bookingRepository.createBooking(userId, event.booking);
         emit(const BookingSuccess(message: 'Booking created successfully!'));
       } catch (e) {
-        if (e.toString().contains('The selected time is already occupied. Please choose another time.')) {
-          emit(const RequestError('The selected time is already occupied. Please choose another time.'));
+        if (e.toString().contains(
+            'The selected time is already occupied. Please choose another time.')) {
+          emit(const RequestError(
+              'The selected time is already occupied. Please choose another time.'));
         } else {
           emit(RequestError('Failed to create booking: $e'));
         }
@@ -109,8 +112,60 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         emit(BookingLoading());
         final booking = await bookingRepository.getUserBooking();
         emit(BookingUserLoaded(booking));
+        debugPrint('Booking loaded: $booking');
       } catch (e) {
         emit(RequestError(e.toString()));
+        debugPrint('Booking loaded: $e');
+      }
+    });
+
+    on<GetNewBookingCount>((event, emit) async {
+      try {
+        emit(BookingLoading());
+
+        final count = await bookingRepository.getNewBookingCount();
+        emit(BookingCountLoaded(count));
+        debugPrint('New booking count: $count');
+      } catch (e) {
+        emit(RequestError('Failed to fetch new booking count: $e'));
+      }
+    });
+
+    on<MarkBookingsAsViewed>((event, emit) async {
+      try {
+        await bookingRepository.markBookingsAsViewed();
+        emit(const BookingSuccess(message: 'All bookings marked as viewed'));
+
+        await Future.delayed(const Duration(milliseconds: 100));
+        add(GetAllPendingBooking());
+        add(GetNewBookingCount());
+      } catch (e) {
+        emit(RequestError('Failed to mark bookings as viewed: $e'));
+      }
+    });
+
+    on<GetNewUserBookingCount>((event, emit) async {
+      try {
+        emit(BookingLoading());
+        final count = await bookingRepository.getNewUserBookingCount();
+        emit(NewUserBookingCountLoaded(count));
+        debugPrint('New booking count: $count');
+      } catch (e) {
+        emit(RequestError('Failed to fetch new booking count: $e'));
+        debugPrint('booking count: $e');
+      }
+    });
+
+    on<MarkUserBookingsAsViewed>((event, emit) async {
+      try {
+        await bookingRepository.markUserBookingsAsViewed();
+        emit(const BookingSuccess(message: 'All bookings marked as viewed'));
+
+        await Future.delayed(const Duration(milliseconds: 100));
+        add(GetNewUserBookingCount());
+        add(GetUserBooking());
+      } catch (e) {
+        emit(RequestError('Failed to mark bookings as viewed: $e'));
       }
     });
   }

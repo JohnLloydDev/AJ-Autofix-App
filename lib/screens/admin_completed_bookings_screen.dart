@@ -18,7 +18,6 @@ class AdminCompletedBookingsScreen extends StatefulWidget {
 
 class _AdminCompletedBookingsScreenState
     extends State<AdminCompletedBookingsScreen> {
-
   final TextEditingController _searchController = TextEditingController();
   List<Booking> _filteredBookings = [];
 
@@ -101,7 +100,12 @@ class _AdminCompletedBookingsScreenState
                     _filteredBookings = _filteredBookings.reversed.toList();
 
                     if (_filteredBookings.isEmpty) {
-                      return const Center(child: Text('No bookings found'));
+                      return const Center(
+                        child: Text(
+                          'No bookings yet',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      );
                     }
 
                     return ListView.builder(
@@ -194,7 +198,7 @@ class _AdminCompletedBookingsScreenState
                   } else if (state is RequestError) {
                     return Center(child: Text(state.error));
                   } else {
-                    return const Center(child: Text('No bookings found'));
+                    return const Center(child: Text(''));
                   }
                 },
               ),

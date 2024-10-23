@@ -1,6 +1,6 @@
 import 'dart:async';
-
-import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
@@ -102,8 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _filteredServices = services;
     _searchController.addListener(_filterServices);
-    context.read<NotificationBloc>().fetchNotificationCount();
-
+    context.read<BookingBloc>().add(GetNewUserBookingCount());
     _pageController = PageController();
 
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {

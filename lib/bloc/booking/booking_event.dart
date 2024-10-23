@@ -14,8 +14,6 @@ class GetBooking extends BookingEvent {}
 
 class GetUserBooking extends BookingEvent {}
 
-
-
 class GetBookingById extends BookingEvent {
   final String bookingId;
 
@@ -56,7 +54,6 @@ class GetAllPendingBooking extends BookingEvent {}
 
 class GetAllAcceptedBooking extends BookingEvent {}
 
-
 class AddService extends BookingEvent {
   final Service service;
   const AddService(this.service);
@@ -65,14 +62,19 @@ class AddService extends BookingEvent {
   List<Object> get props => [service];
 }
 
-
-class CreateBooking extends BookingEvent{
+class CreateBooking extends BookingEvent {
   final Booking booking;
-  
+
   const CreateBooking(this.booking);
 
   @override
   List<Object> get props => [booking];
 }
 
+class GetNewBookingCount extends BookingEvent {}
 
+class MarkBookingsAsViewed extends BookingEvent {}
+
+class GetNewUserBookingCount extends BookingEvent {}
+
+class MarkUserBookingsAsViewed extends BookingEvent {}

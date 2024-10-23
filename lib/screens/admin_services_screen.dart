@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-
 class AdminServicesScreen extends StatefulWidget {
   const AdminServicesScreen({super.key});
 
@@ -19,7 +18,6 @@ class AdminServicesScreen extends StatefulWidget {
 }
 
 class _AdminServicesScreenState extends State<AdminServicesScreen> {
-
   final TextEditingController _searchController = TextEditingController();
   List<Booking> _filteredBookings = [];
 
@@ -27,6 +25,7 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
   void initState() {
     super.initState();
     tz.initializeTimeZones();
+    context.read<BookingBloc>().add(MarkBookingsAsViewed());
     context.read<BookingBloc>().add(GetAllPendingBooking());
     _searchController.addListener(_filterBookings);
   }
@@ -59,7 +58,6 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +108,12 @@ class _AdminServicesScreenState extends State<AdminServicesScreen> {
                         .toList();
 
                     if (_filteredBookings.isEmpty) {
-                      return const Center(child: Text('No bookings found'));
+                      return const Center(
+                        child: Text(
+                          'No bookings yet',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      );
                     }
 
                     return ListView.builder(

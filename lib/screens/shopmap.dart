@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
+import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -33,7 +34,7 @@ class ShopMapState extends State<ShopMap> {
   @override
   void initState() {
     super.initState();
-    context.read<NotificationBloc>().fetchNotificationCount();
+    context.read<BookingBloc>().add(GetNewUserBookingCount());
     _initLocationService();
     _addShopMarker();
   }

@@ -12,6 +12,8 @@ class Booking extends Equatable {
   final DateTime date;
   final String status;
   final String createdAt;
+  final bool viewedByUser;
+  final bool viewedByAdmin;
 
   Booking({
     this.id,
@@ -22,6 +24,8 @@ class Booking extends Equatable {
     this.time,
     required this.date,
     this.status = 'pending',
+    this.viewedByUser = false,
+    this.viewedByAdmin = false,
     String? createdAt,
   }) : createdAt = createdAt ??
             DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
@@ -39,9 +43,10 @@ class Booking extends Equatable {
       date:
           json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
       status: json['status'] ?? 'pending',
+      viewedByUser: json['viewedByUser'] ?? false,
+      viewedByAdmin: json['viewedByAdmin'] ?? false,
       createdAt: json['createdAt'] as String? ??
-          DateFormat('yyyy-MM-dd HH:mm:ss')
-              .format(DateTime.now()), 
+          DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
     );
   }
 
@@ -55,7 +60,9 @@ class Booking extends Equatable {
       'time': time,
       'date': date.toIso8601String(),
       'status': status,
-      'createdAt': createdAt, 
+      'viewedByUser': viewedByUser,
+      'viewedByAdmin': viewedByAdmin,
+      'createdAt': createdAt,
     };
   }
 
@@ -69,6 +76,8 @@ class Booking extends Equatable {
         time,
         date,
         status,
+        viewedByUser,
+        viewedByAdmin,
         createdAt,
       ];
 }

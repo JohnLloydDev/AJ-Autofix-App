@@ -1,4 +1,3 @@
-import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/booking_confirmation_arguments.dart';
@@ -47,7 +46,7 @@ class BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<NotificationBloc>().fetchNotificationCount();
+    context.read<BookingBloc>().add(GetNewUserBookingCount());
   }
 
   @override
@@ -219,29 +218,25 @@ class BookingScreenState extends State<BookingScreen> {
                         ),
                         border: const OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Color.fromARGB(
-                                255, 146, 176, 204),
+                            color: Color.fromARGB(255, 146, 176, 204),
                           ),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 146, 176,
-                                204),
-                            width: 2.0, 
+                            color: Color.fromARGB(255, 146, 176, 204),
+                            width: 2.0,
                           ),
                         ),
                         enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 146, 176,
-                                204),
+                            color: Color.fromARGB(255, 146, 176, 204),
                           ),
                         ),
                       ),
                       style: const TextStyle(
                         color: Colors.black,
                       ),
-                      cursorColor: const Color.fromARGB(
-                          255, 146, 176, 204),
+                      cursorColor: const Color.fromARGB(255, 146, 176, 204),
                       onChanged: (value) {
                         setState(() {
                           carType = value;

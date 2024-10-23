@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+
 import '../utils/constants.dart';
 import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/repositories/booking_repository.dart';
@@ -217,6 +219,88 @@ class BookingRepositoryImpl extends BookingRepository {
       }
     } else {
       throw Exception('Unexpected error occurred: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Future<int> getNewBookingCount() async {
+    final response = await http.get(
+      Uri.parse('${ApiConstants.baseUrl}/bookings/new/count'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['count'];
+    } else {
+      throw Exception('Failed to fetch new booking count');
+    }
+  }
+
+  @override
+  Future<void> markBookingsAsViewed() async {
+    final response = await http.put(
+        Uri.parse("${ApiConstants.baseUrl}/bookings/viewed"),
+        headers: {'Content-Type': 'application/json'});
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to mark bookings as viewed: ${response.body}');
+    }
+  }
+
+  @override
+  Future<int> getNewUserBookingCount() async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+
+    debugPrint('Access token: $accessToken');
+
+    final response = await http.get(
+      Uri.parse('${ApiConstants.baseUrl}/bookings/bookings/new-count'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body) as Map<String, dynamic>;
+
+      if (responseBody.containsKey('totalCount')) {
+        final count = responseBody['totalCount'] as int;
+        debugPrint('New booking count: $count');
+        return count;
+      } else {
+        throw Exception('totalCount not found in the response');
+      }
+    } else {
+      debugPrint('Failed response: ${response.body}');
+      throw Exception('Failed to fetch new booking count');
+    }
+  }
+
+  @override
+  Future<void> markUserBookingsAsViewed() async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+    final response = await http.put(
+      Uri.parse("${ApiConstants.baseUrl}/bookings/userBooking/user-viewed"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to mark bookings as viewed: ${response.body}');
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:aj_autofix/bloc/notifications/Notification_bloc.dart';
 import 'package:aj_autofix/repositories/booking_repository_impl.dart';
 import 'package:aj_autofix/screens/pending_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
@@ -21,16 +20,13 @@ class NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     _fetchUserBookings();
-    _fetchNotifications();
   }
 
   void _fetchUserBookings() {
     context.read<BookingBloc>().add(GetUserBooking());
   }
 
-  void _fetchNotifications() {
-    context.read<NotificationBloc>().fetchNotificationCount();
-  }
+
 
   @override
   Widget build(BuildContext context) {
