@@ -1,4 +1,3 @@
-// contact_state.dart
 abstract class ContactState {}
 
 class ContactInitial extends ContactState {}
