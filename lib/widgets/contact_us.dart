@@ -1,18 +1,14 @@
-import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
-import 'package:aj_autofix/bloc/contact/contact_event.dart';
-import 'package:aj_autofix/bloc/contact/contact_state.dart';
 import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
+import 'package:aj_autofix/bloc/contact/contact_state.dart';
+import 'package:aj_autofix/bloc/contact/contact_event.dart';
 
 class ContactFormContainer extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController emailController;
   final TextEditingController messageController;
 
   const ContactFormContainer({
-    required this.nameController,
-    required this.emailController,
     required this.messageController,
     super.key,
   });
@@ -23,11 +19,9 @@ class ContactFormContainer extends StatelessWidget {
       listener: (context, state) {
         if (state is ContactSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Contact message sent successfully!'),
+            content: Text('Message sent successfully!'),
             backgroundColor: Colors.green,
           ));
-          nameController.clear();
-          emailController.clear();
           messageController.clear();
         } else if (state is ContactFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -56,66 +50,25 @@ class ContactFormContainer extends StatelessWidget {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  labelStyle: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15, horizontal: 15),
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
+              const Text(
+                'Send us a message',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                maxLength: 30,
-                style: const TextStyle(fontSize: 16),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  } else if (value.length > 30) {
-                    return 'Name cannot exceed 30 characters';
-                  }
-                  return null;
-                },
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'We will get back to you as soon as possible.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
               ),
               const SizedBox(height: 16),
-
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15, horizontal: 15),
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  } else if (!RegExp(r'^[^@]+@gmail\.com$').hasMatch(value)) {
-                    return 'Please enter a valid Gmail address';
-                  }
-                  return null;
-                },
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 16),
-
               TextFormField(
                 controller: messageController,
                 decoration: InputDecoration(
@@ -124,8 +77,8 @@ class ContactFormContainer extends StatelessWidget {
                     color: Colors.black54,
                     fontWeight: FontWeight.w500,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15, horizontal: 15),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   filled: true,
                   fillColor: Colors.grey.shade100,
                   border: OutlineInputBorder(
@@ -146,28 +99,18 @@ class ContactFormContainer extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 24),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (emailController.text.contains('@gmail.com')) {
-                      context.read<ContactBloc>().add(SendContactEvent(
-                            name: nameController.text,
-                            email: emailController.text,
-                            message: messageController.text,
-                          ));
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Email must be a Gmail address.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
+                    context.read<ContactBloc>().add(SendContactEvent(
+                      name: 'dummyName', 
+                      email: 'dummyEmail@gmail.com',
+                      message: messageController.text,
+                    ));
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 146, 176, 204),
+                    backgroundColor: const Color(0xFF93C2D5),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
