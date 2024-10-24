@@ -73,6 +73,7 @@ class BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.grey[100],
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
@@ -138,9 +139,11 @@ class BookingScreenState extends State<BookingScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(
+                        height: 8),
                     BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
                       builder: (context, selectedServicesState) {
                         return selectedServicesState.selectedServices.isNotEmpty
@@ -153,19 +156,24 @@ class BookingScreenState extends State<BookingScreen> {
                                   final serviceName = selectedServicesState
                                       .selectedServices[index];
                                   return Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
                                     child: SizedBox(
-                                      width: 350,
-                                      height: 50,
+                                      width: double.infinity, 
+                                      height:
+                                          50,
                                       child: Card(
-                                        elevation: 2,
+                                        elevation:
+                                            2,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(
+                                              16.0),
                                         ),
+                                        shadowColor: Colors.grey
+                                            .withOpacity(0.2),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 12.0),
+                                              horizontal: 16.0),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -175,14 +183,17 @@ class BookingScreenState extends State<BookingScreen> {
                                                   serviceName,
                                                   style: const TextStyle(
                                                     fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
+                                                    fontWeight: FontWeight
+                                                        .w600,
+                                                    color: Colors
+                                                        .black87,
                                                   ),
                                                 ),
                                               ),
                                               IconButton(
                                                 icon: const Icon(
                                                   Icons.remove_circle,
-                                                  color: Colors.red,
+                                                  color: kRedColor,
                                                 ),
                                                 onPressed: () {
                                                   _removeService(serviceName);
@@ -199,10 +210,15 @@ class BookingScreenState extends State<BookingScreen> {
                               )
                             : const Text(
                                 'No services selected.',
-                                style: TextStyle(color: Colors.grey),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      Colors.grey
+                                ),
                               );
                       },
                     ),
+
                     const SizedBox(height: kSpacing),
                     TextFormField(
                       controller: carTypeController,
@@ -210,31 +226,41 @@ class BookingScreenState extends State<BookingScreen> {
                         labelText: 'Type of Car & Year Model',
                         labelStyle: const TextStyle(
                           color: Color.fromARGB(255, 107, 105, 105),
+                          fontSize: 14,
                         ),
                         hintText: 'e.g., Toyota Corolla 2020',
                         hintStyle: TextStyle(
                           color: const Color.fromARGB(255, 107, 105, 105)
-                              .withOpacity(0.7),
+                              .withOpacity(0.6),
                         ),
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 146, 176, 204),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
                           ),
                         ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: const BorderSide(
                             color: Color.fromARGB(255, 146, 176, 204),
                             width: 2.0,
                           ),
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 146, 176, 204),
+                            color: Colors.grey.shade300,
+                            width: 1.5,
                           ),
                         ),
                       ),
                       style: const TextStyle(
                         color: Colors.black,
+                        fontSize: 16,
                       ),
                       cursorColor: const Color.fromARGB(255, 146, 176, 204),
                       onChanged: (value) {
@@ -283,30 +309,50 @@ class BookingScreenState extends State<BookingScreen> {
                       itemBuilder: (context, index) {
                         final slot = timeSlots[index];
                         final isSelected = selectedTimeSlot == slot;
-                        return ElevatedButton(
-                          onPressed: () {
+                        return GestureDetector(
+                          onTap: () {
                             setState(() {
                               selectedTimeSlot = slot;
                               errorMessage = null;
                             });
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                isSelected ? kMainColor : Colors.grey[200],
-                            foregroundColor:
-                                isSelected ? Colors.white : Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              side: isSelected
-                                  ? const BorderSide(
-                                      color: kMainColor, width: 2)
-                                  : const BorderSide(
-                                      color: Colors.grey, width: 1),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isSelected ? kMainColor : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12.0),
+                              boxShadow: isSelected
+                                  ? [
+                                      BoxShadow(
+                                        color: kMainColor.withOpacity(0.4),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ]
+                                  : [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                              border: isSelected
+                                  ? Border.all(color: kMainColor, width: 2)
+                                  : Border.all(
+                                      color: Colors.grey.shade300, width: 1),
                             ),
-                          ),
-                          child: Text(
-                            slot,
-                            textAlign: TextAlign.center,
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              slot,
+                              style: TextStyle(
+                                color:
+                                    isSelected ? Colors.white : Colors.black87,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
                         );
                       },
@@ -382,15 +428,27 @@ class BookingScreenState extends State<BookingScreen> {
                         context.read<BookingBloc>().add(CreateBooking(booking));
                       },
                       style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: kMainColor,
-                          side: const BorderSide(color: kMainColor),
-                          minimumSize: const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12))),
+                        foregroundColor: Colors.white,
+                        backgroundColor: kMainColor,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 2,
+                        shadowColor: kMainColor.withOpacity(0.3),
+                        side: BorderSide(
+                          color: kMainColor.withOpacity(0.7),
+                          width: 1.5,
+                        ),
+                      ),
                       child: const Text(
                         'BOOK NOW',
                         semanticsLabel: 'Book your selected services now',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                     ),
                   ],
