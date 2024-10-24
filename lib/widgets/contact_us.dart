@@ -1,3 +1,4 @@
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,13 +21,13 @@ class ContactFormContainer extends StatelessWidget {
         if (state is ContactSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Message sent successfully!'),
-            backgroundColor: Colors.green,
+            backgroundColor: kGreenColor,
           ));
           messageController.clear();
         } else if (state is ContactFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Failed to send message: ${state.errorMessage}'),
-            backgroundColor: Colors.red,
+            backgroundColor: kRedColor,
           ));
         }
       },
@@ -110,7 +111,7 @@ class ContactFormContainer extends StatelessWidget {
                     ));
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF93C2D5),
+                    backgroundColor: kMainColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -122,7 +123,7 @@ class ContactFormContainer extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                      fontSize: 17,
                     ),
                   ),
                 ),
