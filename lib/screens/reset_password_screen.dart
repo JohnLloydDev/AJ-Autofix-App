@@ -179,17 +179,17 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
           backgroundColor: kMainColor,
           padding: const EdgeInsets.symmetric(vertical: 14.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0), // Softer corners
+            borderRadius: BorderRadius.circular(16.0),
           ),
-          elevation: 4, // Soft shadow for iPhone-like depth effect
-          shadowColor: Colors.black.withOpacity(0.2), // Subtle shadow color
+          elevation: 4,
+          shadowColor: Colors.black.withOpacity(0.2),
         ),
         child: const Text(
           'Reset Password',
           style: TextStyle(
             fontSize: 18.0,
             color: Colors.white,
-            fontWeight: FontWeight.bold, // Slightly bolder text
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
