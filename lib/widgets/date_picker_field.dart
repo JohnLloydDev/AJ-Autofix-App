@@ -1,3 +1,4 @@
+import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -36,11 +37,10 @@ class DatePickerFieldState extends State<DatePickerField> {
     super.dispose();
   }
 
-  // Function to scroll to today's date at the start of the scrollable view
   void _scrollToToday() {
     DateTime today = DateTime.now();
     int daysDifference = today.difference(_startOfMonth).inDays;
-    double scrollPosition = daysDifference * 68.0; // Approximate width of each date tile
+    double scrollPosition = daysDifference * 68.0;
     _scrollController.animateTo(
       scrollPosition,
       duration: const Duration(milliseconds: 300),
@@ -67,13 +67,13 @@ class DatePickerFieldState extends State<DatePickerField> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Color.fromARGB(255, 110, 136, 161),
+              primary: kMainColor,
               onPrimary: Colors.white,
               onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: const Color.fromARGB(255, 110, 136, 161),
+                foregroundColor: kMainColor,
               ),
             ),
           ),
@@ -86,7 +86,7 @@ class DatePickerFieldState extends State<DatePickerField> {
       setState(() {
         _startOfMonth = _getStartOfMonth(picked);
       });
-      _scrollToToday();  // Ensure that the list scrolls to today or the selected date
+      _scrollToToday();
     }
   }
 
@@ -117,13 +117,16 @@ class DatePickerFieldState extends State<DatePickerField> {
                   style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
             IconButton(
-              icon: const Icon(Icons.calendar_today,
-                  color: Color.fromARGB(255, 110, 136, 161)),
+              icon: const Icon(
+                Icons.calendar_today,
+                color: kMainColor,
+              ),
               onPressed: () {
                 _showFullCalendar(context);
               },
@@ -134,9 +137,16 @@ class DatePickerFieldState extends State<DatePickerField> {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(12.0),
             border: Border.all(color: Colors.grey.shade300),
-            color: Colors.grey.shade200,
+            color: Colors.grey.shade100,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           height: 100,
           child: ListView.builder(
@@ -166,9 +176,9 @@ class DatePickerFieldState extends State<DatePickerField> {
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? const Color.fromARGB(255, 110, 136, 161)
+                        ? kMainColor
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
