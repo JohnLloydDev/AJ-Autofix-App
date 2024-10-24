@@ -44,8 +44,8 @@ class ContactFormContainer extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),  
-                spreadRadius: 4, 
-                blurRadius: 15,  
+                spreadRadius: 6, 
+                blurRadius: 18,  
                 offset: const Offset(0, 8), 
               ),
             ],

@@ -16,7 +16,7 @@ class ContactUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[100], 
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: kAppBar,
@@ -41,7 +41,7 @@ class ContactUsScreen extends StatelessWidget {
           },
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0, 
+        elevation: 0,
       ),
       body: BlocProvider(
         create: (context) => ContactBloc(ContactRepositoryImpl()),
@@ -71,28 +71,28 @@ class ContactInfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.phone_android, color: kBlueColor, size: 30), 
+            Icon(Icons.phone_android, color: kdarkColor, size: 30),
             SizedBox(width: 8),
             Text(
               '+639499729777',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
-                fontWeight: FontWeight.w500, 
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
         const SizedBox(height: 15),
         const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.email, color: kBlueColor, size: 30),
+            Icon(Icons.email, color: kdarkColor, size: 30),
             SizedBox(width: 8),
             Text(
               'ajautofix123@gmail.com',
@@ -106,9 +106,9 @@ class ContactInfoContainer extends StatelessWidget {
         ),
         const SizedBox(height: 15),
         const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.location_on, color: kBlueColor, size: 30),
+            Icon(Icons.location_on, color: kdarkColor, size: 30),
             SizedBox(width: 8),
             Text(
               'Bantayan, Mangaldan, Pangasinan Road',

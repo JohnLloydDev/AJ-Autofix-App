@@ -196,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         endDrawer: Drawer(
+          backgroundColor: Colors.grey[100],
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
@@ -537,35 +538,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isSelected
-                ? [
-                    const Color.fromARGB(255, 125, 151, 181),
-                    const Color(0xFF84C6E4),
-                  ]
-                : [
-                    const Color(0xFFF5F5F5),
-                    const Color(0xFFE0E0E0),
-                  ],
-          ),
-          borderRadius:
-              BorderRadius.circular(20.0),
+          color: isSelected ? kColor : Colors.white,
+          borderRadius: BorderRadius.circular(25.0),
         ),
         child: TextButton(
           style: TextButton.styleFrom(
             foregroundColor: isSelected ? Colors.white : Colors.black87,
-            padding: const EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 15.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  20.0),
+              borderRadius: BorderRadius.circular(25.0),
             ),
           ),
           onPressed: () {
@@ -576,9 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: isSelected
-                  ? Colors.white
-                  : Colors.black54,
+              color: isSelected ? Colors.white : Colors.black87,
             ),
           ),
         ),
