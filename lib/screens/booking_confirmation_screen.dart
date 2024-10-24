@@ -84,12 +84,12 @@ class BookingConfirmationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               Card(
-                color: Colors.white, // Set card background color to white
+                color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
-                elevation: 8, // Increased elevation for a floating effect
-                shadowColor: Colors.black.withOpacity(0.2), // Shadow color
+                elevation: 8,
+                shadowColor: Colors.black.withOpacity(0.2),
                 child: Padding(
                   padding: const EdgeInsets.all(kPadding),
                   child: Column(
@@ -167,7 +167,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kMainColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0), // Rounded button
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
                     elevation: 5,
                   ),
