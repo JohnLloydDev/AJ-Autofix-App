@@ -58,6 +58,7 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,

@@ -31,6 +31,7 @@ class NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: Container(

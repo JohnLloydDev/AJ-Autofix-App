@@ -35,6 +35,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: kAppBar,
