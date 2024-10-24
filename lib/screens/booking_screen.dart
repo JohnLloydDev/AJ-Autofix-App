@@ -161,7 +161,11 @@ class BookingScreenState extends State<BookingScreen> {
                                         color: Colors.white,
                                         elevation: 2,
                                         shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
                                         ),
+                                        shadowColor:
+                                            Colors.grey.withOpacity(0.2),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 16.0),
@@ -197,6 +201,8 @@ class BookingScreenState extends State<BookingScreen> {
                               )
                             : const Text(
                                 'No services selected.',
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
                               );
                       },
                     ),

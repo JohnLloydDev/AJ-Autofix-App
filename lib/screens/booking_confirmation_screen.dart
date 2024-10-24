@@ -29,13 +29,15 @@ class BookingConfirmationScreen extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: kAppBar,
         ),
         automaticallyImplyLeading: false,
-        title: const Text('Booking Confirmed',style: TextStyle(
+        title: const Text(
+          'Booking Confirmed',
+          style: TextStyle(
             color: Colors.black,
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -82,10 +84,12 @@ class BookingConfirmationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               Card(
+                color: Colors.white, // Set card background color to white
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
+                  borderRadius: BorderRadius.circular(16.0), // Rounded corners
                 ),
-                elevation: 4,
+                elevation: 8, // Increased elevation for a floating effect
+                shadowColor: Colors.black.withOpacity(0.2), // Shadow color
                 child: Padding(
                   padding: const EdgeInsets.all(kPadding),
                   child: Column(
@@ -162,7 +166,9 @@ class BookingConfirmationScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kMainColor,
-                    shape: kButtonShape,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0), // Rounded button
+                    ),
                     elevation: 5,
                   ),
                   child: const Text(
