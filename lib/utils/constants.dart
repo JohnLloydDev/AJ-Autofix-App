@@ -10,7 +10,9 @@ const double kSpacing = 16.0;
 const Color kPrimaryColor = Colors.lightBlue;
 const Color kAccentColor = Colors.white;
 const Color kMainColor = Color(0xFF6E88A1);
+const Color kRedColor = Color.fromARGB(255, 255, 0, 34);
 const Color kColor = Color.fromARGB(255, 110, 136, 161);
+const Color kGreenColor = Color.fromRGBO(76, 175, 80, 1);
 
 const BorderRadius kBorderRadius = BorderRadius.all(Radius.circular(8.0));
 
