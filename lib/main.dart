@@ -27,8 +27,7 @@ void main() {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(AuthRepositoryImpl()),
-        ),
-       
+        ),    
         BlocProvider(
           create: (context) => UserBloc(AdminRepositoryImpl())..add(GetUsers()),
         ),

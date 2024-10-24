@@ -37,16 +37,16 @@ class ContactFormContainer extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                spreadRadius: 2,
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+                color: Colors.black.withOpacity(0.1),  
+                spreadRadius: 4, 
+                blurRadius: 15,  
+                offset: const Offset(0, 8), 
               ),
             ],
           ),
@@ -58,7 +58,7 @@ class ContactFormContainer extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: kBlackColor,
                 ),
               ),
               const SizedBox(height: 8),
@@ -66,7 +66,7 @@ class ContactFormContainer extends StatelessWidget {
                 'We will get back to you as soon as possible.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: kBlackColor,
                 ),
               ),
               const SizedBox(height: 16),
@@ -75,11 +75,11 @@ class ContactFormContainer extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Message',
                   labelStyle: const TextStyle(
-                    color: Colors.black54,
+                    color: kBlackColor,
                     fontWeight: FontWeight.w500,
                   ),
                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                   filled: true,
                   fillColor: Colors.grey.shade100,
                   border: OutlineInputBorder(
@@ -105,8 +105,8 @@ class ContactFormContainer extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     context.read<ContactBloc>().add(SendContactEvent(
-                      name: 'dummyName', 
-                      email: 'dummyEmail@gmail.com',
+                      name: 'dummyName',
+                      email: 'dummyEmail@gmail.com', 
                       message: messageController.text,
                     ));
                   },

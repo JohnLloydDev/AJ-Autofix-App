@@ -13,6 +13,8 @@ const Color kMainColor = Color(0xFF6E88A1);
 const Color kRedColor = Color.fromARGB(255, 255, 0, 34);
 const Color kColor = Color.fromARGB(255, 110, 136, 161);
 const Color kGreenColor = Color.fromRGBO(76, 175, 80, 1);
+const Color kBlackColor = Color(0xFF000000);
+const Color kBlueColor = Color.fromRGBO(0, 122, 255, 1);
 
 const BorderRadius kBorderRadius = BorderRadius.all(Radius.circular(8.0));
 

@@ -1,6 +1,7 @@
 import 'package:aj_autofix/bloc/contact/contact_bloc.dart';
 import 'package:aj_autofix/repositories/contact_repository_impl.dart';
 import 'package:aj_autofix/utils/constants.dart';
+
 import 'package:aj_autofix/widgets/contact_us.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,7 @@ class ContactUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[100], 
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: kAppBar,
@@ -23,7 +24,7 @@ class ContactUsScreen extends StatelessWidget {
         title: const Text(
           'Contact Us',
           style: TextStyle(
-            color: Colors.black,
+            color: kBlackColor,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -32,15 +33,15 @@ class ContactUsScreen extends StatelessWidget {
         leading: IconButton(
           icon: const FaIcon(
             FontAwesomeIcons.angleLeft,
-            color: Colors.black,
+            color: kBlackColor,
             size: 24,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Colors.transparent,
+        elevation: 0, 
       ),
       body: BlocProvider(
         create: (context) => ContactBloc(ContactRepositoryImpl()),
@@ -53,8 +54,7 @@ class ContactUsScreen extends StatelessWidget {
                 const ContactInfoContainer(),
                 const SizedBox(height: 24),
                 ContactFormContainer(
-                  messageController:
-                      messageController,
+                  messageController: messageController,
                 ),
               ],
             ),
@@ -76,51 +76,51 @@ class ContactInfoContainer extends StatelessWidget {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.phone_android, color: Colors.red, size: 30),
+            Icon(Icons.phone_android, color: kBlueColor, size: 30), 
             SizedBox(width: 8),
             Text(
               '+639499729777',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
+                fontWeight: FontWeight.w500, 
               ),
             ),
           ],
         ),
         const SizedBox(height: 15),
-
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.email, color: Colors.red, size: 30),
+            Icon(Icons.email, color: kBlueColor, size: 30),
             SizedBox(width: 8),
             Text(
               'ajautofix123@gmail.com',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
         const SizedBox(height: 15),
-
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.location_on, color: Colors.red, size: 30),
+            Icon(Icons.location_on, color: kBlueColor, size: 30),
             SizedBox(width: 8),
             Text(
               'Bantayan, Mangaldan, Pangasinan Road',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 15),
-
+        const SizedBox(height: 20),
         Center(
           child: Image.asset(
             'assets/email.png',
