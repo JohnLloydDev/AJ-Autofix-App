@@ -9,6 +9,7 @@ class TaskCard extends StatelessWidget {
   final String status;
   final Color statusColor;
   final VoidCallback? onReviewPressed;
+  final VoidCallback? onCancelPressed; 
 
   TaskCard({
     super.key,
@@ -17,6 +18,7 @@ class TaskCard extends StatelessWidget {
     required this.statusColor,
     required this.subtitle,
     this.onReviewPressed,
+    this.onCancelPressed, 
     required this.date,
     required this.time,
     required this.carname,
@@ -252,6 +254,27 @@ class TaskCard extends StatelessWidget {
                       'Review',
                       style: TextStyle(
                         color: Color.fromARGB(255, 146, 176, 204),
+                      ),
+                    ),
+                  ),
+                if (status == 'Pending')
+                  ElevatedButton(
+                    onPressed: onReviewPressed,
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(
+                          color: Color.fromARGB(255, 255, 0, 0)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        vertical: 8.0,
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 0, 0),
                       ),
                     ),
                   ),
