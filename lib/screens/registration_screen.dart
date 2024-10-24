@@ -95,6 +95,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget _buildCardView(BuildContext context) {
     return Center(
       child: Card(
+        color: Colors.grey[100],
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

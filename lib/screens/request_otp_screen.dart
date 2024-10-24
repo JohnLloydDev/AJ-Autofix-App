@@ -21,9 +21,10 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: kAppBarGradient,
+          decoration: kAppBar,
         ),
         title: const Text(
           'Forgot Password',
@@ -89,7 +90,9 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                     style: TextStyle(color: Colors.grey, fontSize: 16.0),
                   ),
                   const SizedBox(height: 24.0),
-                  SizedBox(width: 330,height: 50,
+                  SizedBox(
+                    width: 330,
+                    height: 50,
                     child: TextField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -122,39 +125,42 @@ class RequestOtpScreenState extends State<RequestOtpScreen> {
                       ),
                     ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      String email = emailController.text.trim();
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        String email = emailController.text.trim();
 
-                      if (email.isNotEmpty) {
-                        setState(() {
-                          errorMessage = null;
-                        });
+                        if (email.isNotEmpty) {
+                          setState(() {
+                            errorMessage = null;
+                          });
 
-                        BlocProvider.of<AuthBloc>(context)
-                            .add(RequestOtp(email));
-                      } else {
-                        setState(() {
-                          errorMessage = 'Please enter your email';
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kMainColor,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 127.0, vertical: 12.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(RequestOtp(email));
+                        } else {
+                          setState(() {
+                            errorMessage = 'Please enter your email';
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kMainColor,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20),
+                        ),
+                        elevation: 5,
                       ),
-                    ),
-
-                    child: Text(
-                      'Request OTP',
-
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width *
-                            0.03, 
-                        color: Colors.white,
+                      child: const Text(
+                        'Request OTP',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                        ),
                       ),
                     ),
                   ),

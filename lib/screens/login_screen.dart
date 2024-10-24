@@ -87,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: screenWidth * 0.9,
                         child: SingleChildScrollView(
                           child: Card(
+                            color: Colors.grey[100],
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

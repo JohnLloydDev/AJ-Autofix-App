@@ -5,6 +5,7 @@ import 'package:aj_autofix/screens/login_screen.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
@@ -24,12 +25,30 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: kAppBarGradient,
+          decoration: kAppBar,
         ),
-        title: const Text('OTP Verification'),
-        
+        title: const Text(
+          'OTP Verification',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.angleLeft,
+            color: Colors.black,
+            size: 25,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -158,11 +177,21 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: kMainColor,
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          shape: kButtonShape,
+          padding: const EdgeInsets.symmetric(vertical: 14.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0), // Softer corners
+          ),
+          elevation: 4, // Soft shadow for iPhone-like depth effect
+          shadowColor: Colors.black.withOpacity(0.2), // Subtle shadow color
         ),
-        child: const Text('Reset Password',
-            style: TextStyle(fontSize: 16.0, color: Colors.white)),
+        child: const Text(
+          'Reset Password',
+          style: TextStyle(
+            fontSize: 18.0,
+            color: Colors.white,
+            fontWeight: FontWeight.bold, // Slightly bolder text
+          ),
+        ),
       ),
     );
   }
