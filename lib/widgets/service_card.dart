@@ -53,8 +53,8 @@ class ServiceCardState extends State<ServiceCard> with SingleTickerProviderState
             builder: (context, constraints) {
               double width = constraints.maxWidth;
 
-              double imageHeight = width * 0.3;
-              double imageWidth = width * 0.50;
+              double imageHeight = width * 0.29;
+              double imageWidth = width * 0.45;
               double fontSize = width * 0.07;
               double buttonSize = width * 0.12;
 
@@ -81,15 +81,30 @@ class ServiceCardState extends State<ServiceCard> with SingleTickerProviderState
                           ),
                         ),
                       const SizedBox(height: 12),
-                      FittedBox(
-                        child: Text(
-                          widget.serviceName,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
+                      
+                      Text(
+                        widget.serviceName.replaceAllMapped(
+                          RegExp(r'(Power Window Motor Installation|Powerlock Set Installation|Fuel Injector Cleaning Service|Alternator Repair Service)'),
+                          (match) {
+                            switch (match.group(0)) {
+                              case 'Power Window Motor Installation':
+                                return 'Power Window Motor\nInstallation';
+                              case 'Powerlock Set Installation':
+                                return 'Powerlock Set\nInstallation';
+                              case 'Fuel Injector Cleaning Service':
+                                return 'Fuel Injector\nCleaning Service';
+                              case 'Alternator Repair Service':
+                                return 'Alternator Repair\nService';
+                              default:
+                                return match.group(0)!;
+                            }
+                          },
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 8),

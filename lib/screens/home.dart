@@ -49,50 +49,118 @@ class _HomeScreenState extends State<HomeScreen> {
   late Timer _timer;
 
   List<Map<String, String>> services = [
-    {'name': 'Power Window Motor', 'price': 'PHP 1,500', 'category': 'window'},
-    {'name': 'Power Window Cable', 'price': 'PHP 900', 'category': 'window'},
-    {'name': 'Powerlock 1pc', 'price': 'PHP 500', 'category': 'window'},
-    {'name': 'Powerlock Set', 'price': 'PHP 2,000', 'category': 'window'},
-    {'name': 'Door Lock', 'price': 'PHP 550', 'category': 'door'},
-    {'name': 'Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
-    {'name': 'Door Lock Repair', 'price': 'PHP 400', 'category': 'door'},
-    {'name': 'Handle Repair', 'price': 'PHP 500', 'category': 'door'},
-    {'name': 'Coolant Flush', 'price': 'PHP 1,200', 'category': 'engine'},
-    {'name': 'Engine Change Oil', 'price': 'PHP 1,000', 'category': 'engine'},
-    {'name': 'Spark Plug', 'price': 'PHP 800', 'category': 'engine'},
-    {'name': 'Air Filter', 'price': 'PHP 600', 'category': 'engine'},
     {
-      'name': 'Fuel Injector Cleaning',
+      'name': 'Power Window Motor Installation',
+      'price': 'PHP 1,500',
+      'category': 'window'
+    },
+    {
+      'name': 'Power Window Cable Replacement',
+      'price': 'PHP 900',
+      'category': 'window'
+    },
+    {
+      'name': 'Powerlock (1pc) Installation',
+      'price': 'PHP 500',
+      'category': 'window'
+    },
+    {
+      'name': 'Powerlock Set Installation',
+      'price': 'PHP 2,000',
+      'category': 'window'
+    },
+    {'name': 'Door Lock Replacement', 'price': 'PHP 550', 'category': 'door'},
+    {'name': 'Door Handle Replacement', 'price': 'PHP 700', 'category': 'door'},
+    {
+      'name': 'Door Lock Repair Service',
+      'price': 'PHP 400',
+      'category': 'door'
+    },
+    {
+      'name': 'Door Handle Repair Service',
+      'price': 'PHP 500',
+      'category': 'door'
+    },
+    {
+      'name': 'Coolant Flush Service',
+      'price': 'PHP 1,200',
+      'category': 'engine'
+    },
+    {
+      'name': 'Engine Change Oil Service',
+      'price': 'PHP 1,000',
+      'category': 'engine'
+    },
+    {
+      'name': 'Spark Plug Replacement',
+      'price': 'PHP 800',
+      'category': 'engine'
+    },
+    {
+      'name': 'Air Filter Replacement',
+      'price': 'PHP 600',
+      'category': 'engine'
+    },
+    {
+      'name': 'Fuel Injector Cleaning Service',
       'price': 'PHP 2,200',
       'category': 'engine'
     },
-    {'name': 'Timing Belt', 'price': 'PHP 4,500', 'category': 'engine'},
-    {'name': 'Tire Replacement', 'price': 'PHP 3,500', 'category': 'wheel'},
-    {'name': 'Wheel Alignment', 'price': 'PHP 1,200', 'category': 'wheel'},
-    {'name': 'Brake Pad Set', 'price': 'PHP 1,800', 'category': 'wheel'},
-    {'name': 'Brake Fluid', 'price': 'PHP 600', 'category': 'wheel'},
     {
-      'name': 'Alternator Repair',
+      'name': 'Timing Belt Replacement',
+      'price': 'PHP 4,500',
+      'category': 'engine'
+    },
+    {
+      'name': 'Tire Replacement Service',
+      'price': 'PHP 3,500',
+      'category': 'wheel'
+    },
+    {
+      'name': 'Wheel Alignment Service',
+      'price': 'PHP 1,200',
+      'category': 'wheel'
+    },
+    {
+      'name': 'Brake Pad Set Replacement',
+      'price': 'PHP 1,800',
+      'category': 'wheel'
+    },
+    {
+      'name': 'Brake Fluid Replacement',
+      'price': 'PHP 600',
+      'category': 'wheel'
+    },
+    {
+      'name': 'Alternator Repair Service',
       'price': 'PHP 3,500',
       'category': 'electrical'
     },
-    {'name': 'Fuse Replacement', 'price': 'PHP 300', 'category': 'electrical'},
     {
-      'name': 'Car Alarm',
+      'name': 'Fuse Replacement Service',
+      'price': 'PHP 300',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Car Alarm Installation',
       'price': 'PHP 1,500 - 1,800',
       'category': 'electrical'
     },
     {
-      'name': 'Battery Replacement',
+      'name': 'Battery Replacement Service',
       'price': 'PHP 4,000',
       'category': 'electrical'
     },
-    {'name': 'HeadLight Bulb', 'price': 'PHP 500', 'category': 'electrical'},
     {
-      'name': 'Power Window Switch',
+      'name': 'Headlight Bulb Replacement',
+      'price': 'PHP 500',
+      'category': 'electrical'
+    },
+    {
+      'name': 'Power Window Switch Replacement',
       'price': 'PHP 1,000',
       'category': 'electrical'
-    }
+    },
   ];
 
   List<Map<String, String>> _filteredServices = [];
@@ -437,74 +505,74 @@ class _HomeScreenState extends State<HomeScreen> {
                         String? imagePath;
 
                         switch (serviceName) {
-                          case 'Power Window Motor':
+                          case 'Power Window Motor Installation':
                             imagePath = 'assets/motor.png';
                             break;
-                          case 'Power Window Cable':
+                          case 'Power Window Cable Replacement':
                             imagePath = 'assets/cable.png';
                             break;
-                          case 'Powerlock 1pc':
+                          case 'Powerlock (1pc) Installation':
                             imagePath = 'assets/power_lock_1pc.jpg';
                             break;
-                          case 'Powerlock Set':
+                          case 'Powerlock Set Installation':
                             imagePath = 'assets/power_lock_set.png';
                             break;
-                          case 'Door Lock':
+                          case 'Door Lock Replacement':
                             imagePath = 'assets/door_lock.png';
                             break;
-                          case 'Handle Replacement':
-                          case 'Handle Repair':
+                          case 'Door Handle Replacement':
+                          case 'Door Handle Repair Service':
                             imagePath = 'assets/door_handle.png';
                             break;
-                          case 'Door Lock Repair':
+                          case 'Door Lock Repair Service':
                             imagePath = 'assets/door_lock.png';
                             break;
-                          case 'Coolant Flush':
+                          case 'Coolant Flush Service':
                             imagePath = 'assets/coolant_flush.png';
                             break;
-                          case 'Engine Change Oil':
+                          case 'Engine Change Oil Service':
                             imagePath = 'assets/change_oil.png';
                             break;
-                          case 'Spark Plug':
+                          case 'Spark Plug Replacement':
                             imagePath = 'assets/spark_plug.png';
                             break;
-                          case 'Air Filter':
-                            imagePath = 'assets/air_flilter.png';
+                          case 'Air Filter Replacement':
+                            imagePath = 'assets/air_filter.png';
                             break;
-                          case 'Fuel Injector Cleaning':
+                          case 'Fuel Injector Cleaning Service':
                             imagePath = 'assets/fuel_injector.png';
                             break;
-                          case 'Timing Belt':
+                          case 'Timing Belt Replacement':
                             imagePath = 'assets/timing_belt.png';
                             break;
-                          case 'Tire Replacement':
+                          case 'Tire Replacement Service':
                             imagePath = 'assets/tire.png';
                             break;
-                          case 'Wheel Alignment':
+                          case 'Wheel Alignment Service':
                             imagePath = 'assets/wheel_alignment.png';
                             break;
-                          case 'Brake Pad Set':
+                          case 'Brake Pad Set Replacement':
                             imagePath = 'assets/brake_pads.png';
                             break;
-                          case 'Brake Fluid':
+                          case 'Brake Fluid Replacement':
                             imagePath = 'assets/brake_fluid.png';
                             break;
-                          case 'Alternator Repair':
+                          case 'Alternator Repair Service':
                             imagePath = 'assets/alternator.png';
                             break;
-                          case 'Fuse Replacement':
+                          case 'Fuse Replacement Service':
                             imagePath = 'assets/fuse.png';
                             break;
-                          case 'Car Alarm':
+                          case 'Car Alarm Installation':
                             imagePath = 'assets/car_alarm.png';
                             break;
-                          case 'Battery Replacement':
+                          case 'Battery Replacement Service':
                             imagePath = 'assets/car_battery.png';
                             break;
-                          case 'HeadLight Bulb':
+                          case 'Headlight Bulb Replacement':
                             imagePath = 'assets/headlight_bulb.png';
                             break;
-                          case 'Power Window Switch':
+                          case 'Power Window Switch Replacement':
                             imagePath = 'assets/power_window_switch.png';
                             break;
                           default:
