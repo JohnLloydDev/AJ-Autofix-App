@@ -142,8 +142,6 @@ class BookingScreenState extends State<BookingScreen> {
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(
-                        height: 8),
                     BlocBuilder<SelectedServicesBloc, SelectedServicesState>(
                       builder: (context, selectedServicesState) {
                         return selectedServicesState.selectedServices.isNotEmpty
@@ -159,18 +157,11 @@ class BookingScreenState extends State<BookingScreen> {
                                     padding:
                                         const EdgeInsets.only(bottom: 10.0),
                                     child: SizedBox(
-                                      width: double.infinity, 
-                                      height:
-                                          50,
                                       child: Card(
-                                        elevation:
-                                            2,
+                                        color: Colors.white,
+                                        elevation: 2,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              16.0),
                                         ),
-                                        shadowColor: Colors.grey
-                                            .withOpacity(0.2),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 16.0),
@@ -183,10 +174,6 @@ class BookingScreenState extends State<BookingScreen> {
                                                   serviceName,
                                                   style: const TextStyle(
                                                     fontSize: 16,
-                                                    fontWeight: FontWeight
-                                                        .w600,
-                                                    color: Colors
-                                                        .black87,
                                                   ),
                                                 ),
                                               ),
@@ -210,15 +197,9 @@ class BookingScreenState extends State<BookingScreen> {
                               )
                             : const Text(
                                 'No services selected.',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color:
-                                      Colors.grey
-                                ),
                               );
                       },
                     ),
-
                     const SizedBox(height: kSpacing),
                     TextFormField(
                       controller: carTypeController,

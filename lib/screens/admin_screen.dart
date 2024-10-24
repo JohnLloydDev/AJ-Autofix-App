@@ -42,7 +42,6 @@ class AdminScreenState extends State<AdminScreen> {
 
     if (index == 2) {
       context.read<BookingBloc>().add(MarkBookingsAsViewed());
-
     }
 
     setState(() {
@@ -129,6 +128,7 @@ class AdminScreenState extends State<AdminScreen> {
               ),
             ],
             onTap: _onBottomNavTapped,
+            backgroundColor: Colors.white,
           );
         },
       ),

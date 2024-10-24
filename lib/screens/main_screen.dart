@@ -34,7 +34,6 @@ class MainScreenState extends State<MainScreen> {
   }
 
   void _onBottomNavTapped(int index) {
-
     if (index == 2) {
       context.read<BookingBloc>().add(MarkUserBookingsAsViewed());
     }
@@ -142,6 +141,8 @@ class MainScreenState extends State<MainScreen> {
                     ),
                   ],
                   onTap: _onBottomNavTapped,
+                  backgroundColor:
+                      Colors.white,
                 );
               },
             );
