@@ -95,8 +95,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                         }
                       },
                       onCancelPressed: () {
-                           _showConfirmationDialog(context, booking); 
-
+                        _showConfirmationDialog(context, booking);
                       });
                 },
               ),
@@ -116,17 +115,17 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Pending':
-        return Colors.orange;
+        return kOrangeColor;
       case 'Approved':
-        return Colors.green;
+        return kGreenColor;
       case 'Rejected':
-        return Colors.red;
+        return kRedColor;
       case 'Canceled':
-        return kdarkColor;
+        return kRedColor;
       case 'Completed':
-        return Colors.blue;
+        return kBlueColor;
       default:
-        return Colors.grey;
+        return kGrayColor;
     }
   }
 
@@ -143,7 +142,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: const Text('No'),
             ),
@@ -348,7 +347,6 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           ),
         );
       },
-      
     );
   }
 }

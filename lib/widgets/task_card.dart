@@ -213,7 +213,7 @@ class TaskCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 if (status == 'Canceled')
+                if (status == 'Canceled')
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12.0, vertical: 6.0),
