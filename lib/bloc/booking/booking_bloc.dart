@@ -51,6 +51,18 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       }
     });
 
+    on<CancelBooking>((event, emit) async {
+      emit(BookingLoading());
+      try {
+        await bookingRepository.cancelBooking(event.bookingId);
+        final booking =
+            await bookingRepository.getUserBooking();
+        emit(BookingUserLoaded(booking));
+      } catch (e) {
+        emit(RequestError('Failed to cancel booking: $e'));
+      }
+    });
+
     on<CompletedBooking>((event, emit) async {
       emit(BookingLoading());
       try {

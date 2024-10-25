@@ -50,6 +50,15 @@ class CompletedBooking extends BookingEvent {
   List<Object> get props => [bookingId];
 }
 
+class CancelBooking extends BookingEvent {
+  final String bookingId;
+
+  const CancelBooking(this.bookingId);
+
+  @override
+  List<Object> get props => [bookingId];
+}
+
 class GetAllPendingBooking extends BookingEvent {}
 
 class GetAllAcceptedBooking extends BookingEvent {}

@@ -1,6 +1,7 @@
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:aj_autofix/bloc/booking/booking_state.dart';
+import 'package:aj_autofix/models/booking_model.dart';
 import 'package:aj_autofix/models/review_model.dart';
 import 'package:aj_autofix/utils/constants.dart';
 import 'package:aj_autofix/utils/custom_loading.dart';
@@ -81,19 +82,22 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                 itemBuilder: (context, index) {
                   final booking = bookings.reversed.toList()[index];
                   return TaskCard(
-                    title: booking.user?.fullname ?? 'Unknown User',
-                    subtitle: booking.serviceType.join(', '),
-                    status: booking.status,
-                    date: DateFormat('MM/dd/yyyy').format(booking.date),
-                    time: booking.time.toString(),
-                    carname: booking.vehicleType,
-                    statusColor: _getStatusColor(booking.status),
-                    onReviewPressed: () {
-                      if (booking.status == 'Completed') {
-                        _showAddReviewDialog(context);
-                      }
-                    },
-                  );
+                      title: booking.user?.fullname ?? 'Unknown User',
+                      subtitle: booking.serviceType.join(', '),
+                      status: booking.status,
+                      date: DateFormat('MM/dd/yyyy').format(booking.date),
+                      time: booking.time.toString(),
+                      carname: booking.vehicleType,
+                      statusColor: _getStatusColor(booking.status),
+                      onReviewPressed: () {
+                        if (booking.status == 'Completed') {
+                          _showAddReviewDialog(context);
+                        }
+                      },
+                      onCancelPressed: () {
+                           _showConfirmationDialog(context, booking); 
+
+                      });
                 },
               ),
             );
@@ -117,11 +121,44 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
         return Colors.green;
       case 'Rejected':
         return Colors.red;
+      case 'Canceled':
+        return kdarkColor;
       case 'Completed':
         return Colors.blue;
       default:
         return Colors.grey;
     }
+  }
+
+  void _showConfirmationDialog(BuildContext context, Booking booking) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          title: const Text('Cancel Review'),
+          content: const Text('Are you sure you want to cancel?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                final bloc = BlocProvider.of<BookingBloc>(context);
+                bloc.add(CancelBooking(booking.id!));
+                Navigator.of(context).pop();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showAddReviewDialog(BuildContext context) {
@@ -311,6 +348,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
           ),
         );
       },
+      
     );
   }
 }

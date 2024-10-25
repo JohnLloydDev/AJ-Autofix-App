@@ -154,7 +154,7 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            if (status != 'Rejected') ...[
+            if (status != 'Rejected'  && status != 'Canceled') ...[
               Column(
                 children: [
                   Row(
@@ -213,6 +213,29 @@ class TaskCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                 if (status == 'Canceled')
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 6.0),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8.0,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      status,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 if (status == 'Rejected')
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -261,7 +284,7 @@ class TaskCard extends StatelessWidget {
                   ),
                 if (status == 'Pending')
                   ElevatedButton(
-                    onPressed: onReviewPressed,
+                    onPressed: onCancelPressed,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       side: const BorderSide(
