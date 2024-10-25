@@ -144,7 +144,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                  'Cancel Review',
+                  'Cancel Booking',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w600,
@@ -153,7 +153,7 @@ class _UserPendingRequestState extends State<UserPendingRequest> {
                 ),
                 const SizedBox(height: 12.0),
                 const Text(
-                  'Are you sure you want to cancel?',
+                  'Are you sure you want to cancel this booking?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16.0,
