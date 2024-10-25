@@ -189,6 +189,7 @@ class ReviewScreenState extends State<ReviewScreen> {
         );
       },
     ).then((_) {
+      // ignore: use_build_context_synchronously
       context.read<ReviewBloc>().add(FetchReviews());
     });
   }
@@ -203,6 +204,7 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
