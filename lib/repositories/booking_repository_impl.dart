@@ -53,6 +53,28 @@ class BookingRepositoryImpl extends BookingRepository {
   }
 
   @override
+  Future<Booking> cancelBooking(String id) async {
+    final accessToken = await SecureStorage.readToken('access_token');
+
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+    final response = await http.put(
+      Uri.parse('${ApiConstants.baseUrl}/bookings/booking/$id/cancel'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return Booking.fromJson(json.decode(response.body)['booking']);
+    } else {
+      throw Exception('Failed to cancel booking');
+    }
+  }
+
+  @override
   Future<Booking> rejectBooking(String id) async {
     final accessToken = await SecureStorage.readToken('access_token');
 
