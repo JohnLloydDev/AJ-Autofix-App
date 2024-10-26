@@ -95,9 +95,21 @@ class ShopMapState extends State<ShopMap> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Location Services Disabled'),
-        content:
-            const Text('Please enable location services to use this feature.'),
+        backgroundColor: kWhiteColor, 
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        title: const Text(
+          'Location Services Disabled',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        content: const Text(
+          'Please enable location services to use this feature.',
+          style: TextStyle(fontSize: 16),
+        ),
         actions: [
           TextButton(
             onPressed: () async {
@@ -105,11 +117,22 @@ class ShopMapState extends State<ShopMap> {
               await Geolocator.openLocationSettings();
               _initLocationService();
             },
-            child: const Text('Enable'),
+            child: const Text(
+              'Enable',
+              style: TextStyle(
+                color: kBlueColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
           ),
         ],
       ),
@@ -354,10 +377,10 @@ class ShopMapState extends State<ShopMap> {
             right: 20,
             child: FloatingActionButton(
               onPressed: _drawRouteToShop,
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Set the button color to black
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               child: const Icon(
                 Icons.directions,
-                color: Color.fromARGB(255, 0, 0, 0), // Set the icon color to white
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
           ),

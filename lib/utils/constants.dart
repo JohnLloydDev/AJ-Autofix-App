@@ -18,6 +18,7 @@ const Color kBlueColor = Color(0xFF007AFF);
 const Color kdarkColor = Color(0xFF001F3F);
 const Color kOrangeColor = Color(0xFFFF9800);
 const Color kGrayColor = Color(0xFF9E9E9E);
+const Color kWhiteColor = Colors.white;
 
 const BorderRadius kBorderRadius = BorderRadius.all(Radius.circular(8.0));
 
