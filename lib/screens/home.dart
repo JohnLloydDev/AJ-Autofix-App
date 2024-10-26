@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:aj_autofix/bloc/booking/booking_bloc.dart';
 import 'package:aj_autofix/bloc/booking/booking_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
 import 'package:aj_autofix/bloc/service/selected_services_event.dart';
@@ -448,6 +449,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: TextField(
                   controller: _searchController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(
+                        r'[a-zA-Z0-9() ]')),
+                  ],
                   decoration: InputDecoration(
                     prefixIcon: const Icon(
                       Icons.search,
