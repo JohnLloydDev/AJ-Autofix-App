@@ -3,6 +3,7 @@ import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/booking_confirmation_arguments.dart';
 import 'package:aj_autofix/utils/custom_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:aj_autofix/bloc/service/selected_services_bloc.dart';
@@ -125,7 +126,6 @@ class BookingScreenState extends State<BookingScreen> {
               }
 
               final authState = context.watch<UserBloc>().state;
-
               if (authState is UserDataLoadedByAuth) {
                 user = authState.user;
               }
@@ -255,6 +255,21 @@ class BookingScreenState extends State<BookingScreen> {
                           carType = value;
                         });
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(50),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9() ]')),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${carTypeController.text.length}/50 characters',
+                      style: TextStyle(
+                        color: carTypeController.text.length >= 50
+                            ? Colors.red
+                            : Colors.grey,
+                        fontSize: 12,
+                      ),
                     ),
                     const SizedBox(height: kSpacing),
                     DatePickerField(

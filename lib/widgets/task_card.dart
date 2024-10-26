@@ -11,6 +11,8 @@ class TaskCard extends StatelessWidget {
   final VoidCallback? onReviewPressed;
   final VoidCallback? onCancelPressed;
 
+  static const int carNameMaxLength = 30;
+
   TaskCard({
     super.key,
     required this.title,
@@ -77,11 +79,16 @@ class TaskCard extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-                Text(
-                  carname,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.black87,
+                Flexible(
+                  child: Text(
+                    carname.length > carNameMaxLength
+                        ? '${carname.substring(0, carNameMaxLength)}...'
+                        : carname,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ],
@@ -154,7 +161,7 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            if (status != 'Rejected'  && status != 'Canceled') ...[
+            if (status != 'Rejected' && status != 'Canceled') ...[
               Column(
                 children: [
                   Row(
