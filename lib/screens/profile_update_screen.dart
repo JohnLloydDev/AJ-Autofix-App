@@ -8,6 +8,7 @@ import 'package:aj_autofix/bloc/user/user_bloc.dart';
 import 'package:aj_autofix/bloc/user/user_event.dart';
 import 'package:aj_autofix/bloc/user/user_state.dart';
 import 'package:aj_autofix/models/user_model.dart';
+import 'package:flutter/services.dart';
 
 class ProfileUpdateScreen extends StatefulWidget {
   final String userId;
@@ -53,6 +54,11 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
         profilePicture = File(image.path);
       });
     }
+  }
+
+  bool _isEmailValid(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
   }
 
   @override
@@ -127,16 +133,16 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                     const Divider(color: Colors.grey, thickness: 1),
                     const SizedBox(height: 30),
                     labeledTextField(
-                        'Full Name', Icons.person, _fullNameController),
+                        'Full Name', Icons.person, _fullNameController, maxLength: 50, isLettersOnly: true),
                     const SizedBox(height: 20),
                     labeledTextField(
-                        'Username', Icons.person_outline, _usernameController),
+                        'Username', Icons.person_outline, _usernameController, maxLength: 20,  isLettersOnly: true ),
                     const SizedBox(height: 20),
                     labeledTextField(
-                        'Email', Icons.email_outlined, _emailController),
+                        'Email', Icons.email_outlined, _emailController, isEmail: true),
                     const SizedBox(height: 20),
                     labeledTextField(
-                        'Phone Number', Icons.phone, _contactNumberController),
+                        'Phone Number', Icons.phone, _contactNumberController, isNumber: true, maxLength: 11),
                     const SizedBox(height: 20),
                     const SizedBox(height: 10),
                     ElevatedButton(
@@ -146,6 +152,13 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         minimumSize: const Size(double.infinity, 50),
                       ),
                       onPressed: () {
+                        if (!_isEmailValid(_emailController.text)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Invalid email address.')),
+                          );
+                          return;
+                        }
+
                         final updatedUser = User(
                           id: widget.userId,
                           fullname: _fullNameController.text,
@@ -187,36 +200,52 @@ class ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
   }
 
   Widget labeledTextField(
-      String label, IconData icon, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+  String label,
+  IconData icon,
+  TextEditingController controller, {
+  int maxLength = 100,
+  bool isEmail = false,
+  bool isNumber = false,
+  bool isLettersOnly = false,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            prefixIcon: Icon(icon, color: Colors.grey[600]),
-            hintText: 'Enter $label',
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
+      ),
+      const SizedBox(height: 8),
+      TextField(
+        controller: controller,
+        keyboardType: isNumber
+            ? TextInputType.number
+            : TextInputType.text,
+        inputFormatters: [
+          if (isNumber) FilteringTextInputFormatter.digitsOnly,
+          if (isLettersOnly) FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+        ],
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon, color: Colors.grey[600]),
+          hintText: 'Enter $label',
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(color: Colors.blue, width: 1.0),
           ),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          counterText: '',
         ),
-      ],
-    );
-  }
+        maxLength: maxLength,
+      ),
+    ],
+  );
+}
 }
 
 ImageProvider _getProfileImage(String? profilePicture) {

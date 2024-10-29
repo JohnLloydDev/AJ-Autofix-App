@@ -266,6 +266,7 @@ class TaskCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  
                 if (status == 'Completed')
                   ElevatedButton(
                     onPressed: onReviewPressed,
